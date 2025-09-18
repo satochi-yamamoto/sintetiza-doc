@@ -17,14 +17,15 @@ export const useAuthStore = defineStore('auth', () => {
   
   // Getters
   const isAuthenticated = computed(() => !!user.value)
-  const isAdmin = computed(() => user.value?.role === 'admin')
-  const userPlan = computed(() => user.value?.subscription?.plan || 'free')
+  const isAdmin = computed(() => user.value?.publicMetadata?.role === 'admin')
+  const userPlan = computed(() => user.value?.publicMetadata?.plan || 'free')
   const userLimits = computed(() => {
     const plans = {
-      free: { documents: 5, summaries: 5 },
-      basic: { documents: 50, summaries: 50 },
-      professional: { documents: -1, summaries: -1 }, // ilimitado
-      enterprise: { documents: -1, summaries: -1 }
+      free: { documentsPerMonth: 10, maxFileSize: 5 * 1024 * 1024 },
+      premium: { documentsPerMonth: 100, maxFileSize: 50 * 1024 * 1024 },
+      basic: { documentsPerMonth: 50, maxFileSize: 10 * 1024 * 1024 },
+      professional: { documentsPerMonth: -1, maxFileSize: 100 * 1024 * 1024 },
+      enterprise: { documentsPerMonth: -1, maxFileSize: -1 }
     }
     return plans[userPlan.value] || plans.free
   })
@@ -257,6 +258,9 @@ export const useAuthStore = defineStore('auth', () => {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       
+      // Limpar estado local
+      await handleSignOut()
+      
       toast.success('Logout realizado com sucesso!')
       
     } catch (error) {
@@ -465,6 +469,18 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
   
+  // Validation methods
+  function validateEmail(email) {
+    if (!email || typeof email !== 'string') return false
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  function validatePassword(password) {
+    if (!password || typeof password !== 'string') return false
+    return password.length >= 6
+  }
+
   return {
     // State
     user,
@@ -487,6 +503,10 @@ export const useAuthStore = defineStore('auth', () => {
     resetPassword,
     updatePassword,
     updateProfile,
-    loadUserProfile
+    loadUserProfile,
+    
+    // Validation methods
+    validateEmail,
+    validatePassword
   }
 })
