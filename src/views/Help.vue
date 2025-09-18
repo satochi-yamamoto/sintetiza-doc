@@ -872,7 +872,7 @@ onMounted(() => {
 }
 
 .action-card {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow cursor-pointer flex items-center space-x-4 text-decoration-none;
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow cursor-pointer flex items-center space-x-4 no-underline;
 }
 
 .action-icon {
@@ -1128,7 +1128,7 @@ onMounted(() => {
 }
 
 .support-button {
-  @apply px-6 py-3 rounded-lg font-medium flex items-center space-x-2 text-decoration-none transition-colors;
+  @apply px-6 py-3 rounded-lg font-medium flex items-center space-x-2 no-underline transition-colors;
 }
 
 .support-button.primary {

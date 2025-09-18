@@ -204,6 +204,7 @@ export const SUBSCRIPTION_PLANS = {
     currency: 'BRL',
     interval: 'month',
     stripeId: 'price_basic_monthly',
+    stripePaymentLink: 'https://buy.stripe.com/7sY6oI00rgDp2cQ4lfes002',
     features: {
       documentsPerMonth: 50,
       maxFileSize: 10, // MB
@@ -228,6 +229,7 @@ export const SUBSCRIPTION_PLANS = {
     currency: 'BRL',
     interval: 'month',
     stripeId: 'price_professional_monthly',
+    stripePaymentLink: 'https://buy.stripe.com/6oUbJ2aF586TbNq8Bves001',
     popular: true,
     features: {
       documentsPerMonth: 200,

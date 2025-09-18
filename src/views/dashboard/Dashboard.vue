@@ -461,7 +461,7 @@ onMounted(() => {
 }
 
 .plan-enterprise {
-  @apply bg-gold-100 text-gold-800 dark:bg-gold-900 dark:text-gold-200;
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
 }
 
 .plan-icon {

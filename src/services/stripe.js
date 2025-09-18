@@ -1,5 +1,5 @@
 import { loadStripe } from '@stripe/stripe-js'
-import { supabaseService } from './supabase.js'
+import { supabaseData } from './supabase.js'
 
 // Inicializar Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
@@ -203,7 +203,7 @@ export const stripeService = {
   // Obter informações da assinatura
   async getSubscriptionInfo(userId) {
     try {
-      const { data, error } = await supabaseService.findUnique(
+      const { data, error } = await supabaseData.selectOne(
         'user_subscriptions',
         { user_id: userId }
       )
@@ -242,7 +242,7 @@ export const stripeService = {
         startOfMonth.setDate(1)
         startOfMonth.setHours(0, 0, 0, 0)
         
-        const { data: usage } = await supabaseService.query(
+        const { data: usage } = await supabaseData.select(
           'summaries',
           {
             select: 'id',
@@ -303,7 +303,7 @@ export const stripeService = {
       startOfMonth.setHours(0, 0, 0, 0)
       
       // Resumos criados este mês
-      const { data: summaries } = await supabaseService.query(
+      const { data: summaries } = await supabaseData.select(
         'summaries',
         {
           select: 'id, created_at',
@@ -313,7 +313,7 @@ export const stripeService = {
       )
       
       // Documentos processados este mês
-      const { data: documents } = await supabaseService.query(
+      const { data: documents } = await supabaseData.select(
         'documents',
         {
           select: 'id, file_size',

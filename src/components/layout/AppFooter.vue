@@ -304,7 +304,7 @@ const subscribeNewsletter = async () => {
 }
 
 .footer-link {
-  @apply text-gray-400 hover:text-primary-400 transition-colors duration-200 text-decoration-none;
+  @apply text-gray-400 hover:text-primary-400 transition-colors duration-200 no-underline;
 }
 
 .newsletter-section {
@@ -348,7 +348,7 @@ const subscribeNewsletter = async () => {
 }
 
 .disclaimer-link {
-  @apply text-primary-400 hover:text-primary-300 text-decoration-none;
+  @apply text-primary-400 hover:text-primary-300 no-underline;
 }
 
 .footer-bottom {
@@ -376,7 +376,7 @@ const subscribeNewsletter = async () => {
 }
 
 .info-link {
-  @apply hover:text-primary-400 transition-colors duration-200 text-decoration-none;
+  @apply hover:text-primary-400 transition-colors duration-200 no-underline;
 }
 
 .certifications {

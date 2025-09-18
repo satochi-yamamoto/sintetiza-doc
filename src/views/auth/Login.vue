@@ -231,13 +231,7 @@ const handleLogin = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.login({
-      email: form.email,
-      password: form.password,
-      rememberMe: form.rememberMe
-    })
-    
-    toast.success('Login realizado com sucesso!')
+    await authStore.signIn(form.email, form.password)
     
     // Redirecionar para dashboard ou página anterior
     const redirectTo = router.currentRoute.value.query.redirect || '/dashboard'
@@ -264,9 +258,8 @@ const loginWithGoogle = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.loginWithProvider('google')
+    await authStore.signInWithProvider('google')
     
-    toast.success('Login com Google realizado com sucesso!')
     router.push('/dashboard')
     
   } catch (error) {
@@ -283,9 +276,8 @@ const loginWithApple = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.loginWithProvider('apple')
+    await authStore.signInWithProvider('apple')
     
-    toast.success('Login com Apple realizado com sucesso!')
     router.push('/dashboard')
     
   } catch (error) {
@@ -302,9 +294,8 @@ const loginWithGitHub = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.loginWithProvider('github')
+    await authStore.signInWithProvider('github')
     
-    toast.success('Login com GitHub realizado com sucesso!')
     router.push('/dashboard')
     
   } catch (error) {

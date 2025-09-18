@@ -959,7 +959,7 @@ onMounted(() => {
 }
 
 .nav-tab.active {
-  @apply text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 border-b-2 border-primary-600;
+  @apply text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 dark:bg-opacity-20 border-b-2 border-primary-600;
 }
 
 .tab-icon {
@@ -1083,7 +1083,7 @@ onMounted(() => {
 }
 
 .badge-enterprise {
-  @apply bg-gold-100 text-gold-800 dark:bg-gold-900 dark:text-gold-200;
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
 }
 
 .plan-name {
@@ -1211,7 +1211,7 @@ onMounted(() => {
 }
 
 .danger-item {
-  @apply flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg;
+  @apply flex items-center justify-between p-4 bg-red-50 dark:bg-red-900 dark:bg-opacity-20 border border-red-200 dark:border-red-800 rounded-lg;
 }
 
 .danger-info {

@@ -651,7 +651,7 @@ const toggleFaq = (index) => {
 }
 
 .success-message {
-  @apply bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-8 text-center;
+  @apply bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border border-green-200 dark:border-green-800 rounded-2xl p-8 text-center;
 }
 
 .success-content {

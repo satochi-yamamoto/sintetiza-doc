@@ -419,15 +419,11 @@ const handleRegister = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.register({
+    await authStore.signUp(form.email.trim(), form.password, {
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
-      email: form.email.trim(),
-      password: form.password,
       acceptMarketing: form.acceptMarketing
     })
-    
-    toast.success('Conta criada com sucesso! Verifique seu email para confirmar.')
     
     // Redirecionar para página de confirmação ou dashboard
     router.push('/email-confirmation')
@@ -454,9 +450,8 @@ const registerWithGoogle = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.registerWithProvider('google')
+    await authStore.signInWithProvider('google')
     
-    toast.success('Conta criada com Google com sucesso!')
     router.push('/dashboard')
     
   } catch (error) {
@@ -473,9 +468,8 @@ const registerWithApple = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.registerWithProvider('apple')
+    await authStore.signInWithProvider('apple')
     
-    toast.success('Conta criada com Apple com sucesso!')
     router.push('/dashboard')
     
   } catch (error) {
@@ -492,9 +486,8 @@ const registerWithGitHub = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.registerWithProvider('github')
+    await authStore.signInWithProvider('github')
     
-    toast.success('Conta criada com GitHub com sucesso!')
     router.push('/dashboard')
     
   } catch (error) {

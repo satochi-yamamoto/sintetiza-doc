@@ -721,7 +721,7 @@ const scrollToSection = (sectionId) => {
 }
 
 .update-notice {
-  @apply flex items-center justify-center space-x-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4;
+  @apply flex items-center justify-center space-x-3 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border border-blue-200 dark:border-blue-800 rounded-lg p-4;
 }
 
 .notice-icon {
@@ -790,7 +790,7 @@ const scrollToSection = (sectionId) => {
 }
 
 .important-notice {
-  @apply flex items-start space-x-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 mb-6;
+  @apply flex items-start space-x-4 bg-yellow-50 dark:bg-yellow-900 dark:bg-opacity-20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 mb-6;
 }
 
 .important-notice .notice-icon {
@@ -838,11 +838,11 @@ const scrollToSection = (sectionId) => {
 }
 
 .use-section.allowed {
-  @apply bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800;
+  @apply bg-green-50 dark:bg-green-900 dark:bg-opacity-20 border border-green-200 dark:border-green-800;
 }
 
 .use-section.prohibited {
-  @apply bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800;
+  @apply bg-red-50 dark:bg-red-900 dark:bg-opacity-20 border border-red-200 dark:border-red-800;
 }
 
 .use-title {
@@ -912,7 +912,7 @@ const scrollToSection = (sectionId) => {
 }
 
 .privacy-summary {
-  @apply flex items-start space-x-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6;
+  @apply flex items-start space-x-4 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6;
 }
 
 .privacy-icon {
@@ -936,7 +936,7 @@ const scrollToSection = (sectionId) => {
 }
 
 .disclaimer-notice {
-  @apply flex items-start space-x-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-6;
+  @apply flex items-start space-x-4 bg-red-50 dark:bg-red-900 dark:bg-opacity-20 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-6;
 }
 
 .disclaimer-icon {

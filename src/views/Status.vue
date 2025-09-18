@@ -816,7 +816,7 @@ onMounted(() => {
 }
 
 .last-incident {
-  @apply flex items-center space-x-2 mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg;
+  @apply flex items-center space-x-2 mt-3 p-3 bg-yellow-50 dark:bg-yellow-900 dark:bg-opacity-20 rounded-lg;
 }
 
 .incident-icon {

@@ -16,22 +16,22 @@ const anthropic = new Anthropic({
 const SUMMARY_PROMPTS = {
   standard: {
     system: "Você é um assistente especializado em criar resumos objetivos e concisos. Analise o texto fornecido e crie um resumo claro e direto.",
-    user: (text) => `Por favor, crie um resumo objetivo do seguinte texto:\n\n${text}\n\nResumo:"
+    user: (text) => `Por favor, crie um resumo objetivo do seguinte texto:\n\n${text}\n\nResumo:`
   },
   
   executive: {
     system: "Você é um consultor executivo especializado em análise de documentos. Crie resumos focados em insights estratégicos, decisões importantes e impactos no negócio.",
-    user: (text) => `Analise o seguinte documento e crie um resumo executivo focado em:\n- Pontos principais\n- Decisões tomadas\n- Impactos no negócio\n- Próximos passos\n\nTexto:\n${text}\n\nResumo Executivo:"
+    user: (text) => `Analise o seguinte documento e crie um resumo executivo focado em:\n- Pontos principais\n- Decisões tomadas\n- Impactos no negócio\n- Próximos passos\n\nTexto:\n${text}\n\nResumo Executivo:`
   },
   
   technical: {
     system: "Você é um especialista técnico. Crie resumos detalhados mantendo terminologia técnica, especificações e detalhes importantes para profissionais da área.",
-    user: (text) => `Crie um resumo técnico detalhado do seguinte documento, preservando:\n- Terminologia técnica\n- Especificações importantes\n- Detalhes de implementação\n- Considerações técnicas\n\nTexto:\n${text}\n\nResumo Técnico:"
+    user: (text) => `Crie um resumo técnico detalhado do seguinte documento, preservando:\n- Terminologia técnica\n- Especificações importantes\n- Detalhes de implementação\n- Considerações técnicas\n\nTexto:\n${text}\n\nResumo Técnico:`
   },
   
   educational: {
     system: "Você é um educador experiente. Crie resumos didáticos que expliquem conceitos de forma clara e acessível, ideal para aprendizado.",
-    user: (text) => `Transforme o seguinte texto em um resumo educacional que:\n- Explique conceitos de forma simples\n- Use linguagem acessível\n- Destaque pontos de aprendizado\n- Inclua contexto quando necessário\n\nTexto:\n${text}\n\nResumo Educacional:"
+    user: (text) => `Transforme o seguinte texto em um resumo educacional que:\n- Explique conceitos de forma simples\n- Use linguagem acessível\n- Destaque pontos de aprendizado\n- Inclua contexto quando necessário\n\nTexto:\n${text}\n\nResumo Educacional:`
   }
 }
 
@@ -39,17 +39,17 @@ const SUMMARY_PROMPTS = {
 const MEETING_ANALYSIS_PROMPTS = {
   decisions: {
     system: "Você é especialista em análise de reuniões. Identifique e extraia todas as decisões tomadas durante a reunião.",
-    user: (text) => `Analise a seguinte transcrição de reunião e identifique:\n\n1. DECISÕES TOMADAS:\n- Liste todas as decisões específicas\n- Indique quem tomou cada decisão\n- Contexto de cada decisão\n\n2. RESPONSÁVEIS:\n- Quem ficou responsável por cada ação\n\nTranscrição:\n${text}\n\nAnálise de Decisões:"
+    user: (text) => `Analise a seguinte transcrição de reunião e identifique:\n\n1. DECISÕES TOMADAS:\n- Liste todas as decisões específicas\n- Indique quem tomou cada decisão\n- Contexto de cada decisão\n\n2. RESPONSÁVEIS:\n- Quem ficou responsável por cada ação\n\nTranscrição:\n${text}\n\nAnálise de Decisões:`
   },
   
   tasks: {
     system: "Você é especialista em gestão de projetos. Extraia todas as tarefas e pendências identificadas na reunião.",
-    user: (text) => `Analise a transcrição e extraia:\n\n1. TAREFAS IDENTIFICADAS:\n- Lista de todas as tarefas mencionadas\n- Responsável por cada tarefa\n- Prazo (se mencionado)\n\n2. PENDÊNCIAS:\n- Itens que ficaram pendentes\n- Próximos passos\n\nTranscrição:\n${text}\n\nTarefas e Pendências:"
+    user: (text) => `Analise a transcrição e extraia:\n\n1. TAREFAS IDENTIFICADAS:\n- Lista de todas as tarefas mencionadas\n- Responsável por cada tarefa\n- Prazo (se mencionado)\n\n2. PENDÊNCIAS:\n- Itens que ficaram pendentes\n- Próximos passos\n\nTranscrição:\n${text}\n\nTarefas e Pendências:`
   },
   
   insights: {
     system: "Você é um analista de negócios. Identifique insights, oportunidades e pontos importantes discutidos na reunião.",
-    user: (text) => `Analise a reunião e identifique:\n\n1. INSIGHTS PRINCIPAIS:\n- Descobertas importantes\n- Oportunidades identificadas\n\n2. PONTOS DE ATENÇÃO:\n- Riscos mencionados\n- Desafios identificados\n\n3. TEMAS RECORRENTES:\n- Assuntos que apareceram múltiplas vezes\n\nTranscrição:\n${text}\n\nInsights e Análise:"
+    user: (text) => `Analise a reunião e identifique:\n\n1. INSIGHTS PRINCIPAIS:\n- Descobertas importantes\n- Oportunidades identificadas\n\n2. PONTOS DE ATENÇÃO:\n- Riscos mencionados\n- Desafios identificados\n\n3. TEMAS RECORRENTES:\n- Assuntos que apareceram múltiplas vezes\n\nTranscrição:\n${text}\n\nInsights e Análise:`
   }
 }
 

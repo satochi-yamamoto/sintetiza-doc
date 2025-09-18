@@ -234,8 +234,8 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '../stores/auth.js'
-import { useAppStore } from '../stores/app.js'
+import { useAuthStore } from '../../stores/auth.js'
+import { useAppStore } from '../../stores/app.js'
 import { useToast } from 'vue-toastification'
 
 // Composables
@@ -401,7 +401,7 @@ onUnmounted(() => {
 }
 
 .logo-link {
-  @apply flex items-center space-x-2 text-decoration-none;
+  @apply flex items-center space-x-2 no-underline;
 }
 
 .logo {
@@ -421,7 +421,7 @@ onUnmounted(() => {
 }
 
 .nav-link {
-  @apply text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors duration-200 text-decoration-none;
+  @apply text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors duration-200 no-underline;
 }
 
 .nav-link.active {
@@ -585,7 +585,7 @@ onUnmounted(() => {
 }
 
 .menu-item {
-  @apply flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-decoration-none;
+  @apply flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 no-underline;
 }
 
 .menu-item.logout {
@@ -601,11 +601,11 @@ onUnmounted(() => {
 }
 
 .btn-secondary {
-  @apply px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 text-decoration-none;
+  @apply px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 no-underline;
 }
 
 .btn-primary {
-  @apply px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-md transition-colors duration-200 text-decoration-none;
+  @apply px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-md transition-colors duration-200 no-underline;
 }
 
 .mobile-menu-btn {
@@ -625,7 +625,7 @@ onUnmounted(() => {
 }
 
 .mobile-nav-link {
-  @apply block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 text-decoration-none;
+  @apply block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors duration-200 no-underline;
 }
 
 .mobile-auth {
@@ -633,7 +633,7 @@ onUnmounted(() => {
 }
 
 .mobile-auth-link {
-  @apply block w-full text-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 text-decoration-none;
+  @apply block w-full text-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 no-underline;
 }
 
 .mobile-auth-link.primary {

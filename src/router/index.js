@@ -9,6 +9,7 @@ const Contact = () => import('@/views/Contact.vue')
 const Login = () => import('@/views/auth/Login.vue')
 const Register = () => import('@/views/auth/Register.vue')
 const ForgotPassword = () => import('@/views/auth/ForgotPassword.vue')
+const EmailConfirmation = () => import('@/views/auth/EmailConfirmation.vue')
 const Dashboard = () => import('@/views/dashboard/Dashboard.vue')
 const Documents = () => import('@/views/dashboard/Documents.vue')
 const Summaries = () => import('@/views/dashboard/Summaries.vue')
@@ -81,6 +82,15 @@ const routes = [
     component: ForgotPassword,
     meta: {
       title: 'Recuperar Senha - Sintetiza Doc',
+      requiresGuest: true
+    }
+  },
+  {
+    path: '/email-confirmation',
+    name: 'email-confirmation',
+    component: EmailConfirmation,
+    meta: {
+      title: 'Confirmação de Email - Sintetiza Doc',
       requiresGuest: true
     }
   },
@@ -193,6 +203,11 @@ const router = createRouter({
 // Guards de navegação
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+  
+  // Aguardar inicialização do auth store se necessário
+  if (!authStore.initialized) {
+    await authStore.initialize()
+  }
   
   // Atualizar título da página
   if (to.meta.title) {

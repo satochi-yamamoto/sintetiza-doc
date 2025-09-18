@@ -1,6 +1,6 @@
 import * as pdfjsLib from 'pdfjs-dist'
 import mammoth from 'mammoth'
-import { supabaseService } from './supabase.js'
+import { supabaseUtils } from './supabase.js'
 
 // Configurar PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
@@ -201,7 +201,7 @@ export const fileProcessorService = {
       const filePath = `${folder}/${userId}/${fileName}`
       
       // Upload para Supabase Storage
-      const uploadResult = await supabaseService.uploadFile(
+      const uploadResult = await supabaseUtils.uploadFile(
         'documents',
         filePath,
         file
@@ -212,7 +212,7 @@ export const fileProcessorService = {
       }
       
       // Obter URL pública
-      const publicUrl = supabaseService.getPublicUrl('documents', filePath)
+      const publicUrl = supabaseUtils.getPublicUrl('documents', filePath)
       
       return {
         path: filePath,

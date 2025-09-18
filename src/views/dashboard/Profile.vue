@@ -262,69 +262,178 @@
 </template>
 
 <script>
+import { ref, reactive, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { supabase } from '@/services/supabase'
+import { clerkService } from '@/services/clerk'
+
 export default {
   name: 'Profile',
-  data() {
-    return {
-      editMode: false,
-      user: {
-        name: 'João Silva',
-        email: 'joao.silva@email.com',
-        phone: '+55 11 99999-9999',
-        company: 'Tech Solutions',
-        position: 'Gerente de Projetos',
-        timezone: 'America/Sao_Paulo',
-        plan: 'Profissional',
-        avatar: null
-      },
-      profileForm: {
-        name: 'João Silva',
-        email: 'joao.silva@email.com',
-        phone: '+55 11 99999-9999',
-        company: 'Tech Solutions',
-        position: 'Gerente de Projetos',
-        timezone: 'America/Sao_Paulo'
-      },
-      preferences: {
-        emailNotifications: true,
-        darkMode: false,
-        autoSave: true,
-        defaultLanguage: 'pt-BR'
+  setup() {
+    const authStore = useAuthStore()
+    const editMode = ref(false)
+    const isLoading = ref(false)
+    const isUpdating = ref(false)
+    
+    const user = reactive({
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      position: '',
+      timezone: 'America/Sao_Paulo',
+      plan: 'Gratuito',
+      avatar: null
+    })
+    
+    const profileForm = reactive({
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      position: '',
+      timezone: 'America/Sao_Paulo'
+    })
+    
+    const preferences = reactive({
+      emailNotifications: true,
+      darkMode: false,
+      autoSave: true,
+      defaultLanguage: 'pt-BR'
+    })
+
+    const loadUserProfile = async () => {
+      try {
+        isLoading.value = true
+        
+        // Carregar dados do usuário do Clerk
+        const clerkUser = authStore.user
+        if (clerkUser) {
+          user.name = clerkUser.firstName + ' ' + (clerkUser.lastName || '')
+          user.email = clerkUser.primaryEmailAddress?.emailAddress || ''
+          user.avatar = clerkUser.imageUrl
+          
+          // Copiar para o formulário
+          Object.assign(profileForm, {
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            company: user.company,
+            position: user.position,
+            timezone: user.timezone
+          })
+        }
+        
+        // Carregar dados adicionais do Supabase
+        const { data: profile } = await supabase
+          .from('users')
+          .select('*')
+          .eq('clerk_id', clerkUser.id)
+          .single()
+        
+        if (profile) {
+          user.phone = profile.phone || ''
+          user.company = profile.company || ''
+          user.position = profile.position || ''
+          user.timezone = profile.timezone || 'America/Sao_Paulo'
+          
+          // Atualizar formulário
+          profileForm.phone = user.phone
+          profileForm.company = user.company
+          profileForm.position = user.position
+          profileForm.timezone = user.timezone
+          
+          // Carregar preferências
+          if (profile.preferences) {
+            Object.assign(preferences, profile.preferences)
+          }
+        }
+        
+      } catch (error) {
+        console.error('Erro ao carregar perfil:', error)
+      } finally {
+        isLoading.value = false
       }
     }
-  },
-  methods: {
-    saveProfile() {
-      // Implementar salvamento do perfil
-      console.log('Salvando perfil:', this.profileForm)
-      this.user = { ...this.user, ...this.profileForm }
-      this.editMode = false
-      // Mostrar toast de sucesso
-    },
-    uploadAvatar() {
-      // Implementar upload de avatar
-      console.log('Upload de avatar')
-    },
-    changePassword() {
-      // Implementar mudança de senha
-      console.log('Alterar senha')
-    },
-    setupTwoFactor() {
-      // Implementar configuração de 2FA
-      console.log('Configurar 2FA')
-    },
-    viewActiveSessions() {
-      // Implementar visualização de sessões ativas
-      console.log('Ver sessões ativas')
+
+    const saveProfile = async () => {
+      try {
+        isUpdating.value = true
+        
+        // Atualizar dados no Clerk
+        await clerkService.updateProfile({
+          firstName: profileForm.name.split(' ')[0],
+          lastName: profileForm.name.split(' ').slice(1).join(' ')
+        })
+        
+        // Atualizar dados no Supabase
+        const { error } = await supabase
+          .from('users')
+          .upsert({
+            clerk_id: authStore.user.id,
+            phone: profileForm.phone,
+            company: profileForm.company,
+            position: profileForm.position,
+            timezone: profileForm.timezone,
+            preferences: preferences
+          })
+        
+        if (error) throw error
+        
+        // Atualizar dados locais
+        Object.assign(user, profileForm)
+        editMode.value = false
+        
+        // Mostrar toast de sucesso
+        console.log('Perfil atualizado com sucesso!')
+        
+      } catch (error) {
+        console.error('Erro ao salvar perfil:', error)
+      } finally {
+        isUpdating.value = false
+      }
     }
-  },
-  watch: {
-    preferences: {
-      handler(newPreferences) {
-        // Salvar preferências automaticamente
-        console.log('Salvando preferências:', newPreferences)
-      },
-      deep: true
+
+    const uploadAvatar = async () => {
+      try {
+        // Implementar upload de avatar via Clerk
+        console.log('Upload de avatar')
+      } catch (error) {
+        console.error('Erro ao fazer upload do avatar:', error)
+      }
+    }
+
+    const changePassword = () => {
+      // Redirecionar para página de alteração de senha do Clerk
+      window.location.href = '/dashboard/configuracoes#security'
+    }
+
+    const setupTwoFactor = () => {
+      // Redirecionar para configuração de 2FA do Clerk
+      window.location.href = '/dashboard/configuracoes#security'
+    }
+
+    const viewActiveSessions = () => {
+      // Redirecionar para visualização de sessões ativas
+      window.location.href = '/dashboard/configuracoes#sessions'
+    }
+
+    onMounted(() => {
+      loadUserProfile()
+    })
+
+    return {
+      editMode,
+      isLoading,
+      isUpdating,
+      user,
+      profileForm,
+      preferences,
+      saveProfile,
+      uploadAvatar,
+      changePassword,
+      setupTwoFactor,
+      viewActiveSessions
     }
   }
 }

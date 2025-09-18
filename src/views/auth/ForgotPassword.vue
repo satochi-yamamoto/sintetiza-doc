@@ -180,7 +180,7 @@ const handleForgotPassword = async () => {
     isLoading.value = true
     appStore.setLoading(true)
     
-    await authStore.forgotPassword(form.email.trim())
+    await authStore.resetPassword(form.email.trim())
     
     emailSent.value = true
     startResendCooldown()
@@ -210,7 +210,7 @@ const resendEmail = async () => {
   try {
     isLoading.value = true
     
-    await authStore.forgotPassword(form.email.trim())
+    await authStore.resetPassword(form.email.trim())
     
     startResendCooldown()
     toast.success('Email reenviado com sucesso!')
