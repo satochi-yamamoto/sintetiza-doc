@@ -94,6 +94,15 @@ Uma plataforma web moderna que oferece:
 - Taxa de sucesso no processamento: > 95%
 - Uptime do sistema: > 99.5%
 
+**Segurança e Autenticação:**
+- Taxa de sucesso de autenticação: > 98%
+- Tempo médio de detecção de senhas comprometidas: < 2s
+- Taxa de falsos positivos em validação: < 0.1%
+- Tempo de resposta de APIs de segurança: < 500ms
+- Taxa de conversão cadastro → confirmação de email: > 85%
+- Incidentes de segurança: 0 por mês
+- Tempo médio de resolução de problemas de autenticação: < 5min
+
 ---
 
 ## 3. Personas e Casos de Uso
@@ -175,6 +184,9 @@ Uma plataforma web moderna que oferece:
 - Pré-visualização do documento
 - Extração de metadados (título, autor, data)
 - Processamento assíncrono com status em tempo real
+- **Validação de Segurança**: Verificação de integridade e detecção de malware
+- **Rate Limiting**: Proteção contra spam e uso abusivo
+- **Auditoria de Upload**: Log completo de atividades para compliance
 
 **Critérios de Aceitação:**
 - Upload deve completar em < 30s para arquivos de 10MB
@@ -627,14 +639,28 @@ graph LR
 ### 10.1 Autenticação e Autorização
 
 **Sistema Duplo:**
-- **Clerk** (primário): Social logins, MFA
+- **Clerk** (primário): Social logins, MFA, validação avançada de senhas
 - **Supabase Auth** (fallback): Email/password tradicional
 
-**Recursos de Segurança:**
+**Recursos de Segurança Implementados:**
 - JWT tokens com refresh automático
 - Session timeout configurável
-- Rate limiting por usuário
+- Rate limiting por usuário e endpoint
 - Audit trail completo
+- **Validação de Senhas Comprometidas**: Integração com HaveIBeenPwned API
+- **Tratamento Granular de Erros**: Sistema específico para diferentes tipos de erro de autenticação
+- **Mensagens de Erro Contextualizadas**: Feedback traduzido e específico para cada cenário
+- **Confirmação de Email Obrigatória**: Fluxo completo de verificação de conta
+- **Proteção contra Ataques de Força Bruta**: Rate limiting inteligente
+
+**Fluxos de Autenticação Testados:**
+- ✅ Cadastro com validação completa de dados
+- ✅ Detecção automática de senhas comprometidas
+- ✅ Tratamento de erros HTTP (422, 429, 401, 403, 500)
+- ✅ Redirecionamento correto pós-cadastro
+- ✅ Confirmação de email e ativação de conta
+- ✅ Login social (Google, Apple, GitHub)
+- ✅ Fallback para múltiplos provedores de autenticação
 
 ### 10.2 Proteção de Dados
 
@@ -661,8 +687,26 @@ graph LR
 - File type validation
 - Size limits rigorosos
 - Sandbox processing
+- **Validação de Integridade**: Verificação de checksums e assinaturas digitais
+- **Análise de Conteúdo**: Detecção de malware e conteúdo malicioso
+- **Rate Limiting de Upload**: Proteção contra spam e ataques DDoS
 
-### 10.4 Monitoring e Incident Response
+### 10.4 Qualidade e Testes de Segurança
+
+**Testes Implementados:**
+- **Testes E2E de Autenticação**: Cobertura completa dos fluxos críticos
+- **Testes de Validação**: Cenários com dados reais incluindo senhas comprometidas
+- **Testes de Tratamento de Erros**: Validação de diferentes códigos de erro HTTP
+- **Testes de Integração**: Verificação da comunicação entre Clerk e Supabase
+- **Monitoramento de Console**: Análise detalhada de logs para identificação de problemas
+
+**Métricas de Segurança:**
+- Taxa de sucesso de autenticação: > 98%
+- Tempo médio de detecção de senhas comprometidas: < 2s
+- Taxa de falsos positivos em validação: < 0.1%
+- Tempo de resposta de APIs de segurança: < 500ms
+
+### 10.5 Monitoring e Incident Response
 
 **Monitoring:**
 - Error tracking (Sentry)

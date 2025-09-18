@@ -38,7 +38,7 @@ O **SintetizaDoc** é uma plataforma moderna e inteligente que utiliza inteligê
 
 ### Backend & Serviços
 - **Supabase** - Backend-as-a-Service (PostgreSQL, Auth, Storage)
-- **Clerk** - Autenticação e gerenciamento de usuários
+- **Clerk** - Autenticação e gerenciamento de usuários com validação avançada
 - **Stripe** - Processamento de pagamentos
 - **OpenAI/Claude** - Modelos de IA para síntese
 - **Google Cloud** - APIs de tradução e speech-to-text
@@ -49,6 +49,11 @@ O **SintetizaDoc** é uma plataforma moderna e inteligente que utiliza inteligê
 - **Notion API** - Exportação para Notion
 - **Trello API** - Criação de cards
 - **Resend/SendGrid** - Envio de emails
+
+### Segurança e Validação
+- **HaveIBeenPwned API** - Verificação de senhas comprometidas
+- **Clerk Security Features** - Rate limiting, detecção de fraude, captcha
+- **Supabase RLS** - Row Level Security para proteção de dados
 
 ## 📋 Pré-requisitos
 
@@ -250,13 +255,49 @@ npm run test:e2e
 npm run test:coverage
 ```
 
+### Testes de Autenticação
+
+O sistema de autenticação foi extensivamente testado incluindo:
+- ✅ Fluxo completo de cadastro com validação de dados
+- ✅ Detecção e tratamento de senhas comprometidas
+- ✅ Validação de formulários e campos obrigatórios
+- ✅ Redirecionamento correto após cadastro bem-sucedido
+- ✅ Tratamento de diferentes tipos de erro (422, 429, 401, 403, 500)
+- ✅ Confirmação de email e ativação de conta
+- ✅ Mensagens de erro traduzidas e específicas para cada cenário
+
 ## 📚 Documentação da API
 
 A documentação completa da API está disponível em:
 - **Desenvolvimento**: `http://localhost:5173/api-docs`
 - **Produção**: `https://sintetizadoc.com/api-docs`
 
-## 🤝 Contribuindo
+## 🎯 Aprendizados e Melhores Práticas
+
+Durante o desenvolvimento do SintetizaDoc, identificamos e implementamos várias melhores práticas importantes:
+
+### 🔐 Autenticação e Segurança
+- **Tratamento Granular de Erros**: Implementação de sistema específico para diferentes tipos de erro de autenticação
+- **Validação de Senhas**: Integração com APIs de verificação de senhas comprometidas para maior segurança
+- **Experiência do Usuário**: Mensagens de erro traduzidas e contextualizadas para melhor UX
+- **Fallback de Sistemas**: Preparação para múltiplos provedores de autenticação
+
+### 🧪 Testes e Qualidade
+- **Testes E2E Abrangentes**: Cobertura completa dos fluxos críticos de autenticação
+- **Validação de Cenários Reais**: Testes com dados reais incluindo senhas comprometidas
+- **Monitoramento de Console**: Análise detalhada de logs para identificação de problemas
+
+### 🏗️ Arquitetura e Código
+- **Separação de Responsabilidades**: Stores dedicados para diferentes domínios (auth, app)
+- **Tratamento de Estados**: Gestão adequada de loading, error e success states
+- **Modularização**: Código organizado em módulos reutilizáveis e testáveis
+
+### 📊 Monitoramento e Observabilidade
+- **Logs Estruturados**: Implementação de logging detalhado para debugging
+- **Métricas de Performance**: Acompanhamento de tempos de resposta e taxa de sucesso
+- **Alertas Proativos**: Detecção precoce de problemas através de monitoramento
+
+---
 
 1. Faça um fork do projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
@@ -280,12 +321,15 @@ chore: tarefas de manutenção
 
 ## 🔒 Segurança
 
-- **Autenticação**: JWT tokens via Clerk
+- **Autenticação Robusta**: JWT tokens via Clerk com tratamento avançado de erros
+- **Validação de Senhas**: Detecção automática de senhas comprometidas (HaveIBeenPwned)
+- **Tratamento de Erros**: Sistema inteligente de identificação e tradução de erros de autenticação
 - **Autorização**: RLS (Row Level Security) no Supabase
 - **Criptografia**: Dados sensíveis criptografados
 - **HTTPS**: Comunicação segura obrigatória
 - **Sanitização**: Validação rigorosa de inputs
-- **Rate Limiting**: Proteção contra abuso
+- **Rate Limiting**: Proteção contra abuso e ataques de força bruta
+- **Confirmação de Email**: Verificação obrigatória de email para ativação de conta
 
 ## 📊 Monitoramento
 
