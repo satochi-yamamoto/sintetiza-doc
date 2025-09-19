@@ -1,0 +1,72 @@
+{
+  "tech_stack": [
+    "Vue.js 3",
+    "Vite",
+    "Tailwind CSS",
+    "Pinia",
+    "Supabase",
+    "Clerk",
+    "Stripe",
+    "OpenAI/Claude"
+  ],
+  "features": [
+    {
+      "name": "Autenticação",
+      "description": "Sistema de autenticação usando Clerk com integração ao Supabase",
+      "files": [
+        "src/main.js",
+        "src/views/auth",
+        "src/components/auth",
+        "supabase/functions/clerk-webhook/index.ts"
+      ]
+    },
+    {
+      "name": "Processamento de Documentos",
+      "description": "Upload e processamento de documentos PDF, DOCX e TXT",
+      "files": [
+        "src/services/fileProcessor.js",
+        "src/components/FileUpload.vue"
+      ]
+    },
+    {
+      "name": "Geração de Resumos",
+      "description": "Geração de resumos usando OpenAI e Claude",
+      "files": [
+        "src/services/ai.js",
+        "src/components/SummaryGenerator.vue"
+      ]
+    },
+    {
+      "name": "Pagamentos e Assinaturas",
+      "description": "Integração com Stripe para gerenciamento de assinaturas",
+      "files": [
+        "src/services/stripe.js",
+        "src/views/Pricing.vue",
+        "src/views/dashboard/Settings.vue"
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "description": "Interface do usuário para gerenciamento de documentos e resumos",
+      "files": [
+        "src/views/dashboard",
+        "src/components/SummaryGenerator.vue"
+      ]
+    },
+    {
+      "name": "Exportação",
+      "description": "Funcionalidade para exportar resumos em diferentes formatos",
+      "files": [
+        "src/services/exportService.js",
+        "src/components/ExportModal.vue"
+      ]
+    },
+    {
+      "name": "Internacionalização",
+      "description": "Suporte para múltiplos idiomas (pt-BR/en)",
+      "files": [
+        "src/main.js"
+      ]
+    }
+  ]
+}

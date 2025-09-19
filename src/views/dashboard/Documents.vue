@@ -186,7 +186,10 @@
         </div>
         
         <div class="modal-body">
-          <FileUpload @upload-complete="handleUploadComplete" />
+          <FileUpload
+            @files-processed="handleFilesProcessed"
+            @processing-complete="handleUploadComplete"
+          />
         </div>
       </div>
     </div>
@@ -216,7 +219,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuth } from '@clerk/vue'
 import { useAppStore } from '@/stores/app'
 import { supabase } from '@/services/supabase'
 import { useToast } from 'vue-toastification'
@@ -232,7 +235,7 @@ import {
 } from '@/components/icons/FileIcons.vue'
 
 // Composables
-const authStore = useAuthStore()
+const { isSignedIn, user } = useAuth()
 const appStore = useAppStore()
 const toast = useToast()
 const router = useRouter()
@@ -297,7 +300,7 @@ const loadDocuments = async () => {
   try {
     isLoading.value = true
     
-    const userId = authStore.user?.id
+    const userId = user.value?.id
     if (!userId) return
     
     const { data, error } = await supabase
@@ -449,10 +452,54 @@ const closeSummaryModal = () => {
   selectedDocumentForSummary.value = null
 }
 
+const handleFilesProcessed = async (results) => {
+  try {
+    // Salvar cada documento processado no banco
+    for (const result of results) {
+      const { file, result: processingResult } = result
+
+      await supabase
+        .from('documents')
+        .insert({
+          user_id: user.value?.id,
+          name: file.name,
+          file_type: getFileTypeFromMime(file.type),
+          file_size: file.size,
+          file_path: processingResult.upload.path,
+          public_url: processingResult.upload.publicUrl,
+          extracted_text: processingResult.text,
+          metadata: processingResult.metadata || {},
+          word_count: processingResult.wordCount || 0,
+          char_count: processingResult.charCount || 0,
+          status: 'completed',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+    }
+
+    toast.success(`${results.length} documento(s) processado(s) e salvos com sucesso!`)
+  } catch (error) {
+    console.error('Erro ao salvar documentos:', error)
+    toast.error('Erro ao salvar documentos no banco de dados')
+  }
+}
+
+const getFileTypeFromMime = (mimeType) => {
+  const typeMap = {
+    'application/pdf': 'pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+    'text/plain': 'txt',
+    'audio/mpeg': 'mp3',
+    'audio/wav': 'wav',
+    'audio/mp4': 'm4a',
+    'audio/webm': 'webm'
+  }
+  return typeMap[mimeType] || 'unknown'
+}
+
 const handleUploadComplete = () => {
   closeUploadModal()
   loadDocuments() // Refresh documents list
-  toast.success('Upload concluído com sucesso!')
 }
 
 const handleSummaryGenerated = () => {
@@ -467,7 +514,7 @@ onMounted(() => {
 })
 
 // Watch for auth changes
-watch(() => authStore.user, (newUser) => {
+watch(() => user?.value, (newUser) => {
   if (newUser) {
     loadDocuments()
   } else {

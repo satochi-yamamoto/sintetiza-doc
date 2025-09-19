@@ -62,7 +62,8 @@
           </div>
         </div>
         
-        <div class="option-card">
+        <div class="option-card disabled">
+          <div class="coming-soon-badge">Em breve</div>
           <div class="option-icon">
             <CodeIcon />
           </div>
@@ -71,17 +72,17 @@
             Quer integrar nossa API ou discutir parcerias estratégicas?
           </p>
           <div class="option-actions">
-            <a href="/docs/api" class="btn-primary">
+            <button disabled class="btn-disabled">
               Ver documentação
-            </a>
-            <a href="mailto:parcerias@sintetiza-doc.com" class="btn-secondary">
+            </button>
+            <button disabled class="btn-disabled">
               Contato comercial
-            </a>
+            </button>
           </div>
           <div class="option-info">
             <span class="info-item">
               <DocumentIcon class="info-icon" />
-              API REST disponível
+              API REST em desenvolvimento
             </span>
           </div>
         </div>
@@ -524,7 +525,19 @@ const toggleFaq = (index) => {
 }
 
 .option-card {
-  @apply bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 text-center transition-all duration-300 hover:shadow-xl;
+  @apply bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 text-center transition-all duration-300 hover:shadow-xl relative;
+}
+
+.option-card.disabled {
+  @apply opacity-60 pointer-events-none;
+}
+
+.coming-soon-badge {
+  @apply absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gray-500 text-white px-4 py-2 rounded-full text-sm font-medium;
+}
+
+.btn-disabled {
+  @apply inline-flex items-center justify-center px-6 py-3 bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 rounded-lg cursor-not-allowed font-medium border border-transparent;
 }
 
 .option-icon {

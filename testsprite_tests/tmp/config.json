@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3018",
+  "loginUser": "yamamoto.alexandre@gmail.com",
+  "loginPassword": "SPlango2001",
+  "executionArgs": {
+    "projectName": "sintetiza-doc",
+    "projectPath": "c:\\Projetos\\sintetiza-doc",
+    "testIds": [],
+    "additionalInstruction": "Focar nos testes de funcionalidades principais: autenticação, upload de documentos, geração de resumos e pagamentos",
+    "envs": {
+      "API_KEY": "sk-user-krwbkl7hBLeu0zSylE9wPYsWbxTMzQZpPE1_jktbB7YapjEzfWVOAlHT82mEfAlaJljb8WT8KZ_xlK8JtbFlS4sb7GyO69qP7KzUMclrN5nqk7LYpGLTVk076pTN1xAKxYs"
+    }
+  },
+  "proxy": "http://f0cfb070-eb58-457a-a6a6-f5c39ce89213:W2dEKiCUDnfb4HVmiSK491qg3OfJB5o1@tun.testsprite.com:8080"
+}

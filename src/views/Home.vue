@@ -16,8 +16,8 @@
             </p>
             
             <div class="hero-actions">
-              <router-link 
-                to="/register" 
+              <router-link
+                to="/sign-up"
                 class="btn btn-primary btn-lg"
               >
                 Começar Gratuitamente
@@ -276,7 +276,7 @@
                 <span class="price-period">/mês</span>
               </div>
             </div>
-            
+
             <ul class="pricing-features">
               <li class="feature-item">
                 <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
@@ -288,102 +288,111 @@
                 <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                Formatos básicos (PDF, TXT)
+                Formatos PDF, DOCX, TXT
               </li>
               <li class="feature-item">
                 <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                Resumos padrão
+                Resumos básicos com IA
+              </li>
+              <li class="feature-item">
+                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                50MB de armazenamento
               </li>
             </ul>
-            
-            <router-link to="/register" class="pricing-btn btn-outline">
+
+            <router-link to="/sign-up" class="pricing-btn btn-outline">
               Começar Grátis
             </router-link>
           </div>
-          
+
           <div class="pricing-card featured">
             <div class="pricing-badge">Mais Popular</div>
+            <div class="pricing-header">
+              <h3 class="pricing-title">Básico</h3>
+              <div class="pricing-price">
+                <span class="price-currency">R$</span>
+                <span class="price-amount">19,90</span>
+                <span class="price-period">/mês</span>
+              </div>
+            </div>
+
+            <ul class="pricing-features">
+              <li class="feature-item">
+                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                50 resumos por mês
+              </li>
+              <li class="feature-item">
+                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Múltiplos estilos de resumo
+              </li>
+              <li class="feature-item">
+                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Processamento de áudio
+              </li>
+              <li class="feature-item">
+                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                500MB de armazenamento
+              </li>
+            </ul>
+
+            <router-link to="/sign-up" class="pricing-btn btn-primary">
+              Começar Teste Grátis
+            </router-link>
+          </div>
+
+          <div class="pricing-card disabled">
+            <div class="pricing-badge-coming-soon">Em breve</div>
             <div class="pricing-header">
               <h3 class="pricing-title">Profissional</h3>
               <div class="pricing-price">
                 <span class="price-currency">R$</span>
-                <span class="price-amount">79</span>
+                <span class="price-amount">49,90</span>
                 <span class="price-period">/mês</span>
               </div>
             </div>
-            
+
             <ul class="pricing-features">
               <li class="feature-item">
                 <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                Documentos ilimitados
+                200 resumos por mês
               </li>
               <li class="feature-item">
                 <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                Todos os formatos + áudio
+                Resumos técnicos avançados
               </li>
               <li class="feature-item">
                 <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                Integrações completas
+                Integrações Notion, Trello
               </li>
               <li class="feature-item">
                 <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                Prioridade no processamento
+                2GB de armazenamento
               </li>
             </ul>
-            
-            <router-link to="/register" class="pricing-btn btn-primary">
-              Começar Teste Grátis
-            </router-link>
-          </div>
-          
-          <div class="pricing-card">
-            <div class="pricing-header">
-              <h3 class="pricing-title">Empresarial</h3>
-              <div class="pricing-price">
-                <span class="price-custom">Sob consulta</span>
-              </div>
-            </div>
-            
-            <ul class="pricing-features">
-              <li class="feature-item">
-                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                API dedicada
-              </li>
-              <li class="feature-item">
-                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Suporte premium 24/7
-              </li>
-              <li class="feature-item">
-                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Personalizações corporativas
-              </li>
-              <li class="feature-item">
-                <svg class="feature-check" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                SLA garantido
-              </li>
-            </ul>
-            
-            <router-link to="/contact" class="pricing-btn btn-outline">
-              Falar com Vendas
-            </router-link>
+
+            <button disabled class="pricing-btn btn-disabled">
+              Em breve
+            </button>
           </div>
         </div>
       </div>
@@ -400,7 +409,7 @@
             Junte-se a milhares de profissionais que já transformaram sua produtividade
           </p>
           <div class="cta-actions">
-            <router-link to="/register" class="btn btn-primary btn-lg">
+            <router-link to="/sign-up" class="btn btn-primary btn-lg">
               Começar Gratuitamente
             </router-link>
             <router-link to="/contact" class="btn btn-outline btn-lg">
@@ -627,6 +636,18 @@ const scrollToDemo = () => {
 
 .pricing-badge {
   @apply absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary-600 text-white px-4 py-1 rounded-full text-sm font-medium;
+}
+
+.pricing-badge-coming-soon {
+  @apply absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gray-500 text-white px-4 py-1 rounded-full text-sm font-medium;
+}
+
+.pricing-card.disabled {
+  @apply opacity-60 pointer-events-none;
+}
+
+.btn-disabled {
+  @apply w-full text-center py-3 px-6 rounded-lg font-medium bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed;
 }
 
 .pricing-header {

@@ -248,7 +248,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuth } from '@clerk/vue'
 import { useAppStore } from '@/stores/app'
 import { supabase } from '@/services/supabase'
 import { useToast } from 'vue-toastification'
@@ -257,7 +257,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import ExportModal from '@/components/ExportModal.vue'
 
 // Composables
-const authStore = useAuthStore()
+const { isSignedIn, user } = useAuth()
 const appStore = useAppStore()
 const toast = useToast()
 const router = useRouter()
@@ -328,7 +328,7 @@ const loadSummaries = async () => {
   try {
     isLoading.value = true
     
-    const userId = authStore.user?.id
+    const userId = user.value?.id
     if (!userId) return
     
     const { data, error } = await supabase
@@ -390,7 +390,7 @@ const duplicateSummary = async (summary) => {
     const { data, error } = await supabase
       .from('summaries')
       .insert({
-        user_id: authStore.user.id,
+        user_id: user.value?.id,
         document_id: summary.document_id,
         title: `${summary.title} (Cópia)`,
         content: summary.content,
@@ -512,7 +512,7 @@ onMounted(() => {
 })
 
 // Watch for auth changes
-watch(() => authStore.user, (newUser) => {
+watch(() => user?.value, (newUser) => {
   if (newUser) {
     loadSummaries()
   } else {

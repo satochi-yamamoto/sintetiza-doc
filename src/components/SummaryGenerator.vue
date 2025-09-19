@@ -311,7 +311,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 import { aiService } from '../services/ai.js'
-import { useAuthStore } from '../stores/auth.js'
+import { useAuth } from '@clerk/vue'
 import { stripeService } from '../services/stripe.js'
 import { DocumentIcon, PdfIcon, WordIcon, AudioIcon } from './icons/FileIcons.vue'
 
@@ -332,7 +332,7 @@ const emit = defineEmits(['summary-generated', 'export-requested'])
 
 // Composables
 const toast = useToast()
-const authStore = useAuthStore()
+const { isSignedIn, user } = useAuth()
 
 // Refs
 const selectedDocuments = ref([])
@@ -457,7 +457,7 @@ const generateSummary = async () => {
     isGenerating.value = true
     
     // Verificar limites do plano
-    const currentPlan = await stripeService.getCurrentPlan(authStore.user?.id)
+    const currentPlan = await stripeService.getCurrentPlan(user.value?.id)
     
     // Preparar configurações
     const config = {
@@ -471,17 +471,27 @@ const generateSummary = async () => {
     }
     
     // Preparar conteúdo dos documentos
-    const documentsContent = selectedDocuments.value.map(doc => ({
-      id: doc.id,
-      name: doc.name,
-      content: doc.extracted_text || doc.content,
-      type: doc.type
-    }))
-    
+    const documentsContent = selectedDocuments.value.map(doc =>
+      doc.extracted_text || doc.content || ''
+    ).join('\n\n--- DOCUMENTO ---\n\n')
+
+    if (!documentsContent.trim()) {
+      throw new Error('Nenhum conteúdo de texto encontrado nos documentos selecionados')
+    }
+
     // Gerar resumo
     const result = await aiService.generateSummary(
       documentsContent,
-      config
+      config.style,
+      {
+        provider: 'openai',
+        maxTokens: config.length === 'short' ? 500 : config.length === 'long' ? 2000 : 1000,
+        temperature: 0.7,
+        customPrompt: config.focus ? {
+          system: `Você é um assistente especializado em criar resumos. Foque especificamente em: ${config.focus}`,
+          user: (text) => `Analise o seguinte texto com foco em "${config.focus}" e crie um resumo ${config.style}:\n\n${text}\n\nResumo:`
+        } : undefined
+      }
     )
     
     generatedSummary.value = result
@@ -572,8 +582,8 @@ watch(() => props.documents, (newDocs) => {
 // Lifecycle
 onMounted(() => {
   // Configurações iniciais baseadas no usuário
-  if (authStore.user?.preferences?.language) {
-    selectedLanguage.value = authStore.user.preferences.language
+  if (user.value?.publicMetadata?.preferences?.language) {
+    selectedLanguage.value = user.value.publicMetadata.preferences.language
   }
 })
 

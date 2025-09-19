@@ -203,19 +203,21 @@ export const stripeService = {
   // Obter informações da assinatura
   async getSubscriptionInfo(userId) {
     try {
+      console.log('🔍 getSubscriptionInfo - Buscando subscription para userId:', userId)
       const { data, error } = await supabaseData.selectOne(
         'user_subscriptions',
         { user_id: userId }
       )
-      
+
       if (error) {
-        console.error('Erro ao buscar assinatura:', error)
+        console.error('❌ getSubscriptionInfo - Erro ao buscar assinatura:', error)
         return null
       }
-      
+
+      console.log('📊 getSubscriptionInfo - Dados retornados:', data)
       return data
     } catch (error) {
-      console.error('Erro ao obter informações da assinatura:', error)
+      console.error('❌ getSubscriptionInfo - Erro ao obter informações da assinatura:', error)
       return null
     }
   },
@@ -375,15 +377,20 @@ export const stripeService = {
   // Obter plano atual do usuário
   async getCurrentPlan(userId) {
     try {
+      console.log('🔍 getCurrentPlan - Buscando plano para userId:', userId)
       const subscription = await this.getSubscriptionInfo(userId)
-      
+      console.log('📊 getCurrentPlan - Subscription encontrada:', subscription)
+
       if (!subscription || !this.isSubscriptionActive(subscription)) {
+        console.log('📋 getCurrentPlan - Retornando plano gratuito (sem subscription ativa)')
         return SUBSCRIPTION_PLANS.free
       }
-      
-      return SUBSCRIPTION_PLANS[subscription.plan_id] || SUBSCRIPTION_PLANS.free
+
+      const plan = SUBSCRIPTION_PLANS[subscription.plan_id] || SUBSCRIPTION_PLANS.free
+      console.log('✅ getCurrentPlan - Plano retornado:', plan)
+      return plan
     } catch (error) {
-      console.error('Erro ao obter plano atual:', error)
+      console.error('❌ getCurrentPlan - Erro ao obter plano atual:', error)
       return SUBSCRIPTION_PLANS.free
     }
   }

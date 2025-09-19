@@ -26,8 +26,8 @@ export const SUPABASE_CONFIG = {
  */
 export const CLERK_CONFIG = {
   PUBLISHABLE_KEY: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
-  SIGN_IN_URL: '/auth/login',
-  SIGN_UP_URL: '/auth/register',
+  SIGN_IN_URL: '/sign-in',
+  SIGN_UP_URL: '/sign-up',
   AFTER_SIGN_IN_URL: '/dashboard',
   AFTER_SIGN_UP_URL: '/dashboard'
 }

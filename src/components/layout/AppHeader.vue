@@ -72,125 +72,94 @@
           </svg>
         </button>
 
-        <!-- Notificações -->
-        <div class="notifications" v-if="authStore.isAuthenticated">
-          <button 
-            @click="toggleNotifications"
-            class="notifications-btn"
-            :class="{ 'has-unread': hasUnreadNotifications }"
+        <!-- Componentes de Autenticação do Clerk -->
+        <SignedIn>
+          <!-- Dashboard Link -->
+          <router-link
+            to="/dashboard"
+            class="dashboard-link"
+            title="Ir para Dashboard"
           >
-            <svg class="notification-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10 2C7.79086 2 6 3.79086 6 6V8C6 9.10457 5.10457 10 4 10H3C2.44772 10 2 10.4477 2 11C2 11.5523 2.44772 12 3 12H17C17.5523 12 18 11.5523 18 11C18 10.4477 17.5523 10 17 10H16C14.8954 10 14 9.10457 14 8V6C14 3.79086 12.2091 2 10 2Z" />
-              <path d="M8.5 14C8.5 15.3807 9.11929 16 10.5 16C11.8807 16 12.5 15.3807 12.5 14H8.5Z" />
+            <svg class="dashboard-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
             </svg>
-            <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
-          </button>
-          
-          <div v-if="showNotifications" class="notifications-dropdown">
-            <div class="notifications-header">
-              <h3>Notificações</h3>
-              <button @click="markAllAsRead" class="mark-all-read">Marcar todas como lidas</button>
-            </div>
-            
-            <div class="notifications-list">
-              <div 
-                v-for="notification in notifications" 
-                :key="notification.id"
-                class="notification-item"
-                :class="{ 'unread': !notification.read }"
-                @click="markAsRead(notification.id)"
-              >
-                <div class="notification-content">
-                  <h4>{{ notification.title }}</h4>
-                  <p>{{ notification.message }}</p>
-                  <span class="notification-time">{{ formatTime(notification.created_at) }}</span>
+            <span class="dashboard-text">Dashboard</span>
+          </router-link>
+
+          <!-- Notificações -->
+          <div class="notifications">
+            <button
+              @click="toggleNotifications"
+              class="notifications-btn"
+              :class="{ 'has-unread': hasUnreadNotifications }"
+            >
+              <svg class="notification-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 2C7.79086 2 6 3.79086 6 6V8C6 9.10457 5.10457 10 4 10H3C2.44772 10 2 10.4477 2 11C2 11.5523 2.44772 12 3 12H17C17.5523 12 18 11.5523 18 11C18 10.4477 17.5523 10 17 10H16C14.8954 10 14 9.10457 14 8V6C14 3.79086 12.2091 2 10 2Z" />
+                <path d="M8.5 14C8.5 15.3807 9.11929 16 10.5 16C11.8807 16 12.5 15.3807 12.5 14H8.5Z" />
+              </svg>
+              <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+            </button>
+
+            <div v-if="showNotifications" class="notifications-dropdown">
+              <div class="notifications-header">
+                <h3>Notificações</h3>
+                <button @click="markAllAsRead" class="mark-all-read">Marcar todas como lidas</button>
+              </div>
+
+              <div class="notifications-list">
+                <div
+                  v-for="notification in notifications"
+                  :key="notification.id"
+                  class="notification-item"
+                  :class="{ 'unread': !notification.read }"
+                  @click="markAsRead(notification.id)"
+                >
+                  <div class="notification-content">
+                    <h4>{{ notification.title }}</h4>
+                    <p>{{ notification.message }}</p>
+                    <span class="notification-time">{{ formatTime(notification.created_at) }}</span>
+                  </div>
+                </div>
+
+                <div v-if="notifications.length === 0" class="no-notifications">
+                  <p>Nenhuma notificação</p>
                 </div>
               </div>
-              
-              <div v-if="notifications.length === 0" class="no-notifications">
-                <p>Nenhuma notificação</p>
-              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Menu do Usuário -->
-        <div class="user-menu" v-if="authStore.isAuthenticated">
-          <button 
-            @click="toggleUserMenu"
-            class="user-menu-btn"
-          >
-            <img 
-              v-if="authStore.user?.avatar_url"
-              :src="authStore.user.avatar_url"
-              :alt="authStore.user.name"
-              class="user-avatar"
+          <!-- User Button do Clerk -->
+          <div class="clerk-user-button">
+            <UserButton
+              :appearance="{
+                elements: {
+                  avatarBox: 'w-8 h-8',
+                  userButtonPopoverCard: 'shadow-lg border border-gray-200 dark:border-gray-700',
+                  userButtonPopoverActionButton: 'hover:bg-gray-50 dark:hover:bg-gray-700',
+                  userButtonPopoverActionButtonText: 'text-gray-700 dark:text-gray-300',
+                  userButtonPopoverFooter: 'hidden'
+                }
+              }"
+              :user-profile-url="'/user-profile'"
             />
-            <div v-else class="user-avatar-placeholder">
-              {{ getUserInitials() }}
-            </div>
-            <svg class="chevron-icon" :class="{ 'rotate': showUserMenu }" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </button>
-          
-          <div v-if="showUserMenu" class="user-dropdown">
-            <div class="user-info">
-              <div class="user-name">{{ authStore.user?.name || authStore.user?.email }}</div>
-              <div class="user-email">{{ authStore.user?.email }}</div>
-              <div class="user-plan">Plano {{ authStore.currentPlan?.name || 'Gratuito' }}</div>
-            </div>
-            
-            <div class="menu-divider"></div>
-            
-            <router-link to="/dashboard" class="menu-item" @click="closeUserMenu">
-              <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-              </svg>
-              Dashboard
-            </router-link>
-            
-            <router-link to="/dashboard/documents" class="menu-item" @click="closeUserMenu">
-              <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
-              </svg>
-              Meus Documentos
-            </router-link>
-            
-            <router-link to="/dashboard/summaries" class="menu-item" @click="closeUserMenu">
-              <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-              </svg>
-              Resumos
-            </router-link>
-            
-            <router-link to="/dashboard/settings" class="menu-item" @click="closeUserMenu">
-              <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
-              </svg>
-              Configurações
-            </router-link>
-            
-            <div class="menu-divider"></div>
-            
-            <button @click="handleLogout" class="menu-item logout">
-              <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
-              </svg>
-              Sair
-            </button>
           </div>
-        </div>
+        </SignedIn>
 
-        <!-- Botões de Autenticação -->
-        <div class="auth-buttons" v-else>
-          <router-link to="/login" class="btn-secondary">
-            Entrar
-          </router-link>
-          <router-link to="/register" class="btn-primary">
-            Cadastrar
-          </router-link>
-        </div>
+        <SignedOut>
+          <!-- Botões de Autenticação -->
+          <div class="auth-buttons">
+            <SignInButton mode="modal">
+              <button class="btn-secondary">
+                Entrar
+              </button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <button class="btn-primary">
+                Cadastrar
+              </button>
+            </SignUpButton>
+          </div>
+        </SignedOut>
 
         <!-- Menu Mobile -->
         <button 
@@ -219,44 +188,64 @@
         </router-link>
       </nav>
       
-      <div v-if="!authStore.isAuthenticated" class="mobile-auth">
-        <router-link to="/login" class="mobile-auth-link" @click="closeMobileMenu">
-          Entrar
-        </router-link>
-        <router-link to="/register" class="mobile-auth-link primary" @click="closeMobileMenu">
-          Cadastrar
-        </router-link>
-      </div>
+      <SignedOut>
+        <div class="mobile-auth">
+          <router-link to="/sign-in" class="mobile-auth-link" @click="closeMobileMenu">
+            Entrar
+          </router-link>
+          <router-link to="/sign-up" class="mobile-auth-link primary" @click="closeMobileMenu">
+            Cadastrar
+          </router-link>
+        </div>
+      </SignedOut>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '../../stores/auth.js'
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useAuth } from '@clerk/vue'
 import { useAppStore } from '../../stores/app.js'
 import { useToast } from 'vue-toastification'
 
 // Composables
 const router = useRouter()
 const route = useRoute()
-const authStore = useAuthStore()
 const appStore = useAppStore()
 const toast = useToast()
+const { isSignedIn, user, isLoaded } = useAuth()
+
+// Debug logs para autenticação
+console.log('🔍 AppHeader - Estado inicial de autenticação:', {
+  isSignedIn: isSignedIn?.value,
+  user: user?.value,
+  isLoaded: isLoaded?.value
+})
+
+// Watch para mudanças no estado de autenticação
+watch([isSignedIn, user, isLoaded], ([newIsSignedIn, newUser, newIsLoaded]) => {
+  console.log('🔍 AppHeader - Mudança no estado de autenticação:', {
+    isSignedIn: newIsSignedIn,
+    user: newUser,
+    isLoaded: newIsLoaded,
+    userId: newUser?.id,
+    userEmail: newUser?.primaryEmailAddress?.emailAddress
+  })
+}, { immediate: true })
 
 // Refs
 const showLanguageMenu = ref(false)
 const showNotifications = ref(false)
-const showUserMenu = ref(false)
 const showMobileMenu = ref(false)
+const showUserMenu = ref(false)
 
 // Data
 const navigationItems = [
   { path: '/', label: 'Início' },
-  { path: '/features', label: 'Funcionalidades' },
-  { path: '/pricing', label: 'Preços' },
-  { path: '/contact', label: 'Contato' }
+  { path: '/funcionalidades', label: 'Funcionalidades' },
+  { path: '/precos', label: 'Preços' },
+  { path: '/contato', label: 'Contato' }
 ]
 
 const availableLanguages = [
@@ -302,12 +291,6 @@ const toggleNotifications = () => {
   showUserMenu.value = false
 }
 
-const toggleUserMenu = () => {
-  showUserMenu.value = !showUserMenu.value
-  showLanguageMenu.value = false
-  showNotifications.value = false
-}
-
 const toggleMobileMenu = () => {
   showMobileMenu.value = !showMobileMenu.value
 }
@@ -316,14 +299,9 @@ const closeMobileMenu = () => {
   showMobileMenu.value = false
 }
 
-const closeUserMenu = () => {
-  showUserMenu.value = false
-}
-
 const closeAllMenus = () => {
   showLanguageMenu.value = false
   showNotifications.value = false
-  showUserMenu.value = false
   showMobileMenu.value = false
 }
 
@@ -333,10 +311,6 @@ const changeLanguage = (langCode) => {
   toast.success(`Idioma alterado para ${availableLanguages.find(l => l.code === langCode)?.name}`)
 }
 
-const getUserInitials = () => {
-  const name = authStore.user?.name || authStore.user?.email || 'U'
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
-}
 
 const markAsRead = (notificationId) => {
   appStore.markNotificationAsRead(notificationId)
@@ -350,30 +324,17 @@ const formatTime = (timestamp) => {
   return appStore.formatRelativeTime(timestamp)
 }
 
-const handleLogout = async () => {
-  try {
-    await authStore.logout()
-    router.push('/')
-    toast.success('Logout realizado com sucesso!')
-  } catch (error) {
-    console.error('Erro no logout:', error)
-    toast.error('Erro ao fazer logout')
-  }
-}
 
 // Event Listeners
 const handleClickOutside = (event) => {
   const target = event.target
-  
+
   // Fechar menus se clicar fora
   if (!target.closest('.language-selector')) {
     showLanguageMenu.value = false
   }
   if (!target.closest('.notifications')) {
     showNotifications.value = false
-  }
-  if (!target.closest('.user-menu')) {
-    showUserMenu.value = false
   }
 }
 
@@ -638,5 +599,21 @@ onUnmounted(() => {
 
 .mobile-auth-link.primary {
   @apply text-white bg-primary-600 border-primary-600 hover:bg-primary-700;
+}
+
+.clerk-user-button {
+  @apply flex items-center;
+}
+
+.dashboard-link {
+  @apply flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200 no-underline;
+}
+
+.dashboard-icon {
+  @apply w-5 h-5;
+}
+
+.dashboard-text {
+  @apply hidden sm:inline;
 }
 </style>

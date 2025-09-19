@@ -13,8 +13,8 @@
           <div class="flex items-center space-x-6">
             <div class="relative">
               <img
-                :src="user.avatar || '/api/placeholder/120/120'"
-                :alt="user.name"
+                :src="userProfile.avatar || '/api/placeholder/120/120'"
+                :alt="userProfile.name"
                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
               >
               <button class="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-lg transition-colors">
@@ -25,14 +25,14 @@
               </button>
             </div>
             <div class="flex-1">
-              <h2 class="text-2xl font-bold text-gray-900">{{ user.name }}</h2>
-              <p class="text-gray-600">{{ user.email }}</p>
+              <h2 class="text-2xl font-bold text-gray-900">{{ userProfile.name }}</h2>
+              <p class="text-gray-600">{{ userProfile.email }}</p>
               <div class="flex items-center mt-2">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                   Conta Verificada
                 </span>
                 <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  Plano {{ user.plan }}
+                  Plano {{ userProfile.plan }}
                 </span>
               </div>
             </div>
@@ -263,19 +263,19 @@
 
 <script>
 import { ref, reactive, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuth } from '@clerk/vue'
 import { supabase } from '@/services/supabase'
-import { clerkService } from '@/services/clerk'
+// Clerk service não é mais necessário - usar useAuth diretamente
 
 export default {
   name: 'Profile',
   setup() {
-    const authStore = useAuthStore()
+    const { isSignedIn, user } = useAuth()
     const editMode = ref(false)
     const isLoading = ref(false)
     const isUpdating = ref(false)
     
-    const user = reactive({
+    const userProfile = reactive({
       name: '',
       email: '',
       phone: '',
@@ -307,20 +307,20 @@ export default {
         isLoading.value = true
         
         // Carregar dados do usuário do Clerk
-        const clerkUser = authStore.user
+        const clerkUser = user.value
         if (clerkUser) {
-          user.name = clerkUser.firstName + ' ' + (clerkUser.lastName || '')
-          user.email = clerkUser.primaryEmailAddress?.emailAddress || ''
-          user.avatar = clerkUser.imageUrl
-          
+          userProfile.name = clerkUser.firstName + ' ' + (clerkUser.lastName || '')
+          userProfile.email = clerkUser.primaryEmailAddress?.emailAddress || ''
+          userProfile.avatar = clerkUser.imageUrl
+
           // Copiar para o formulário
           Object.assign(profileForm, {
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            company: user.company,
-            position: user.position,
-            timezone: user.timezone
+            name: userProfile.name,
+            email: userProfile.email,
+            phone: userProfile.phone,
+            company: userProfile.company,
+            position: userProfile.position,
+            timezone: userProfile.timezone
           })
         }
         
@@ -332,16 +332,16 @@ export default {
           .single()
         
         if (profile) {
-          user.phone = profile.phone || ''
-          user.company = profile.company || ''
-          user.position = profile.position || ''
-          user.timezone = profile.timezone || 'America/Sao_Paulo'
-          
+          userProfile.phone = profile.phone || ''
+          userProfile.company = profile.company || ''
+          userProfile.position = profile.position || ''
+          userProfile.timezone = profile.timezone || 'America/Sao_Paulo'
+
           // Atualizar formulário
-          profileForm.phone = user.phone
-          profileForm.company = user.company
-          profileForm.position = user.position
-          profileForm.timezone = user.timezone
+          profileForm.phone = userProfile.phone
+          profileForm.company = userProfile.company
+          profileForm.position = userProfile.position
+          profileForm.timezone = userProfile.timezone
           
           // Carregar preferências
           if (profile.preferences) {
@@ -360,8 +360,8 @@ export default {
       try {
         isUpdating.value = true
         
-        // Atualizar dados no Clerk
-        await clerkService.updateProfile({
+        // Atualizar dados no Clerk via user.update()
+        await user.value.update({
           firstName: profileForm.name.split(' ')[0],
           lastName: profileForm.name.split(' ').slice(1).join(' ')
         })
@@ -370,7 +370,7 @@ export default {
         const { error } = await supabase
           .from('users')
           .upsert({
-            clerk_id: authStore.user.id,
+            clerk_id: user.value?.id,
             phone: profileForm.phone,
             company: profileForm.company,
             position: profileForm.position,
@@ -381,7 +381,7 @@ export default {
         if (error) throw error
         
         // Atualizar dados locais
-        Object.assign(user, profileForm)
+        Object.assign(userProfile, profileForm)
         editMode.value = false
         
         // Mostrar toast de sucesso
@@ -426,7 +426,7 @@ export default {
       editMode,
       isLoading,
       isUpdating,
-      user,
+      userProfile,
       profileForm,
       preferences,
       saveProfile,

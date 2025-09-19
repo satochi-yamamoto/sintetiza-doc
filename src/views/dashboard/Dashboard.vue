@@ -5,7 +5,7 @@
       <div class="header-content">
         <div class="header-left">
           <h1 class="dashboard-title">
-            Olá, {{ authStore.user?.firstName || 'Usuário' }}! 👋
+            Olá, {{ getUserName || 'Usuário' }}! 👋
           </h1>
           <p class="dashboard-subtitle">
             Bem-vindo ao seu painel de controle
@@ -66,7 +66,7 @@
       <div class="stat-card">
         <div class="stat-icon storage">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 16V8C20.9996 7.64928 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64928 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 16V8C20.9996 7.64928 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64928 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 = 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 = 21.9979C12.3511 21.9979 12.696 21.9055 13 = 21.73L20 = 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 = 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div class="stat-content">
@@ -84,7 +84,7 @@
         <button @click="showUploadModal = true" class="action-card upload">
           <div class="action-icon">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 = 19.5304 3 = 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -95,7 +95,7 @@
           </div>
         </button>
         
-        <router-link to="/documents" class="action-card documents">
+        <router-link to="/dashboard/documentos" class="action-card documents">
           <div class="action-icon">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -108,7 +108,7 @@
           </div>
         </router-link>
         
-        <router-link to="/summaries" class="action-card summaries">
+        <router-link to="/dashboard/resumos" class="action-card summaries">
           <div class="action-icon">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -121,7 +121,7 @@
           </div>
         </router-link>
         
-        <router-link to="/billing" class="action-card billing">
+        <router-link to="/dashboard/cobranca" class="action-card billing">
           <div class="action-icon">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -139,7 +139,7 @@
     <div class="recent-activity">
       <div class="section-header">
         <h2 class="section-title">Atividade Recente</h2>
-        <router-link to="/documents" class="view-all-link">
+        <router-link to="/dashboard/documentos" class="view-all-link">
           Ver todos
         </router-link>
       </div>
@@ -211,168 +211,252 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import { useAppStore } from '@/stores/app'
-import { supabase } from '@/services/supabase'
-import { useToast } from 'vue-toastification'
-import FileUpload from '@/components/FileUpload.vue'
-
-// Composables
-const authStore = useAuthStore()
-const appStore = useAppStore()
-const toast = useToast()
-
-// Refs
-const showUploadModal = ref(false)
-const isLoading = ref(false)
-
-// Data
-const stats = reactive({
-  totalDocuments: 0,
-  totalSummaries: 0,
-  monthlyUsage: 0,
-  storageUsed: 0
-})
-
-const recentActivity = ref([])
-
-// Computed
-const currentPlan = computed(() => {
-  return authStore.user?.plan || 'Gratuito'
-})
-
-const planBadgeClass = computed(() => {
-  const plan = currentPlan.value.toLowerCase()
-  return {
-    'plan-free': plan === 'gratuito' || plan === 'free',
-    'plan-basic': plan === 'básico' || plan === 'basic',
-    'plan-pro': plan === 'profissional' || plan === 'professional',
-    'plan-enterprise': plan === 'empresarial' || plan === 'enterprise'
-  }
-})
-
-// Methods
-const loadDashboardData = async () => {
-  try {
-    isLoading.value = true
-    appStore.setLoading(true)
-    
-    // Load user stats
-    await Promise.all([
-      loadStats(),
-      loadRecentActivity()
-    ])
-    
-  } catch (error) {
-    console.error('Erro ao carregar dados do dashboard:', error)
-    toast.error('Erro ao carregar dados do dashboard')
-  } finally {
-    isLoading.value = false
-    appStore.setLoading(false)
-  }
-}
-
-const loadStats = async () => {
-  try {
-    const userId = authStore.user?.id
-    if (!userId) return
-    
-    // Load documents count
-    const { count: documentsCount } = await supabase
-      .from('documents')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-    
-    // Load summaries count
-    const { count: summariesCount } = await supabase
-      .from('summaries')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-    
-    // Load monthly usage (current month)
-    const startOfMonth = new Date()
-    startOfMonth.setDate(1)
-    startOfMonth.setHours(0, 0, 0, 0)
-    
-    const { count: monthlyCount } = await supabase
-      .from('summaries')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .gte('created_at', startOfMonth.toISOString())
-    
-    // Load storage usage
-    const { data: documents } = await supabase
-      .from('documents')
-      .select('file_size')
-      .eq('user_id', userId)
-    
-    const totalStorage = documents?.reduce((sum, doc) => sum + (doc.file_size || 0), 0) || 0
-    
-    // Update stats
-    stats.totalDocuments = documentsCount || 0
-    stats.totalSummaries = summariesCount || 0
-    stats.monthlyUsage = monthlyCount || 0
-    stats.storageUsed = totalStorage
-    
-  } catch (error) {
-    console.error('Erro ao carregar estatísticas:', error)
-  }
-}
-
-const loadRecentActivity = async () => {
-  try {
-    const userId = authStore.user?.id
-    if (!userId) return
-    
-    // Load recent documents and summaries
-    const { data: documents } = await supabase
-      .from('documents')
-      .select('id, name, created_at')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(3)
-    
-    const { data: summaries } = await supabase
-      .from('summaries')
-      .select('id, title, created_at, document:documents(name)')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(3)
-    
-    // Combine and sort activities
-    const activities = []
-    
-    documents?.forEach(doc => {
-      activities.push({
-        id: `doc-${doc.id}`,
-        type: 'upload',
-        title: 'Documento enviado',
-        description: doc.name,
-        createdAt: doc.created_at
-      })
-    })
-    
-    summaries?.forEach(summary => {
-      activities.push({
-        id: `summary-${summary.id}`,
-        type: 'summary',
-        title: 'Resumo gerado',
-        description: summary.title || summary.document?.name || 'Documento',
-        createdAt: summary.created_at
-      })
-    })
-    
-    // Sort by date and take latest 5
-    recentActivity.value = activities
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 5)
-    
-  } catch (error) {
-    console.error('Erro ao carregar atividade recente:', error)
-  }
-}
-
+import { ref, reactive, computed, onMounted, watch } from 'vue'
+-import { useAuth } from '@clerk/vue'
++import { useAuth, useUser } from '@clerk/vue'
+ import { useAppStore } from '@/stores/app'
+-import { supabase } from '@/services/supabase'
++import supabase, { setSupabaseAccessToken } from '@/services/supabase'
+ import { useToast } from 'vue-toastification'
+ import FileUpload from '@/components/FileUpload.vue'
+ 
+-// Composables
+-const { isSignedIn, user } = useAuth()
++// Composables
++const { isLoaded: authLoaded, isSignedIn, getToken } = useAuth()
++const { isLoaded: userLoaded, user } = useUser()
+ const appStore = useAppStore()
+ const toast = useToast()
+ 
+ // Refs
+ const showUploadModal = ref(false)
+ const isLoading = ref(false)
+ 
+ // Data
+ const stats = reactive({
+   totalDocuments: 0,
+   totalSummaries: 0,
+   monthlyUsage: 0,
+   storageUsed: 0
+ })
+ 
+ const recentActivity = ref([])
+ 
++// Garantir que o token do Clerk esteja aplicado ao cliente Supabase
++const ensureSupabaseSession = async () => {
++  try {
++    if (!authLoaded?.value || !userLoaded?.value) return false
++    if (!isSignedIn?.value) return false
++    const token = await getToken({ template: 'supabase' })
++    if (!token) return false
++    setSupabaseAccessToken(token)
++    return true
++  } catch (err) {
++    // Silenciado para evitar ruído em produção
++    return false
++  }
++}
++
+ // Computed
+ const currentPlan = computed(() => {
+   return user?.value?.publicMetadata?.plan || 'Gratuito'
+ })
+ 
+ const planBadgeClass = computed(() => {
+   const plan = (currentPlan.value || 'Gratuito').toLowerCase()
+   return {
+     'plan-free': plan === 'gratuito' || plan === 'free',
+     'plan-basic': plan === 'básico' || plan === 'basic',
+     'plan-pro': plan === 'profissional' || plan === 'professional',
+     'plan-enterprise': plan === 'empresarial' || plan === 'enterprise'
+   }
+ })
+ 
+ const getUserName = computed(() => {
+   if (!user?.value) return null
+ 
+   // Tentar diferentes propriedades do Clerk user
+   const firstName = user.value.firstName || user.value.first_name
+   const lastName = user.value.lastName || user.value.last_name
+   const fullName = user.value.fullName || user.value.full_name
+   const username = user.value.username
+   const emailName = user.value.primaryEmailAddress?.emailAddress?.split('@')[0]
+ 
+   // Prioridade: firstName, fullName, username, parte do email
+   if (firstName) {
+     return lastName ? `${firstName} ${lastName}` : firstName
+   }
+ 
+   if (fullName) return fullName
+   if (username) return username
+   if (emailName) return emailName
+ 
+   return null
+ })
+ 
+ // Methods
+ const loadDashboardData = async () => {
+   try {
+     isLoading.value = true
+     appStore.setLoading(true)
+ 
+     // Wait for user and session to be available
+-    if (!user?.value?.id) {
+-      console.log('User not loaded yet, skipping dashboard data load')
+-      return
+-    }
++    if (!user?.value?.id) {
++      console.log('User not loaded yet, skipping dashboard data load')
++      return
++    }
++    const sessionReady = await ensureSupabaseSession()
++    if (!sessionReady) {
++      console.log('Supabase session not ready, skipping data fetch')
++      return
++    }
+ 
+     // Load user stats
+     await Promise.all([
+       loadStats(),
+       loadRecentActivity()
+     ])
+     
+   } catch (error) {
+     console.error('Erro ao carregar dados do dashboard:', error)
+     toast.error('Erro ao carregar dados do dashboard')
+   } finally {
+     isLoading.value = false
+     appStore.setLoading(false)
+   }
+ }
+ 
+ const loadStats = async () => {
+   try {
+     const userId = user.value?.id
+     if (!userId) return
+     
+     // Load documents count
+     const { count: documentsCount } = await supabase
+       .from('documents')
+       .select('*', { count: 'exact', head: true })
+       .eq('user_id', userId)
+     
+     // Load summaries count
+     const { count: summariesCount } = await supabase
+       .from('summaries')
+       .select('*', { count: 'exact', head: true })
+       .eq('user_id', userId)
+     
+     // Load monthly usage (current month)
+     const startOfMonth = new Date()
+     startOfMonth.setDate(1)
+     startOfMonth.setHours(0, 0, 0, 0)
+     
+     const { count: monthlyCount } = await supabase
+       .from('summaries')
+       .select('*', { count: 'exact', head: true })
+       .eq('user_id', userId)
+       .gte('created_at', startOfMonth.toISOString())
+     
+     // Load storage usage
+     const { data: documents } = await supabase
+       .from('documents')
+       .select('file_size')
+       .eq('user_id', userId)
+     
+     const totalStorage = documents?.reduce((sum, doc) => sum + (doc.file_size || 0), 0) || 0
+     
+     // Update stats
+     stats.totalDocuments = documentsCount || 0
+     stats.totalSummaries = summariesCount || 0
+     stats.monthlyUsage = monthlyCount || 0
+     stats.storageUsed = totalStorage
+     
+   } catch (error) {
+     console.error('Erro ao carregar estatísticas:', error)
+   }
+ }
+ 
+ const loadRecentActivity = async () => {
+   try {
+     const userId = user.value?.id
+     if (!userId) return
+     
+     // Load recent documents and summaries
+     const { data: documents } = await supabase
+       .from('documents')
+       .select('id, name, created_at')
+       .eq('user_id', userId)
+       .order('created_at', { ascending: false })
+       .limit(3)
+     
+     const { data: summaries } = await supabase
+       .from('summaries')
+       .select('id, title, created_at, document:documents(name)')
+       .eq('user_id', userId)
+       .order('created_at', { ascending: false })
+       .limit(3)
+     
+     // Combine and sort activities
+     const activities = []
+     
+     documents?.forEach(doc => {
+       activities.push({
+         id: `doc-${doc.id}`,
+         type: 'upload',
+         title: 'Documento enviado',
+         description: doc.name,
+         createdAt: doc.created_at
+       })
+     })
+     
+     summaries?.forEach(summary => {
+       activities.push({
+         id: `summary-${summary.id}`,
+         type: 'summary',
+         title: 'Resumo gerado',
+         description: summary.title || summary.document?.name || 'Documento',
+         createdAt: summary.created_at
+       })
+     })
+     
+     // Sort by date and take latest 5
+     recentActivity.value = activities
+       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+       .slice(0, 5)
+     
+   } catch (error) {
+     console.error('Erro ao carregar atividade recente:', error)
+   }
+ }
+ 
+ // Watch for user changes
+-watch(() => user?.value?.id, (newUserId) => {
+-  if (newUserId) {
+-    loadDashboardData()
+-  }
+-}, { immediate: true })
++watch(() => user?.value?.id, async (newUserId) => {
++  if (newUserId) {
++    await ensureSupabaseSession()
++    await loadDashboardData()
++  }
++}, { immediate: true })
+ 
+ // Lifecycle
+-onMounted(() => {
+-  // Try to load data immediately if user is already available
+-  if (user?.value?.id) {
+-    loadDashboardData()
+-  }
+-})
++onMounted(async () => {
++  // Aplicar token assim que possível e carregar dados
++  await ensureSupabaseSession()
++  if (user?.value?.id) {
++    await loadDashboardData()
++  }
++})
 const formatStorage = (bytes) => {
   if (bytes === 0) return '0 B'
   
@@ -409,9 +493,19 @@ const handleUploadComplete = () => {
   toast.success('Upload concluído com sucesso!')
 }
 
+// Watch for user changes
+watch(() => user?.value?.id, (newUserId) => {
+  if (newUserId) {
+    loadDashboardData()
+  }
+}, { immediate: true })
+
 // Lifecycle
 onMounted(() => {
-  loadDashboardData()
+  // Try to load data immediately if user is already available
+  if (user?.value?.id) {
+    loadDashboardData()
+  }
 })
 </script>
 

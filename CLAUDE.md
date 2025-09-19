@@ -10,16 +10,22 @@ SintetizaDoc is a Vue.js 3 SaaS application for intelligent document summarizati
 
 ```bash
 # Development
-npm run dev          # Start development server on port 3000
+npm run dev          # Start development server on port 3012
 npm run build        # Build for production
 npm run preview      # Preview production build
 
 # Code Quality
 npm run lint         # Run ESLint
 npm run format       # Run Prettier formatting
+
+# Testing
+npm run test         # Run unit tests with Vitest
+npm run test:ui      # Run tests with UI
+npm run test:run     # Run tests once
+npm run test:coverage # Run tests with coverage report
 ```
 
-Note: The project uses Vite as the build tool and runs on port 3000 (not the default 5173).
+Note: The project uses Vite as the build tool and runs on port 3012 (configured in vite.config.js).
 
 ## Architecture Overview
 
@@ -32,16 +38,17 @@ Note: The project uses Vite as the build tool and runs on port 3000 (not the def
 - **Vue I18n** for internationalization (pt-BR/en)
 
 ### Authentication Strategy
-The application uses a **dual authentication approach**:
-- **Primary**: Clerk (social logins: Google, Apple, GitHub)
-- **Fallback**: Supabase Auth
-- Both systems are synchronized through the auth store
+The application uses **Clerk as the primary authentication system**:
+- **Clerk**: Primary authentication with social logins (Google, Apple, GitHub)
+- **Supabase**: Database and storage backend (auth system was migrated from Supabase to Clerk)
+- User data is synced between Clerk and Supabase database
+- Route guards use Clerk's `useAuth()` composable for authentication checks
 
 ### Backend Services
-- **Supabase**: Database, storage, and auth fallback
+- **Supabase**: Database, storage, and real-time subscriptions
 - **Clerk**: Primary authentication and user management
 - **Stripe**: Payment processing and subscription management
-- **OpenAI/Claude**: AI services with automatic fallback
+- **OpenAI/Claude**: AI services with automatic failover (OpenAI primary, Claude fallback)
 
 ### Key Services Architecture
 
@@ -57,41 +64,46 @@ The application uses a **dual authentication approach**:
 - Supabase Storage integration
 - Audio transcription placeholder (Whisper API planned)
 
-#### Authentication Store (`src/stores/auth.js`)
-- Manages dual auth (Clerk + Supabase)
-- User profile synchronization
-- Subscription and plan management
-- Route protection logic
+#### App Store (`src/stores/app.js`)
+- Global application state management
+- UI state (loading, sidebar, modals, notifications)
+- Theme and language management
+- File validation utilities and configuration
+- Toast notifications system
 
 ## File Organization
 
 ```
 src/
 ├── components/
+│   ├── auth/            # Clerk authentication components
 │   ├── layout/          # App layout components (Header, Footer)
 │   ├── modals/          # Modal components
 │   └── icons/           # SVG icon components
 ├── views/
-│   ├── auth/            # Authentication pages
+│   ├── auth/            # Authentication pages (SignIn, SignUp, UserProfile)
 │   ├── dashboard/       # User dashboard pages
 │   └── admin/           # Admin panel pages
-├── stores/              # Pinia stores
-├── services/            # API services and integrations
+├── stores/              # Pinia stores (app store for global state)
+├── services/            # API services (AI, Supabase, Stripe, export, file processing)
 ├── utils/               # Utility functions and constants
-└── router/              # Vue Router configuration
+├── router/              # Vue Router configuration with Clerk guards
+└── test/                # Test files (Vitest configuration)
 ```
 
 ## Configuration Details
 
 ### Vite Configuration
-- Custom path aliases for clean imports (@, @components, @views, etc.)
-- Manual chunk splitting for optimal loading
-- Development server on port 3000
+- Custom path aliases for clean imports (@, @components, @views, @stores, @services, @utils, @assets)
+- Manual chunk splitting for optimal loading (vendor, supabase, clerk, stripe, ai, utils)
+- Development server on port 3012
+- Vue I18n configuration for internationalization
 
 ### Tailwind Configuration
 - Custom color palette (primary, secondary, success, warning, error)
 - Inter font family for UI, JetBrains Mono for code
-- Custom animations and keyframes
+- Custom animations and keyframes (fade-in, slide-up, pulse-slow)
+- Tailwind plugins: forms, typography, aspect-ratio
 
 ## Environment Variables
 
@@ -104,11 +116,16 @@ Key environment variables used (create from .env.example):
 ## Route Structure
 
 - Public routes: `/`, `/funcionalidades`, `/precos`, `/contato`
-- Auth routes: `/login`, `/cadastro`, `/esqueci-senha`
+- Auth routes: `/sign-in`, `/sign-up`, `/user-profile` (Clerk components)
+- Legacy redirects: `/login` → `/sign-in`, `/cadastro` → `/sign-up`, `/register` → `/sign-up`
 - Dashboard routes: `/dashboard/*` (requires auth)
-- Admin routes: `/admin/*` (requires admin role)
+- Admin routes: `/admin/*` (requires admin role via Clerk publicMetadata)
 
-Route guards automatically handle authentication and admin access control.
+Route guards use Clerk's `useAuth()` composable and automatically handle:
+- Authentication checks with loading states
+- Guest route protection
+- Admin role verification through Clerk metadata
+- Title and meta description updates
 
 ## Development Patterns
 
@@ -119,7 +136,8 @@ Route guards automatically handle authentication and admin access control.
 
 ### State Management
 - Pinia stores use the composition pattern
-- Auth store handles both Clerk and Supabase synchronization
+- App store handles global UI state, theme, language, and notifications
+- Clerk handles authentication state directly through composables
 - Reactive state with computed properties for derived values
 
 ### Error Handling
@@ -137,10 +155,28 @@ Key tables managed through migrations:
 
 ## Testing and Quality
 
+The project uses **Vitest** for unit testing with **jsdom** environment:
+
+```bash
+npm run test         # Run all tests
+npm run test:ui      # Run tests with UI interface
+npm run test:run     # Run tests once (CI mode)
+npm run test:coverage # Run tests with coverage report
+```
+
+Test files are located in `src/test/` with setup in `src/test/setup.js`.
+
+### Current Test Status
+- Components tests: ✅ Fully working
+- Auth tests: ⚠️ Partially working (8/13 passing)
+- File upload tests: ⚠️ Some failures
+- Integration tests: ⚠️ In progress
+
 Run these commands before committing:
 ```bash
 npm run lint     # Check code style
 npm run build    # Ensure build succeeds
+npm run test     # Run tests
 ```
 
 ## Key Integration Points
@@ -159,6 +195,10 @@ npm run build    # Ensure build succeeds
 - OpenAI GPT-4o-mini for primary processing
 - Claude Haiku for fallback
 - Automatic provider switching on failures
+- Multiple summary types: standard, executive, technical, educational
+- Meeting analysis capabilities (decisions, tasks, insights)
+- Translation support (Portuguese ↔ English)
+- Text quality analysis and readability scoring
 
 ## Deployment Notes
 
@@ -166,3 +206,25 @@ npm run build    # Ensure build succeeds
 - Supabase provides backend infrastructure
 - Environment variables must be configured in deployment platform
 - Build output is optimized with chunk splitting for performance
+
+## Important Development Notes
+
+### Authentication Migration
+- The project recently migrated from Supabase Auth to Clerk
+- Legacy auth routes (`/login`, `/cadastro`) redirect to new Clerk routes
+- Some test files may still reference old auth patterns and need updates
+
+### Internationalization
+- Built-in i18n support with Vue I18n
+- Default locale: `pt-BR`, fallback: `en`
+- Messages defined in `src/main.js`
+
+### File Processing
+- Supports PDF (PDF.js), DOCX (Mammoth), TXT, and audio files
+- File size limits and type validation in app store
+- Upload functionality integrated with Supabase Storage
+
+### Toast Notifications
+- Uses Vue Toastification for user feedback
+- Configured in `src/main.js` with custom options
+- Notifications managed through app store

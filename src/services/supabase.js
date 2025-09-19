@@ -20,6 +20,17 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 })
 
+// Expor helper para definir o token de acesso (ex.: JWT do Clerk)
+export const setSupabaseAccessToken = (accessToken) => {
+  try {
+    if (accessToken) {
+      supabase.auth.setAuth(accessToken)
+    }
+  } catch (error) {
+    console.error('Erro ao configurar token de acesso no Supabase:', error)
+  }
+}
+
 // Funções utilitárias para o Supabase
 export const supabaseUtils = {
   // Upload de arquivo

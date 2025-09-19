@@ -367,7 +367,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 import { exportService } from '../services/exportService.js'
-import { useAuthStore } from '../stores/auth.js'
+import { useAuth } from '@clerk/vue'
 import { stripeService } from '../services/stripe.js'
 
 // Props
@@ -395,7 +395,7 @@ const emit = defineEmits(['close', 'export-complete'])
 
 // Composables
 const toast = useToast()
-const authStore = useAuthStore()
+const { isSignedIn, user } = useAuth()
 
 // Refs
 const selectedFormat = ref('')
@@ -488,7 +488,7 @@ const closeModal = () => {
 const selectFormat = async (format) => {
   if (!format.available) {
     // Verificar se o usuário tem plano adequado
-    const currentPlan = await stripeService.getCurrentPlan(authStore.user?.id)
+    const currentPlan = await stripeService.getCurrentPlan(user.value?.id)
     if (!stripeService.hasFeature(currentPlan.id, 'integrations')) {
       toast.warning('Este formato requer um plano PRO ou superior')
       return

@@ -52,11 +52,11 @@
           <div class="link-group">
             <h3 class="link-group-title">Produto</h3>
             <ul class="link-list">
-              <li><router-link to="/features" class="footer-link">Funcionalidades</router-link></li>
-              <li><router-link to="/pricing" class="footer-link">Preços</router-link></li>
-              <li><router-link to="/integrations" class="footer-link">Integrações</router-link></li>
-              <li><router-link to="/api" class="footer-link">API</router-link></li>
-              <li><router-link to="/changelog" class="footer-link">Novidades</router-link></li>
+              <li><router-link to="/funcionalidades" class="footer-link">Funcionalidades</router-link></li>
+              <li><router-link to="/precos" class="footer-link">Preços</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Integrações</router-link></li>
+              <li><router-link to="/contato" class="footer-link">API</router-link></li>
+              <li><router-link to="/status" class="footer-link">Status do Sistema</router-link></li>
             </ul>
           </div>
           
@@ -64,11 +64,11 @@
           <div class="link-group">
             <h3 class="link-group-title">Empresa</h3>
             <ul class="link-list">
-              <li><router-link to="/about" class="footer-link">Sobre Nós</router-link></li>
-              <li><router-link to="/blog" class="footer-link">Blog</router-link></li>
-              <li><router-link to="/careers" class="footer-link">Carreiras</router-link></li>
-              <li><router-link to="/press" class="footer-link">Imprensa</router-link></li>
-              <li><router-link to="/contact" class="footer-link">Contato</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Sobre Nós</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Blog</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Carreiras</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Imprensa</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Contato</router-link></li>
             </ul>
           </div>
           
@@ -76,10 +76,10 @@
           <div class="link-group">
             <h3 class="link-group-title">Recursos</h3>
             <ul class="link-list">
-              <li><router-link to="/help" class="footer-link">Central de Ajuda</router-link></li>
-              <li><router-link to="/docs" class="footer-link">Documentação</router-link></li>
-              <li><router-link to="/tutorials" class="footer-link">Tutoriais</router-link></li>
-              <li><router-link to="/community" class="footer-link">Comunidade</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Central de Ajuda</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Documentação</router-link></li>
+              <li><router-link to="/funcionalidades" class="footer-link">Funcionalidades</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Comunidade</router-link></li>
               <li><router-link to="/status" class="footer-link">Status</router-link></li>
             </ul>
           </div>
@@ -88,11 +88,11 @@
           <div class="link-group">
             <h3 class="link-group-title">Legal</h3>
             <ul class="link-list">
-              <li><router-link to="/privacy" class="footer-link">Privacidade</router-link></li>
-              <li><router-link to="/terms" class="footer-link">Termos de Uso</router-link></li>
-              <li><router-link to="/cookies" class="footer-link">Cookies</router-link></li>
-              <li><router-link to="/security" class="footer-link">Segurança</router-link></li>
-              <li><router-link to="/compliance" class="footer-link">Compliance</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Privacidade</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Termos de Uso</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Cookies</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Segurança</router-link></li>
+              <li><router-link to="/contato" class="footer-link">Compliance</router-link></li>
             </ul>
           </div>
         </div>
@@ -130,8 +130,8 @@
           </div>
           
           <p class="newsletter-disclaimer">
-            Ao se inscrever, você concorda com nossa 
-            <router-link to="/privacy" class="disclaimer-link">Política de Privacidade</router-link>.
+            Ao se inscrever, você concorda com nossa
+            <router-link to="/contato" class="disclaimer-link">Política de Privacidade</router-link>.
           </p>
         </form>
       </div>

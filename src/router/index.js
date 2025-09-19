@@ -1,15 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { useAuth } from '@clerk/vue'
+import { watch } from 'vue'
 
 // Importação lazy das views
 const Home = () => import('@/views/Home.vue')
 const Features = () => import('@/views/Features.vue')
 const Pricing = () => import('@/views/Pricing.vue')
 const Contact = () => import('@/views/Contact.vue')
-const Login = () => import('@/views/auth/Login.vue')
-const Register = () => import('@/views/auth/Register.vue')
-const ForgotPassword = () => import('@/views/auth/ForgotPassword.vue')
-const EmailConfirmation = () => import('@/views/auth/EmailConfirmation.vue')
+// Componentes do Clerk
+const SignInPage = () => import('@/views/auth/SignInPage.vue')
+const SignUpPage = () => import('@/views/auth/SignUpPage.vue')
+const UserProfilePage = () => import('@/views/auth/UserProfilePage.vue')
 const Dashboard = () => import('@/views/dashboard/Dashboard.vue')
 const Documents = () => import('@/views/dashboard/Documents.vue')
 const Summaries = () => import('@/views/dashboard/Summaries.vue')
@@ -58,41 +59,43 @@ const routes = [
       description: 'Entre em contato conosco para dúvidas e suporte'
     }
   },
+  // Rotas de Autenticação com Clerk
+  {
+    path: '/sign-in',
+    name: 'sign-in',
+    component: SignInPage,
+    meta: {
+      title: 'Entrar - Sintetiza Doc'
+    }
+  },
+  {
+    path: '/sign-up',
+    name: 'sign-up',
+    component: SignUpPage,
+    meta: {
+      title: 'Criar Conta - Sintetiza Doc'
+    }
+  },
+  {
+    path: '/user-profile',
+    name: 'user-profile',
+    component: UserProfilePage,
+    meta: {
+      title: 'Meu Perfil - Sintetiza Doc'
+    }
+  },
+  // Redirecionamentos das rotas antigas
   {
     path: '/login',
-    name: 'login',
-    component: Login,
-    meta: {
-      title: 'Login - Sintetiza Doc',
-      requiresGuest: true
-    }
+    redirect: '/sign-in'
   },
   {
     path: '/cadastro',
-    name: 'register',
-    component: Register,
-    meta: {
-      title: 'Cadastro - Sintetiza Doc',
-      requiresGuest: true
-    }
+    redirect: '/sign-up'
   },
   {
-    path: '/esqueci-senha',
-    name: 'forgot-password',
-    component: ForgotPassword,
-    meta: {
-      title: 'Recuperar Senha - Sintetiza Doc',
-      requiresGuest: true
-    }
-  },
-  {
-    path: '/email-confirmation',
-    name: 'email-confirmation',
-    component: EmailConfirmation,
-    meta: {
-      title: 'Confirmação de Email - Sintetiza Doc',
-      requiresGuest: true
-    }
+    path: '/register',
+    redirect: '/sign-up'
   },
   {
     path: '/dashboard',
@@ -202,11 +205,19 @@ const router = createRouter({
 
 // Guards de navegação
 router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
+  // Aguardar carregamento do Clerk
+  const { isLoaded, isSignedIn, user } = useAuth()
   
-  // Aguardar inicialização do auth store se necessário
-  if (!authStore.initialized) {
-    await authStore.initialize()
+  if (!isLoaded.value) {
+    // Aguardar o Clerk carregar
+    await new Promise(resolve => {
+      const unwatch = watch(isLoaded, (loaded) => {
+        if (loaded) {
+          unwatch()
+          resolve()
+        }
+      })
+    })
   }
   
   // Atualizar título da página
@@ -223,21 +234,24 @@ router.beforeEach(async (to, from, next) => {
   }
   
   // Verificar autenticação
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'login', query: { redirect: to.fullPath } })
+  if (to.meta.requiresAuth && !isSignedIn.value) {
+    next({ name: 'sign-in', query: { redirect: to.fullPath } })
     return
   }
   
   // Verificar se usuário já está logado (para páginas de guest)
-  if (to.meta.requiresGuest && authStore.isAuthenticated) {
+  if (to.meta.requiresGuest && isSignedIn.value) {
     next({ name: 'dashboard' })
     return
   }
   
-  // Verificar permissões de admin
-  if (to.meta.requiresAdmin && !authStore.isAdmin) {
-    next({ name: 'dashboard' })
-    return
+  // Verificar se é admin (usando Clerk metadata)
+  if (to.meta.requiresAdmin) {
+    const isAdmin = user.value?.publicMetadata?.role === 'admin'
+    if (!isAdmin) {
+      next({ name: 'dashboard' })
+      return
+    }
   }
   
   next()

@@ -28,15 +28,21 @@
       <div 
         v-for="plan in plans" 
         :key="plan.id"
-        :class="{ 
+        :class="{
           'plan-popular': plan.popular,
-          'plan-current': currentPlan === plan.id
+          'plan-current': currentPlan === plan.id,
+          'disabled': plan.disabled
         }"
         class="plan-card"
       >
         <!-- Popular Badge -->
         <div v-if="plan.popular" class="popular-badge">
           Mais popular
+        </div>
+
+        <!-- Coming Soon Badge -->
+        <div v-if="plan.disabled" class="coming-soon-badge">
+          Em breve
         </div>
         
         <!-- Plan Header -->
@@ -103,7 +109,14 @@
           >
             Começar grátis
           </button>
-          <button 
+          <button
+            v-else-if="plan.disabled"
+            disabled
+            class="btn-disabled"
+          >
+            Em breve
+          </button>
+          <button
             v-else
             @click="selectPlan(plan.id)"
             :disabled="isProcessing"
@@ -171,7 +184,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuth } from '@clerk/vue'
 import { stripeService } from '@/services/stripe'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
@@ -211,7 +224,7 @@ const BuildingIcon = {
 }
 
 // Composables
-const authStore = useAuthStore()
+const { isSignedIn, user } = useAuth()
 const toast = useToast()
 const router = useRouter()
 
@@ -273,6 +286,7 @@ const plans = [
     monthlyPrice: 4990, // R$ 49.90
     annualPrice: 47904, // R$ 479.04 (20% desconto)
     popular: false,
+    disabled: true,
     features: [
       'Tudo do plano Básico',
       'Resumos técnicos avançados',
@@ -286,29 +300,6 @@ const plans = [
       documents: 200,
       summaries: 200,
       storage: 2 * 1024 * 1024 * 1024 // 2GB
-    }
-  },
-  {
-    id: 'enterprise',
-    name: 'Empresarial',
-    description: 'Para grandes empresas',
-    icon: BuildingIcon,
-    monthlyPrice: 9990, // R$ 99.90
-    annualPrice: 95904, // R$ 959.04 (20% desconto)
-    popular: false,
-    features: [
-      'Tudo do plano Profissional',
-      'Processamento em lote',
-      'Integrações customizadas',
-      'Gerenciamento de equipes',
-      'Relatórios avançados',
-      'SLA garantido',
-      'Suporte dedicado 24/7'
-    ],
-    limits: {
-      documents: 'unlimited',
-      summaries: 'unlimited',
-      storage: 10 * 1024 * 1024 * 1024 // 10GB
     }
   }
 ]
@@ -364,7 +355,7 @@ const getAnnualSavings = (plan) => {
 }
 
 const getActionLabel = (planId) => {
-  if (!authStore.isAuthenticated) {
+  if (!isSignedIn.value) {
     return 'Começar teste grátis'
   }
   
@@ -381,7 +372,7 @@ const getActionLabel = (planId) => {
 
 // Methods
 const loadCurrentPlan = async () => {
-  if (!authStore.isAuthenticated) return
+  if (!isSignedIn.value) return
   
   try {
     const planInfo = await stripeService.getCurrentPlan()
@@ -392,7 +383,7 @@ const loadCurrentPlan = async () => {
 }
 
 const selectFreePlan = () => {
-  if (!authStore.isAuthenticated) {
+  if (!isSignedIn.value) {
     router.push('/auth/register')
     return
   }
@@ -401,7 +392,7 @@ const selectFreePlan = () => {
 }
 
 const selectPlan = async (planId) => {
-  if (!authStore.isAuthenticated) {
+  if (!isSignedIn.value) {
     // Store selected plan and redirect to register
     localStorage.setItem('selectedPlan', planId)
     router.push('/auth/register')
@@ -453,7 +444,7 @@ onMounted(() => {
   
   // Check if user came from registration with selected plan
   const selectedPlan = localStorage.getItem('selectedPlan')
-  if (selectedPlan && authStore.isAuthenticated) {
+  if (selectedPlan && isSignedIn.value) {
     localStorage.removeItem('selectedPlan')
     selectPlan(selectedPlan)
   }
@@ -522,7 +513,7 @@ onMounted(() => {
 }
 
 .plans-grid {
-  @apply max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20;
+  @apply max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-20;
 }
 
 .plan-card {
@@ -539,6 +530,18 @@ onMounted(() => {
 
 .popular-badge {
   @apply absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary-600 text-white px-4 py-2 rounded-full text-sm font-medium;
+}
+
+.coming-soon-badge {
+  @apply absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gray-500 text-white px-4 py-2 rounded-full text-sm font-medium;
+}
+
+.plan-card.disabled {
+  @apply opacity-60;
+}
+
+.btn-disabled {
+  @apply w-full px-6 py-3 bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 rounded-lg cursor-not-allowed font-medium;
 }
 
 .plan-header {

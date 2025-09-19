@@ -1,16 +1,20 @@
 import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
 
-// Configuração das APIs
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true // Para uso no frontend
-})
+// SEGURANÇA: As chaves de API devem ser movidas para o backend
+// Este arquivo deve ser refatorado para fazer chamadas para uma API backend
+// que gerencia as chaves de forma segura
 
-const anthropic = new Anthropic({
+// TEMPORÁRIO: Configuração das APIs (MOVER PARA BACKEND)
+const openai = import.meta.env.VITE_OPENAI_API_KEY ? new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true // INSEGURO: Apenas para desenvolvimento
+}) : null
+
+const anthropic = import.meta.env.VITE_ANTHROPIC_API_KEY ? new Anthropic({
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true
-})
+  dangerouslyAllowBrowser: true // INSEGURO: Apenas para desenvolvimento
+}) : null
 
 // Prompts para diferentes tipos de resumo
 const SUMMARY_PROMPTS = {
@@ -57,9 +61,14 @@ const MEETING_ANALYSIS_PROMPTS = {
 export const aiService = {
   // Gerar resumo usando OpenAI
   async generateSummaryOpenAI(text, type = 'standard', options = {}) {
+    // SEGURANÇA: Verificar se a instância OpenAI está disponível
+    if (!openai) {
+      throw new Error('OpenAI não configurado. Chaves de API devem ser movidas para o backend.')
+    }
+
     try {
-      const prompt = SUMMARY_PROMPTS[type] || SUMMARY_PROMPTS.standard
-      
+      const prompt = options.customPrompt || SUMMARY_PROMPTS[type] || SUMMARY_PROMPTS.standard
+
       const response = await openai.chat.completions.create({
         model: options.model || 'gpt-4o-mini',
         messages: [
@@ -87,9 +96,14 @@ export const aiService = {
   
   // Gerar resumo usando Claude
   async generateSummaryClaude(text, type = 'standard', options = {}) {
+    // SEGURANÇA: Verificar se a instância Anthropic está disponível
+    if (!anthropic) {
+      throw new Error('Claude/Anthropic não configurado. Chaves de API devem ser movidas para o backend.')
+    }
+
     try {
-      const prompt = SUMMARY_PROMPTS[type] || SUMMARY_PROMPTS.standard
-      
+      const prompt = options.customPrompt || SUMMARY_PROMPTS[type] || SUMMARY_PROMPTS.standard
+
       const response = await anthropic.messages.create({
         model: options.model || 'claude-3-haiku-20240307',
         max_tokens: options.maxTokens || 1000,
@@ -160,9 +174,14 @@ export const aiService = {
   
   // Traduzir texto
   async translateText(text, targetLanguage = 'en', sourceLanguage = 'pt') {
+    // SEGURANÇA: Verificar se a instância OpenAI está disponível
+    if (!openai) {
+      throw new Error('OpenAI não configurado para tradução. Chaves de API devem ser movidas para o backend.')
+    }
+
     try {
       const prompt = `Traduza o seguinte texto de ${sourceLanguage} para ${targetLanguage}. Mantenha o tom e o contexto original:\n\n${text}`
-      
+
       const response = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [

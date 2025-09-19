@@ -167,8 +167,9 @@
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'vue-toastification'
 import { fileProcessorService } from '../services/fileProcessor.js'
-import { useAuthStore } from '../stores/auth.js'
+import { useAuth, useUser } from '@clerk/vue'
 import { stripeService } from '../services/stripe.js'
+import { setSupabaseAccessToken } from '../services/supabase.js'
 
 // Props
 const props = defineProps({
@@ -192,7 +193,10 @@ const emit = defineEmits(['files-processed', 'file-error', 'processing-start', '
 
 // Composables
 const toast = useToast()
-const authStore = useAuthStore()
+
+// Estados de autenticação do Clerk
+const { isLoaded: authLoaded, isSignedIn, userId, getToken } = useAuth()
+const { isLoaded: userLoaded, user } = useUser()
 
 // Refs
 const fileInput = ref(null)
@@ -251,8 +255,29 @@ const handleFileSelect = (e) => {
 
 const addFiles = async (newFiles) => {
   try {
-    // Verificar limites do plano
-    const currentPlan = await stripeService.getCurrentPlan(authStore.user?.id)
+    if (!authLoaded.value || !userLoaded.value) {
+      toast.info('Carregando sistema de autenticação...')
+      return
+    }
+
+    if (!isSignedIn.value || !userId?.value || !user?.value?.id) {
+      // Removido log temporário de debug
+      toast.error('Você precisa estar logado para fazer upload de arquivos')
+      return
+    }
+
+    // Garantir token do Clerk aplicado ao Supabase
+    const token = await getToken({ template: 'supabase' })
+    if (!token) {
+      // Removido log temporário de aviso
+      toast.error('Falha ao obter token de sessão. Tente novamente.')
+      return
+    }
+    setSupabaseAccessToken(token)
+
+    // Removidos logs temporários de debug de autenticação e plano
+
+    const currentPlan = await stripeService.getCurrentPlan(userId.value)
     
     for (const file of newFiles) {
       try {
@@ -264,7 +289,7 @@ const addFiles = async (newFiles) => {
         if (!stripeService.isFormatSupported(currentPlan.id, fileExtension)) {
           throw new Error(`Formato ${fileExtension.toUpperCase()} não suportado no seu plano atual`)
         }
-        
+
         // Verificar tamanho máximo do plano
         if (file.size > currentPlan.limits.maxFileSize) {
           throw new Error(`Arquivo muito grande para o seu plano. Máximo: ${formatFileSize(currentPlan.limits.maxFileSize)}`)
@@ -283,10 +308,12 @@ const addFiles = async (newFiles) => {
           validation
         })
       } catch (error) {
+        // Removido log temporário; manter feedback ao usuário
         toast.error(`Erro no arquivo ${file.name}: ${error.message}`)
       }
     }
   } catch (error) {
+    // Removido log temporário; manter feedback ao usuário
     toast.error(`Erro ao adicionar arquivos: ${error.message}`)
   }
 }
@@ -305,13 +332,33 @@ const clearFiles = () => {
 }
 
 const processFiles = async () => {
-  if (isUploading.value || files.value.length === 0) return
-  
   try {
+    if (!authLoaded.value || !userLoaded.value) {
+      toast.info('Carregando sistema de autenticação...')
+      return
+    }
+
+    if (!isSignedIn.value || !userId?.value || !user?.value?.id) {
+      // Removido log temporário de debug
+      toast.error('Você precisa estar logado para processar arquivos')
+      return
+    }
+
+    // Garantir token do Clerk aplicado ao Supabase
+    const token = await getToken({ template: 'supabase' })
+    if (!token) {
+      // Removido log temporário de aviso
+      toast.error('Falha ao obter token de sessão. Tente novamente.')
+      return
+    }
+    setSupabaseAccessToken(token)
+
+    // Removidos logs temporários de debug de autenticação
+
     isUploading.value = true
     hasError.value = false
     emit('processing-start')
-    
+
     const results = []
     
     for (let i = 0; i < files.value.length; i++) {
@@ -335,12 +382,12 @@ const processFiles = async () => {
         if (props.fileType === 'documents') {
           result = await fileProcessorService.processAndUploadDocument(
             fileItem.file,
-            authStore.user?.id
+            user.value.id
           )
         } else {
           result = await fileProcessorService.transcribeAudio(
             fileItem.file,
-            authStore.user?.id
+            user.value.id
           )
         }
         

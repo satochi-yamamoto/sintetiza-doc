@@ -1,0 +1,508 @@
+[
+  {
+    "id": "TC001",
+    "title": "User Registration with Email",
+    "description": "Verify that a user can register successfully using email with validation and confirmation email received.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the registration page"
+      },
+      {
+        "type": "action",
+        "description": "Input valid email and strong password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Check that a confirmation email is sent to the user"
+      },
+      {
+        "type": "action",
+        "description": "Click on the confirmation link in the email"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that user account is activated and redirect to login or dashboard page"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "User Registration with Social Login",
+    "description": "Ensure user can register and login via social login providers successfully.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the login page"
+      },
+      {
+        "type": "action",
+        "description": "Click on available social login option (e.g. Google, Facebook)"
+      },
+      {
+        "type": "action",
+        "description": "Authenticate via social provider"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user is logged in and redirected to dashboard"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Password Validation and Compromised Detection",
+    "description": "Verify that password inputs are validated for strength and checked against compromised password database within 2 seconds.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to register or update profile with a weak password"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify rejection and message indicating password strength requirements"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to use a known compromised password"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify rejection and alert message within 2 seconds"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Multi-Factor Authentication Setup and Enforcement",
+    "description": "Verify that users can enable MFA and are required to provide it on login.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login to user account"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to security settings and enable MFA"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify MFA setup instructions and success message"
+      },
+      {
+        "type": "action",
+        "description": "Logout and login again"
+      },
+      {
+        "type": "action",
+        "description": "Provide MFA code when prompted"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify successful login only after correct MFA verification"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Document Upload with Supported File Types and Validation",
+    "description": "Validate that users can upload PDF, DOCX, TXT, and audio files with size limits and preview feature.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to document upload interface"
+      },
+      {
+        "type": "action",
+        "description": "Upload document in each supported format under 10MB"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify upload completes within 30 seconds and preview is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Attempt upload of unsupported file format"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify upload is rejected with appropriate error message"
+      },
+      {
+        "type": "action",
+        "description": "Attempt upload of file larger than allowed size per plan"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify upload is rejected with file size error"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "AI Summary Generation Success Flow",
+    "description": "Verify successful generation of multiple summary types using OpenAI GPT-4 and fallback to Anthropic Claude if needed.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Upload a supported document under 50 pages"
+      },
+      {
+        "type": "action",
+        "description": "Select summary type (executive, technical, educational, topics, narrative)"
+      },
+      {
+        "type": "action",
+        "description": "Submit document for processing"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify summary is generated within 45 seconds"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify summary quality and format corresponding to the selected style"
+      },
+      {
+        "type": "action",
+        "description": "Simulate failure of primary AI provider"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify fallback to alternative AI provider occurs automatically"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user receives summary without detectable degradation in quality or delay"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Summary Regeneration and Parameter Adjustment",
+    "description": "Ensure user can regenerate summaries and adjust parameters after initial result.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Upload document and generate initial summary"
+      },
+      {
+        "type": "action",
+        "description": "Use UI to adjust summary parameters (length, style)"
+      },
+      {
+        "type": "action",
+        "description": "Request summary regeneration"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify new summary reflects updated parameters and is delivered within expected time"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Export Summary in Multiple Formats",
+    "description": "Validate exporting summaries in Word, Excel, PowerPoint, PDF, Markdown, Notion, Trello, and HTML email formats preserves formatting and metadata within 10 seconds.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Generate a valid summary for testing"
+      },
+      {
+        "type": "action",
+        "description": "Export summary sequentially in each supported format"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify each exported file preserves summary formatting and metadata"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify export completes within 10 seconds per format"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Subscription Plan Limits Enforcement",
+    "description": "Verify usage limits and upload size restrictions are enforced per subscription plan with notifications on limit reached.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a user on Free plan"
+      },
+      {
+        "type": "action",
+        "description": "Upload documents and generate summaries until plan limit is exceeded"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify system restricts further usage and displays limit reached notification"
+      },
+      {
+        "type": "action",
+        "description": "Upgrade to Basic or Professional plan"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify increased upload size and usage limits are applied"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Payment Processing and Subscription Upgrade",
+    "description": "Validate subscription payments via Stripe and successful upgrade of user plan.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login and navigate to subscription management"
+      },
+      {
+        "type": "action",
+        "description": "Select a paid plan and initiate payment"
+      },
+      {
+        "type": "action",
+        "description": "Input valid payment information and submit"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payment is processed successfully via Stripe"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user subscription plan is updated accordingly"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "API Backend Response Time and Uptime",
+    "description": "Ensure backend API response time is under 500ms at 95th percentile and system uptime is above 99.5%.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate 1000 API requests with typical load"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify 95th percentile response time is below 500ms"
+      },
+      {
+        "type": "action",
+        "description": "Check system monitoring status page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify uptime in reporting period is over 99.5%"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "LGPD Compliance: Consent and Data Deletion",
+    "description": "Verify explicit user consent is required and user can request data deletion in compliance with LGPD.",
+    "category": "compliance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Register a new user and verify that consent checkbox is required before proceeding"
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm registration fails if consent is not given"
+      },
+      {
+        "type": "action",
+        "description": "Login as registered user, navigate to privacy settings"
+      },
+      {
+        "type": "action",
+        "description": "Request account/data deletion"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify confirmation prompt and successful deletion of user data"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Drag & Drop Document Upload UI Interaction",
+    "description": "Validate drag and drop functionality for document upload including visual feedback and error handling.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Drag supported file over drop zone"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify visual highlight/feedback on drop zone"
+      },
+      {
+        "type": "action",
+        "description": "Drop the file on drop zone"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify file upload starts and preview appears"
+      },
+      {
+        "type": "action",
+        "description": "Drag unsupported file over drop zone"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify rejection with appropriate UI error message"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Multi-language UI and Notification Verification",
+    "description": "Ensure the interface and notifications correctly support Portuguese and English languages and can be switched dynamically.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to settings and switch UI language to Portuguese"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all UI elements and notifications display in Portuguese"
+      },
+      {
+        "type": "action",
+        "description": "Switch UI language to English"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all UI elements and notifications display in English"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "User Profile and Plan Management",
+    "description": "Verify user can view and edit profile details, view current subscription plan, and access usage history from dashboard.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login and navigate to user dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify profile details are displayed correctly"
+      },
+      {
+        "type": "action",
+        "description": "Edit profile information and save changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify changes persist after refresh"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify current subscription plan and usage statistics are visible"
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Audio Document Transcription Processing",
+    "description": "Test uploading audio files and successful transcription by AI with accurate text extraction.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Upload supported audio file within allowed size"
+      },
+      {
+        "type": "action",
+        "description": "Submit for processing"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify transcription text output appears accurately within expected time"
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Error Handling: AI Service Downtime",
+    "description": "Verify system behavior and user feedback when both AI providers are unavailable.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate downtime of OpenAI GPT-4 and Anthropic Claude services"
+      },
+      {
+        "type": "action",
+        "description": "Submit document for summary generation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user receives informative error message with retry suggestion"
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Recovery Process: Backup and Data Restoration",
+    "description": "Verify that backup and recovery policies successfully restore user data after incident.",
+    "category": "performance",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate data loss scenario"
+      },
+      {
+        "type": "action",
+        "description": "Trigger recovery process from backups"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user documents, profiles, and subscription data are fully restored"
+      }
+    ]
+  }
+]

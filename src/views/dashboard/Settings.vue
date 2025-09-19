@@ -504,7 +504,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuth } from '@clerk/vue'
 import { useAppStore } from '@/stores/app'
 import { supabase } from '@/services/supabase'
 import { stripeService } from '@/services/stripe'
@@ -534,7 +534,7 @@ const ShieldIcon = {
 }
 
 // Composables
-const authStore = useAuthStore()
+const { isSignedIn, user } = useAuth()
 const appStore = useAppStore()
 const toast = useToast()
 const router = useRouter()
@@ -597,7 +597,7 @@ const tabs = [
 // Methods
 const loadUserData = async () => {
   try {
-    const userId = authStore.user?.id
+    const userId = user.value?.id
     if (!userId) return
     
     // Load user profile
@@ -609,7 +609,7 @@ const loadUserData = async () => {
     
     if (profile) {
       accountForm.name = profile.name || ''
-      accountForm.email = authStore.user.email || ''
+      accountForm.email = user.value?.primaryEmailAddress?.emailAddress || ''
       accountForm.phone = profile.phone || ''
       accountForm.company = profile.company || ''
       
@@ -653,7 +653,7 @@ const updateAccount = async () => {
     const { error } = await supabase
       .from('profiles')
       .upsert({
-        id: authStore.user.id,
+        id: user.value?.id,
         name: accountForm.name,
         phone: accountForm.phone,
         company: accountForm.company,
@@ -714,7 +714,7 @@ const updatePreferences = async () => {
     const { error } = await supabase
       .from('profiles')
       .upsert({
-        id: authStore.user.id,
+        id: user.value?.id,
         preferences: preferences,
         updated_at: new Date().toISOString()
       })
@@ -743,7 +743,7 @@ const updateNotifications = async () => {
     const { error } = await supabase
       .from('profiles')
       .upsert({
-        id: authStore.user.id,
+        id: user.value?.id,
         notifications: notifications,
         updated_at: new Date().toISOString()
       })
@@ -807,8 +807,8 @@ const deleteAllData = async () => {
   
   try {
     // Delete all user data
-    await supabase.from('summaries').delete().eq('user_id', authStore.user.id)
-    await supabase.from('documents').delete().eq('user_id', authStore.user.id)
+    await supabase.from('summaries').delete().eq('user_id', user.value?.id)
+    await supabase.from('documents').delete().eq('user_id', user.value?.id)
     
     toast.success('Todos os dados foram excluídos')
     router.push('/dashboard')
@@ -832,7 +832,7 @@ const deleteAccount = async () => {
   try {
     // Delete account and all data
     await deleteAllData()
-    await authStore.signOut()
+    // Redirect to sign out (Clerk handles this automatically)
     
     toast.success('Conta excluída com sucesso')
     router.push('/')
