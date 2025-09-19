@@ -178,8 +178,10 @@ app.use(clerkPlugin, {
   afterSignOutUrl: '/',
   signInUrl: '/sign-in',
   signUpUrl: '/sign-up',
-  afterSignInUrl: '/dashboard',
-  afterSignUpUrl: '/dashboard',
+  // afterSignInUrl: '/dashboard',
+  // afterSignUpUrl: '/dashboard',
+  fallbackRedirectUrl: '/dashboard',
+  // forceRedirectUrl: '/dashboard', // use se quiser forçar sempre o dashboard
   appearance: {
     variables: {
       colorPrimary: '#4f46e5',

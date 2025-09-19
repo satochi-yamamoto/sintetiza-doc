@@ -205,7 +205,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useAuth } from '@clerk/vue'
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useAuth, useUser } from '@clerk/vue'
 import { useAppStore } from '../../stores/app.js'
 import { useToast } from 'vue-toastification'
 
@@ -214,7 +214,8 @@ const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
 const toast = useToast()
-const { isSignedIn, user, isLoaded } = useAuth()
+const { isSignedIn, isLoaded } = useAuth()
+const { user } = useUser()
 
 // Debug logs para autenticação
 console.log('🔍 AppHeader - Estado inicial de autenticação:', {

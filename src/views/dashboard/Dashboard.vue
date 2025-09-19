@@ -66,7 +66,7 @@
       <div class="stat-card">
         <div class="stat-icon storage">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 16V8C20.9996 7.64928 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64928 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 = 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 = 21.9979C12.3511 21.9979 12.696 21.9055 13 = 21.73L20 = 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 = 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 16V8C20.9996 7.64928 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69626 6.44536 3.44398 6.69751 3.26846 7.00116C3.09294 7.30481 3.00036 7.64928 3 8V16C3.00036 16.3507 3.09294 16.6952 3.26846 16.9988C3.44398 17.3025 3.69626 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div class="stat-content">
@@ -84,7 +84,7 @@
         <button @click="showUploadModal = true" class="action-card upload">
           <div class="action-icon">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 = 19.5304 3 = 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -212,51 +212,47 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
--import { useAuth } from '@clerk/vue'
-+import { useAuth, useUser } from '@clerk/vue'
- import { useAppStore } from '@/stores/app'
--import { supabase } from '@/services/supabase'
-+import supabase, { setSupabaseAccessToken } from '@/services/supabase'
- import { useToast } from 'vue-toastification'
- import FileUpload from '@/components/FileUpload.vue'
- 
--// Composables
--const { isSignedIn, user } = useAuth()
-+// Composables
-+const { isLoaded: authLoaded, isSignedIn, getToken } = useAuth()
-+const { isLoaded: userLoaded, user } = useUser()
- const appStore = useAppStore()
- const toast = useToast()
- 
- // Refs
- const showUploadModal = ref(false)
- const isLoading = ref(false)
- 
- // Data
- const stats = reactive({
-   totalDocuments: 0,
-   totalSummaries: 0,
-   monthlyUsage: 0,
-   storageUsed: 0
- })
- 
- const recentActivity = ref([])
- 
-+// Garantir que o token do Clerk esteja aplicado ao cliente Supabase
-+const ensureSupabaseSession = async () => {
-+  try {
-+    if (!authLoaded?.value || !userLoaded?.value) return false
-+    if (!isSignedIn?.value) return false
-+    const token = await getToken({ template: 'supabase' })
-+    if (!token) return false
-+    setSupabaseAccessToken(token)
-+    return true
-+  } catch (err) {
-+    // Silenciado para evitar ruído em produção
-+    return false
-+  }
-+}
-+
+import { useAuth, useUser } from '@clerk/vue'
+import { useAppStore } from '@/stores/app'
+import supabase, { setSupabaseAccessToken } from '@/services/supabase'
+import { useToast } from 'vue-toastification'
+import FileUpload from '@/components/FileUpload.vue'
+
+// Composables
+const { isLoaded: authLoaded, isSignedIn, getToken } = useAuth()
+const { isLoaded: userLoaded, user } = useUser()
+const appStore = useAppStore()
+const toast = useToast()
+
+// Refs
+const showUploadModal = ref(false)
+const isLoading = ref(false)
+
+// Data
+const stats = reactive({
+  totalDocuments: 0,
+  totalSummaries: 0,
+  monthlyUsage: 0,
+  storageUsed: 0
+})
+
+const recentActivity = ref([])
+
+// Garantir que o token do Clerk esteja aplicado ao cliente Supabase
+const ensureSupabaseSession = async () => {
+  try {
+    if (!authLoaded?.value || !userLoaded?.value) return false
+    if (!isSignedIn?.value) return false
+    const token = await getToken({ template: 'supabase' })
+    if (!token) return false
+    setSupabaseAccessToken(token)
+    return true
+  } catch (err) {
+    // Silenciado para evitar ruído em produção
+    return false
+  }
+}
+
  // Computed
  const currentPlan = computed(() => {
    return user?.value?.publicMetadata?.plan || 'Gratuito'
@@ -301,19 +297,15 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
      appStore.setLoading(true)
  
      // Wait for user and session to be available
--    if (!user?.value?.id) {
--      console.log('User not loaded yet, skipping dashboard data load')
--      return
--    }
-+    if (!user?.value?.id) {
-+      console.log('User not loaded yet, skipping dashboard data load')
-+      return
-+    }
-+    const sessionReady = await ensureSupabaseSession()
-+    if (!sessionReady) {
-+      console.log('Supabase session not ready, skipping data fetch')
-+      return
-+    }
+    if (!user?.value?.id) {
+      console.log('User not loaded yet, skipping dashboard data load')
+      return
+    }
+    const sessionReady = await ensureSupabaseSession()
+    if (!sessionReady) {
+      console.log('Supabase session not ready, skipping data fetch')
+      return
+    }
  
      // Load user stats
      await Promise.all([
@@ -431,32 +423,21 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
  }
  
  // Watch for user changes
--watch(() => user?.value?.id, (newUserId) => {
--  if (newUserId) {
--    loadDashboardData()
--  }
--}, { immediate: true })
-+watch(() => user?.value?.id, async (newUserId) => {
-+  if (newUserId) {
-+    await ensureSupabaseSession()
-+    await loadDashboardData()
-+  }
-+}, { immediate: true })
- 
- // Lifecycle
--onMounted(() => {
--  // Try to load data immediately if user is already available
--  if (user?.value?.id) {
--    loadDashboardData()
--  }
--})
-+onMounted(async () => {
-+  // Aplicar token assim que possível e carregar dados
-+  await ensureSupabaseSession()
-+  if (user?.value?.id) {
-+    await loadDashboardData()
-+  }
-+})
+watch(() => user?.value?.id, async (newUserId) => {
+  if (newUserId) {
+    await ensureSupabaseSession()
+    await loadDashboardData()
+  }
+}, { immediate: true })
+
+// Lifecycle
+onMounted(async () => {
+  // Aplicar token assim que possível e carregar dados
+  await ensureSupabaseSession()
+  if (user?.value?.id) {
+    await loadDashboardData()
+  }
+})
 const formatStorage = (bytes) => {
   if (bytes === 0) return '0 B'
   
@@ -494,17 +475,18 @@ const handleUploadComplete = () => {
 }
 
 // Watch for user changes
-watch(() => user?.value?.id, (newUserId) => {
+watch(() => user?.value?.id, async (newUserId) => {
   if (newUserId) {
-    loadDashboardData()
+    await ensureSupabaseSession()
+    await loadDashboardData()
   }
 }, { immediate: true })
 
 // Lifecycle
-onMounted(() => {
-  // Try to load data immediately if user is already available
+onMounted(async () => {
+  await ensureSupabaseSession()
   if (user?.value?.id) {
-    loadDashboardData()
+    await loadDashboardData()
   }
 })
 </script>
