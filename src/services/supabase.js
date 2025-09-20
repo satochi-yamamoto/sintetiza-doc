@@ -21,14 +21,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 })
 
 // Expor helper para definir o token de acesso (ex.: JWT do Clerk)
-export const setSupabaseAccessToken = (accessToken) => {
-  try {
-    if (accessToken) {
-      supabase.auth.setAuth(accessToken)
-    }
-  } catch (error) {
-    console.error('Erro ao configurar token de acesso no Supabase:', error)
-  }
+export function setSupabaseAccessToken(accessToken) {
+  supabase.auth.setAuth(accessToken);
 }
 
 // Funções utilitárias para o Supabase
@@ -260,3 +254,64 @@ export const supabaseRealtime = {
 }
 
 export default supabase
+
+// Centraliza a autenticação Clerk → Supabase sem depender de JWT template
+export async function ensureSupabaseAuth(getTokenLike) {
+  try {
+    const callGetToken = async (opts) => {
+      if (!getTokenLike) return null;
+      const fn = typeof getTokenLike === 'function' ? getTokenLike : getTokenLike?.value;
+      if (!fn) return null;
+      return await fn(opts);
+    };
+
+    // 1) Abordagem recomendada: usar o session token padrão do Clerk (sem template)
+    let token = await callGetToken();
+
+    // Se token vier nulo, tentar usar template do Clerk informado por ENV
+    if (!token) {
+      const envTemplate = (import.meta?.env?.VITE_CLERK_JWT_TEMPLATE || '').trim();
+      if (envTemplate) {
+        try {
+          token = await callGetToken({ template: envTemplate });
+          if (!token) console.debug('[ensureSupabaseAuth] getToken com template de env retornou vazio');
+        } catch (eT) {
+          console.debug('[ensureSupabaseAuth] falha ao obter token com template de env:', eT);
+        }
+      } else {
+        // Fallback comum quando o projeto define template "supabase" no Clerk
+        try {
+          token = await callGetToken({ template: 'supabase' });
+          if (!token) console.debug('[ensureSupabaseAuth] getToken com template "supabase" retornou vazio');
+        } catch (eTS) {
+          console.debug('[ensureSupabaseAuth] falha ao obter token com template "supabase":', eTS);
+        }
+      }
+    }
+
+    // Se ainda não houver token, abortar
+    if (!token) return false;
+
+    // Tenta aplicar o token diretamente
+    try {
+      await supabase.auth.setAuth(token);
+      return true;
+    } catch (e1) {
+      // Fallback opcional: tentar signInWithIdToken se explicitamente habilitado por env
+      const allowIdToken = (import.meta?.env?.VITE_SUPABASE_ALLOW_IDTOKEN_LOGIN === 'true');
+      if (allowIdToken && supabase?.auth?.signInWithIdToken) {
+        try {
+          await supabase.auth.signInWithIdToken({ provider: 'clerk', token });
+          return true;
+        } catch (e2) {
+          console.error('[ensureSupabaseAuth] signInWithIdToken falhou:', e2);
+        }
+      }
+      console.error('[ensureSupabaseAuth] setAuth falhou e fallback id_token está desabilitado ou indisponível:', e1);
+      return false;
+    }
+  } catch (err) {
+    console.error('[ensureSupabaseAuth] erro inesperado:', err);
+    return false;
+  }
+}

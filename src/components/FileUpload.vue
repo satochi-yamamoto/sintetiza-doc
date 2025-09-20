@@ -90,7 +90,7 @@
               <div v-if="file.result" class="file-result mt-2">
                 <p class="text-sm text-gray-600">
                   <span class="font-medium">Texto extraído:</span> 
-                  {{ file.result.wordCount }} palavras
+                  {{ (file.result?.processed?.extraction?.wordCount) || 0 }} palavras
                 </p>
               </div>
               
@@ -169,7 +169,7 @@ import { useToast } from 'vue-toastification'
 import { fileProcessorService } from '../services/fileProcessor.js'
 import { useAuth, useUser } from '@clerk/vue'
 import { stripeService } from '../services/stripe.js'
-import { setSupabaseAccessToken } from '../services/supabase.js'
+import { ensureSupabaseAuth } from '@/services/supabase'
 
 // Props
 const props = defineProps({
@@ -267,13 +267,11 @@ const addFiles = async (newFiles) => {
     }
 
     // Garantir token do Clerk aplicado ao Supabase
-    const token = await getToken({ template: 'supabase' })
-    if (!token) {
-      // Removido log temporário de aviso
-      toast.error('Falha ao obter token de sessão. Tente novamente.')
+    const okAdd = await ensureSupabaseAuth(getToken)
+    if (!okAdd) {
+      toast.error('Falha ao autenticar com o Supabase. Tente novamente.')
       return
     }
-    setSupabaseAccessToken(token)
 
     // Removidos logs temporários de debug de autenticação e plano
 
@@ -345,13 +343,11 @@ const processFiles = async () => {
     }
 
     // Garantir token do Clerk aplicado ao Supabase
-    const token = await getToken({ template: 'supabase' })
-    if (!token) {
-      // Removido log temporário de aviso
-      toast.error('Falha ao obter token de sessão. Tente novamente.')
+    const okProc = await ensureSupabaseAuth(getToken)
+    if (!okProc) {
+      toast.error('Falha ao autenticar com o Supabase. Tente novamente.')
       return
     }
-    setSupabaseAccessToken(token)
 
     // Removidos logs temporários de debug de autenticação
 
@@ -382,12 +378,11 @@ const processFiles = async () => {
         if (props.fileType === 'documents') {
           result = await fileProcessorService.processAndUploadDocument(
             fileItem.file,
-            user.value.id
+            { path: user.value.id }
           )
         } else {
           result = await fileProcessorService.transcribeAudio(
-            fileItem.file,
-            user.value.id
+            fileItem.file
           )
         }
         

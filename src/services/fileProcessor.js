@@ -1,9 +1,30 @@
 import * as pdfjsLib from 'pdfjs-dist'
+import PdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?worker'
+import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import mammoth from 'mammoth'
 import { supabaseUtils } from './supabase.js'
 
-// Configurar PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
+// Configurar PDF.js worker (usar asset local empacotado pelo Vite, evitando CDN)
+try {
+  if (typeof window !== 'undefined' && typeof Worker !== 'undefined') {
+    const workerInstance = new PdfWorker()
+    // Usar porta de worker real (recomendado nas versões 4/5 do pdfjs)
+    pdfjsLib.GlobalWorkerOptions.workerPort = workerInstance
+  }
+  // Definir também o workerSrc como fallback local (nunca CDN)
+  if (pdfjsWorkerUrl) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl
+  }
+} catch (e) {
+  console.warn('Falha ao inicializar PDF.js Worker, aplicando fallback para workerSrc local:', e)
+  try {
+    if (pdfjsWorkerUrl) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorkerUrl
+    }
+  } catch (e2) {
+    console.error('Falha ao definir workerSrc local para PDF.js:', e2)
+  }
+}
 
 // Tipos de arquivo suportados
 export const SUPPORTED_FILE_TYPES = {
@@ -177,12 +198,8 @@ export const fileProcessorService = {
       }
       
       return {
-        ...extractionResult,
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type,
-        processedAt: new Date().toISOString(),
-        validation
+        validation,
+        extraction: extractionResult
       }
     } catch (error) {
       console.error('Erro ao processar documento:', error)
@@ -191,137 +208,96 @@ export const fileProcessorService = {
   },
   
   // Upload de arquivo para Supabase Storage
-  async uploadFile(file, userId, folder = 'documents') {
+  async uploadFileToSupabase(file, bucket = 'documents', path = '') {
     try {
-      // Gerar nome único para o arquivo
-      const timestamp = Date.now()
-      const randomId = Math.random().toString(36).substring(2, 15)
-      const fileExtension = file.name.split('.').pop()
-      const fileName = `${timestamp}_${randomId}.${fileExtension}`
-      const filePath = `${folder}/${userId}/${fileName}`
+      const fileName = `${Date.now()}_${file.name}`
+      const filePath = path ? `${path}/${fileName}` : fileName
       
       // Upload para Supabase Storage
-      const uploadResult = await supabaseUtils.uploadFile(
-        'documents',
-        filePath,
-        file
-      )
+      const data = await supabaseUtils.uploadFile(bucket, filePath, file)
       
-      if (uploadResult.error) {
-        throw new Error(`Erro no upload: ${uploadResult.error.message}`)
-      }
-      
-      // Obter URL pública
-      const publicUrl = supabaseUtils.getPublicUrl('documents', filePath)
+      // Obter URL pública (se o bucket for público)
+      const url = supabaseUtils.getPublicUrl(bucket, filePath)
       
       return {
         path: filePath,
-        publicUrl,
-        fileName: file.name,
-        originalName: file.name,
-        size: file.size,
-        type: file.type,
-        uploadedAt: new Date().toISOString()
+        url,
+        data
       }
     } catch (error) {
-      console.error('Erro no upload do arquivo:', error)
-      throw error
+      console.error('Erro no upload para Supabase:', error)
+      throw new Error(`Falha no upload: ${error.message}`)
     }
   },
   
   // Processar e fazer upload de documento
-  async processAndUploadDocument(file, userId) {
+  async processAndUploadDocument(file, options = {}) {
+    const { bucket = 'documents', path = '' } = options
+    
     try {
-      // Processar o documento (extrair texto)
-      const processingResult = await this.processDocument(file)
+      // Primeiro processar o documento
+      const processed = await this.processDocument(file)
       
-      // Fazer upload do arquivo original
-      const uploadResult = await this.uploadFile(file, userId, 'documents')
+      // Em seguida, fazer o upload do arquivo original
+      const uploadResult = await this.uploadFileToSupabase(file, bucket, path)
       
       return {
-        ...processingResult,
-        upload: uploadResult,
-        status: 'completed'
+        processed,
+        upload: uploadResult
       }
     } catch (error) {
-      console.error('Erro ao processar e fazer upload:', error)
+      console.error('Erro ao processar e fazer upload do documento:', error)
       throw error
     }
   },
   
-  // Transcrever áudio (placeholder - implementar com Whisper API)
-  async transcribeAudio(file, userId) {
+  // Transcrever áudio (placeholder)
+  async transcribeAudio(file) {
+    // Nota: Esta função é um placeholder. A implementação real dependerá
+    // da integração com a API de transcrição (por exemplo, Whisper da OpenAI)
+    // e do backend para processar o áudio de forma segura.
     try {
-      // Validar arquivo de áudio
-      const validation = this.validateFile(file, 'audio')
+      // Validação básica
+      this.validateFile(file, 'audio')
       
-      // Upload do arquivo de áudio
-      const uploadResult = await this.uploadFile(file, userId, 'audio')
-      
-      // TODO: Implementar transcrição com OpenAI Whisper
-      // Por enquanto, retornar placeholder
-      const transcription = {
-        text: 'Transcrição será implementada com OpenAI Whisper API',
-        language: 'pt-BR',
-        duration: 0,
-        confidence: 0.95,
-        segments: []
-      }
-      
+      // Placeholder: Retornar um objeto simulando uma transcrição
       return {
-        transcription,
-        upload: uploadResult,
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type,
-        processedAt: new Date().toISOString(),
-        validation,
-        status: 'completed'
+        text: 'Transcrição de exemplo. Integração com API de transcrição pendente.',
+        metadata: {
+          duration: 0,
+          language: 'pt-BR',
+          confidence: 0
+        }
       }
     } catch (error) {
-      console.error('Erro ao transcrever áudio:', error)
-      throw error
+      console.error('Erro na transcrição de áudio:', error)
+      throw new Error(`Erro ao transcrever áudio: ${error.message}`)
     }
-  },
-  
-  // Obter informações do arquivo
-  getFileInfo(file) {
-    return {
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      lastModified: new Date(file.lastModified),
-      sizeFormatted: this.formatFileSize(file.size)
-    }
-  },
-  
-  // Formatar tamanho do arquivo
-  formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes'
-    
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-  },
-  
-  // Verificar se o tipo de arquivo é suportado
-  isFileTypeSupported(file, category = 'documents') {
-    return SUPPORTED_FILE_TYPES[category] && 
-           SUPPORTED_FILE_TYPES[category][file.type] !== undefined
-  },
-  
-  // Obter tipos de arquivo suportados para exibição
-  getSupportedFileTypes(category = 'documents') {
-    const types = SUPPORTED_FILE_TYPES[category]
-    return Object.keys(types).map(mimeType => ({
-      mimeType,
-      extension: types[mimeType].ext,
-      maxSize: types[mimeType].maxSize,
-      maxSizeFormatted: this.formatFileSize(types[mimeType].maxSize)
-    }))
   }
+}
+
+// Utilitários
+export function getFileInfo(file) {
+  return {
+    name: file.name,
+    type: file.type,
+    size: file.size,
+    lastModified: file.lastModified,
+    sizeFormatted: formatFileSize(file.size)
+  }
+}
+
+export function formatFileSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`
+  const kb = bytes / 1024
+  if (kb < 1024) return `${kb.toFixed(2)} KB`
+  const mb = kb / 1024
+  return `${mb.toFixed(2)} MB`
+}
+
+export function isFileTypeSupported(file, type = 'documents') {
+  const supportedTypes = SUPPORTED_FILE_TYPES[type]
+  return !!supportedTypes[file.type]
 }
 
 export default fileProcessorService
