@@ -1,15 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import supabase from '@/services/supabase'
+import { supabase } from '@/services/supabase'
 
 // Importação lazy das views
 const Home = () => import('@/views/Home.vue')
 const Features = () => import('@/views/Features.vue')
 const Pricing = () => import('@/views/Pricing.vue')
 const Contact = () => import('@/views/Contact.vue')
-// Componentes do Clerk
+// Componentes de Autenticação (Supabase)
 const SignInPage = () => import('@/views/auth/SignInPage.vue')
 const SignUpPage = () => import('@/views/auth/SignUpPage.vue')
-const UserProfilePage = () => import('@/views/auth/UserProfilePage.vue')
 const Dashboard = () => import('@/views/dashboard/Dashboard.vue')
 const Documents = () => import('@/views/dashboard/Documents.vue')
 const Summaries = () => import('@/views/dashboard/Summaries.vue')
@@ -58,9 +57,9 @@ const routes = [
       description: 'Entre em contato conosco para dúvidas e suporte'
     }
   },
-  // Rotas de Autenticação com Clerk
+  // Rotas de Autenticação (Supabase)
   {
-    // Clerk may navigate to nested steps like /sign-in/factor-one, so allow subpaths
+    // Permite subcaminhos para possíveis etapas adicionais no fluxo de login
     path: '/sign-in/:pathMatch(.*)*',
     name: 'sign-in',
     component: SignInPage,
@@ -70,7 +69,7 @@ const routes = [
     }
   },
   {
-    // Similarly, sign-up flow may include additional path segments
+    // Permite subcaminhos para etapas adicionais no fluxo de cadastro
     path: '/sign-up/:pathMatch(.*)*',
     name: 'sign-up',
     component: SignUpPage,
@@ -80,10 +79,11 @@ const routes = [
     }
   },
   {
-    // Clerk UserProfile includes internal routing segments (e.g., tabs)
+    // Rota legada de perfil podia incluir segmentos internos (ex.: abas)
+    // Compat: rota legada do antigo provedor -> redireciona para Perfil do Dashboard
     path: '/user-profile/:pathMatch(.*)*',
     name: 'user-profile',
-    component: UserProfilePage,
+    redirect: { name: 'dashboard-profile' },
     meta: {
       title: 'Meu Perfil - Sintetiza Doc'
     }

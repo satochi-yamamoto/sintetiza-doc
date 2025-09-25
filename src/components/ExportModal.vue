@@ -367,8 +367,8 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 import { exportService } from '../services/exportService.js'
-import { useAuth } from '@clerk/vue'
 import { stripeService } from '../services/stripe.js'
+import { supabase } from '@/services/supabase'
 
 // Props
 const props = defineProps({
@@ -395,7 +395,10 @@ const emit = defineEmits(['close', 'export-complete'])
 
 // Composables
 const toast = useToast()
-const { isSignedIn, user } = useAuth()
+
+// Sessão Supabase
+const session = ref(null)
+const uid = ref(null)
 
 // Refs
 const selectedFormat = ref('')
@@ -480,16 +483,34 @@ const formatSpecificConfig = computed(() => {
   return selectedFormat.value && ['word', 'pdf', 'excel', 'email', 'notion', 'trello'].includes(selectedFormat.value)
 })
 
+// Garantir sessão Supabase
+const ensureSupabaseSession = async () => {
+  try {
+    const { data } = await supabase.auth.getSession()
+    session.value = data?.session || null
+    uid.value = session.value?.user?.id || null
+    return !!uid.value
+  } catch (e) {
+    console.error('Erro ao obter sessão do Supabase:', e)
+    return false
+  }
+}
+
 // Methods
 const closeModal = () => {
   emit('close')
 }
 
 const selectFormat = async (format) => {
+  // Garantir sessão antes de verificações
+  if (!uid.value) {
+    await ensureSupabaseSession()
+  }
+
   if (!format.available) {
-    // Verificar se o usuário tem plano adequado
-    const currentPlan = await stripeService.getCurrentPlan(user.value?.id)
-    if (!stripeService.hasFeature(currentPlan.id, 'integrations')) {
+    // Verificar se o usuário tem plano adequado para o formato
+    const currentPlan = await stripeService.getCurrentPlan(uid.value)
+    if (!stripeService.isExportFormatSupported(currentPlan.id, format.id)) {
       toast.warning('Este formato requer um plano PRO ou superior')
       return
     }
@@ -648,7 +669,8 @@ const generateDefaultFilename = () => {
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  await ensureSupabaseSession()
   exportConfig.value.filename = generateDefaultFilename()
 })
 </script>

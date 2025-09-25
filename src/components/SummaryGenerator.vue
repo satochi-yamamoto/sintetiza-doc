@@ -311,9 +311,10 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 import { aiService } from '../services/ai.js'
-import { useAuth } from '@clerk/vue'
+// import { useAuth } from '@clerk/vue'
 import { stripeService } from '../services/stripe.js'
 import { DocumentIcon, PdfIcon, WordIcon, AudioIcon } from './icons/FileIcons.vue'
+import { supabase } from '../services/supabase.js'
 
 // Props
 const props = defineProps({
@@ -332,7 +333,17 @@ const emit = defineEmits(['summary-generated', 'export-requested'])
 
 // Composables
 const toast = useToast()
-const { isSignedIn, user } = useAuth()
+// const { isSignedIn, user } = useAuth()
+
+// Helper para obter UID do usuário autenticado via Supabase
+const getUid = async () => {
+  const { data, error } = await supabase.auth.getSession()
+  if (error) {
+    console.error('Erro ao obter sessão do Supabase:', error)
+    return null
+  }
+  return data?.session?.user?.id || null
+}
 
 // Refs
 const selectedDocuments = ref([])
@@ -456,8 +467,13 @@ const generateSummary = async () => {
   try {
     isGenerating.value = true
     
-    // Verificar limites do plano
-    const currentPlan = await stripeService.getCurrentPlan(user.value?.id)
+    // Verificar autenticacao e limites do plano
+    const uid = await getUid()
+    if (!uid) {
+      toast.error('Você precisa estar logado para gerar resumos')
+      return
+    }
+    const currentPlan = await stripeService.getCurrentPlan(uid)
     
     // Preparar configurações
     const config = {
@@ -580,10 +596,23 @@ watch(() => props.documents, (newDocs) => {
 }, { immediate: true })
 
 // Lifecycle
-onMounted(() => {
-  // Configurações iniciais baseadas no usuário
-  if (user.value?.publicMetadata?.preferences?.language) {
-    selectedLanguage.value = user.value.publicMetadata.preferences.language
+onMounted(async () => {
+  // Configurações iniciais: se houver preferência de idioma salva localmente, aplicar
+  try {
+    const storedLang = localStorage.getItem('preferredLanguage')
+    if (storedLang) {
+      selectedLanguage.value = storedLang
+      return
+    }
+    const { data } = await supabase.auth.getSession()
+    const lang = data?.session?.user?.user_metadata?.preferences?.language
+      || data?.session?.user?.user_metadata?.language
+      || data?.session?.user?.app_metadata?.language
+    if (lang) {
+      selectedLanguage.value = lang
+    }
+  } catch (e) {
+    console.warn('Não foi possível obter idioma preferido', e)
   }
 })
 

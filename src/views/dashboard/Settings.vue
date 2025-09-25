@@ -504,7 +504,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useAuth } from '@clerk/vue'
+
 import { useAppStore } from '@/stores/app'
 import { supabase } from '@/services/supabase'
 import { stripeService } from '@/services/stripe'
@@ -512,29 +512,10 @@ import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
-// Icons (inline components)
-const UserIcon = {
-  template: `<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>`
-}
+// Sessão Supabase
+const session = ref(null)
+const uid = ref(null)
 
-const CogIcon = {
-  template: `<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>`
-}
-
-const BellIcon = {
-  template: `<svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" /></svg>`
-}
-
-const CreditCardIcon = {
-  template: `<svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" /></svg>`
-}
-
-const ShieldIcon = {
-  template: `<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`
-}
-
-// Composables
-const { isSignedIn, user } = useAuth()
 const appStore = useAppStore()
 const toast = useToast()
 const router = useRouter()
@@ -578,350 +559,63 @@ const preferences = reactive({
   maxFileSize: 10
 })
 
-const notifications = reactive({
-  summaryCompleted: true,
-  planLimitReached: true,
-  productUpdates: false,
-  newsletter: false
-})
-
-// Tabs configuration
-const tabs = [
-  { id: 'account', label: 'Conta', icon: UserIcon },
-  { id: 'preferences', label: 'Preferências', icon: CogIcon },
-  { id: 'notifications', label: 'Notificações', icon: BellIcon },
-  { id: 'subscription', label: 'Assinatura', icon: CreditCardIcon },
-  { id: 'security', label: 'Segurança', icon: ShieldIcon }
-]
-
-// Methods
-const loadUserData = async () => {
+// Garantir sessão Supabase
+const ensureSupabaseSession = async () => {
   try {
-    const userId = user.value?.id
-    if (!userId) return
-    
-    // Load user profile
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
-    
-    if (profile) {
-      accountForm.name = profile.name || ''
-      accountForm.email = user.value?.primaryEmailAddress?.emailAddress || ''
-      accountForm.phone = profile.phone || ''
-      accountForm.company = profile.company || ''
-      
-      // Load preferences
-      Object.assign(preferences, profile.preferences || {})
-      Object.assign(notifications, profile.notifications || {})
-    }
-    
-    // Load subscription info
-    await loadSubscriptionData()
-    
-  } catch (error) {
-    console.error('Erro ao carregar dados do usuário:', error)
+    const { data } = await supabase.auth.getSession()
+    session.value = data?.session || null
+    uid.value = session.value?.user?.id || null
+    return !!uid.value
+  } catch (_) {
+    return false
   }
 }
 
-const loadSubscriptionData = async () => {
+// Métodos auxiliares
+const loadUsage = async () => {
+  const userId = uid.value
+  if (!userId) return
+  const [{ count: documentsCount }, { count: summariesCount }, { data: docs }] = await Promise.all([
+    supabase.from('documents').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+    supabase.from('summaries').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+    supabase.from('documents').select('file_size').eq('user_id', userId)
+  ])
+  const storage = docs?.reduce((sum, d) => sum + (d.file_size || 0), 0) || 0
+  usage.value = {
+    documents: documentsCount || 0,
+    summaries: summariesCount || 0,
+    storage
+  }
+}
+
+const loadAccount = async () => {
+  const u = session.value?.user
+  if (!u) return
+  const meta = u.user_metadata || {}
+  accountForm.name = meta.fullName || meta.full_name || `${meta.firstName || ''} ${meta.lastName || ''}`.trim()
+  accountForm.email = u.email || ''
+}
+
+const loadPlan = async () => {
+  const userId = uid.value
+  if (!userId) return
   try {
-    const planInfo = await stripeService.getCurrentPlan()
-    currentPlan.value = planInfo
-    
-    // Load usage data
-    const usageData = await stripeService.getUsage()
-    usage.value = usageData
-    
-    // Load billing history
-    if (planInfo.name !== 'free') {
-      const history = await stripeService.getBillingHistory()
-      billingHistory.value = history
-    }
-    
-  } catch (error) {
-    console.error('Erro ao carregar dados de assinatura:', error)
+    const info = await stripeService.getSubscriptionInfo(userId)
+    currentPlan.value = info?.plan || 'Gratuito'
+    billingHistory.value = info?.invoices || []
+  } catch (e) {
+    currentPlan.value = session.value?.user?.user_metadata?.plan || 'Gratuito'
   }
 }
 
-const updateAccount = async () => {
-  try {
-    isUpdatingAccount.value = true
-    
-    const { error } = await supabase
-      .from('profiles')
-      .upsert({
-        id: user.value?.id,
-        name: accountForm.name,
-        phone: accountForm.phone,
-        company: accountForm.company,
-        updated_at: new Date().toISOString()
-      })
-    
-    if (error) throw error
-    
-    toast.success('Informações atualizadas com sucesso')
-    
-  } catch (error) {
-    console.error('Erro ao atualizar conta:', error)
-    toast.error('Erro ao atualizar informações')
-  } finally {
-    isUpdatingAccount.value = false
-  }
-}
-
-const updatePassword = async () => {
-  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-    toast.error('As senhas não coincidem')
-    return
-  }
-  
-  if (passwordForm.newPassword.length < 6) {
-    toast.error('A nova senha deve ter pelo menos 6 caracteres')
-    return
-  }
-  
-  try {
-    isUpdatingPassword.value = true
-    
-    const { error } = await supabase.auth.updateUser({
-      password: passwordForm.newPassword
-    })
-    
-    if (error) throw error
-    
-    // Clear form
-    passwordForm.currentPassword = ''
-    passwordForm.newPassword = ''
-    passwordForm.confirmPassword = ''
-    
-    toast.success('Senha alterada com sucesso')
-    
-  } catch (error) {
-    console.error('Erro ao alterar senha:', error)
-    toast.error('Erro ao alterar senha')
-  } finally {
-    isUpdatingPassword.value = false
-  }
-}
-
-const updatePreferences = async () => {
-  try {
-    isUpdatingPreferences.value = true
-    
-    const { error } = await supabase
-      .from('profiles')
-      .upsert({
-        id: user.value?.id,
-        preferences: preferences,
-        updated_at: new Date().toISOString()
-      })
-    
-    if (error) throw error
-    
-    // Update app theme if changed
-    if (preferences.theme !== appStore.theme) {
-      appStore.setTheme(preferences.theme)
-    }
-    
-    toast.success('Preferências salvas com sucesso')
-    
-  } catch (error) {
-    console.error('Erro ao salvar preferências:', error)
-    toast.error('Erro ao salvar preferências')
-  } finally {
-    isUpdatingPreferences.value = false
-  }
-}
-
-const updateNotifications = async () => {
-  try {
-    isUpdatingNotifications.value = true
-    
-    const { error } = await supabase
-      .from('profiles')
-      .upsert({
-        id: user.value?.id,
-        notifications: notifications,
-        updated_at: new Date().toISOString()
-      })
-    
-    if (error) throw error
-    
-    toast.success('Configurações de notificação salvas')
-    
-  } catch (error) {
-    console.error('Erro ao salvar notificações:', error)
-    toast.error('Erro ao salvar configurações')
-  } finally {
-    isUpdatingNotifications.value = false
-  }
-}
-
-const upgradePlan = async () => {
-  try {
-    const checkoutUrl = await stripeService.createCheckoutSession('basic')
-    window.location.href = checkoutUrl
-  } catch (error) {
-    console.error('Erro ao iniciar upgrade:', error)
-    toast.error('Erro ao processar upgrade')
-  }
-}
-
-const manageBilling = async () => {
-  try {
-    const portalUrl = await stripeService.createCustomerPortalSession()
-    window.location.href = portalUrl
-  } catch (error) {
-    console.error('Erro ao abrir portal:', error)
-    toast.error('Erro ao acessar portal de faturamento')
-  }
-}
-
-const enableTwoFactor = () => {
-  // Implement 2FA setup
-  toast.info('Funcionalidade em desenvolvimento')
-}
-
-const disableTwoFactor = () => {
-  // Implement 2FA disable
-  toast.info('Funcionalidade em desenvolvimento')
-}
-
-const viewActiveSessions = () => {
-  // Implement active sessions view
-  toast.info('Funcionalidade em desenvolvimento')
-}
-
-const viewActivityLog = () => {
-  // Implement activity log view
-  toast.info('Funcionalidade em desenvolvimento')
-}
-
-const deleteAllData = async () => {
-  if (!confirm('Tem certeza que deseja excluir TODOS os seus dados? Esta ação não pode ser desfeita.')) {
-    return
-  }
-  
-  try {
-    // Delete all user data
-    await supabase.from('summaries').delete().eq('user_id', user.value?.id)
-    await supabase.from('documents').delete().eq('user_id', user.value?.id)
-    
-    toast.success('Todos os dados foram excluídos')
-    router.push('/dashboard')
-    
-  } catch (error) {
-    console.error('Erro ao excluir dados:', error)
-    toast.error('Erro ao excluir dados')
-  }
-}
-
-const deleteAccount = async () => {
-  if (!confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.')) {
-    return
-  }
-  
-  const confirmation = prompt('Digite "EXCLUIR" para confirmar:')
-  if (confirmation !== 'EXCLUIR') {
-    return
-  }
-  
-  try {
-    // Delete account and all data
-    await deleteAllData()
-    // Redirect to sign out (Clerk handles this automatically)
-    
-    toast.success('Conta excluída com sucesso')
-    router.push('/')
-    
-  } catch (error) {
-    console.error('Erro ao excluir conta:', error)
-    toast.error('Erro ao excluir conta')
-  }
-}
-
-const downloadInvoice = async (invoice) => {
-  try {
-    // Download invoice PDF
-    const url = invoice.invoice_pdf
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `fatura-${invoice.number}.pdf`
-    link.click()
-  } catch (error) {
-    console.error('Erro ao baixar fatura:', error)
-    toast.error('Erro ao baixar fatura')
-  }
-}
-
-// Utility functions
-const getPlanLabel = (planName) => {
-  const labels = {
-    free: 'Gratuito',
-    basic: 'Básico',
-    professional: 'Profissional',
-    enterprise: 'Empresarial'
-  }
-  return labels[planName] || 'Desconhecido'
-}
-
-const getPlanBadgeClass = (planName) => {
-  return {
-    'badge-free': planName === 'free',
-    'badge-basic': planName === 'basic',
-    'badge-professional': planName === 'professional',
-    'badge-enterprise': planName === 'enterprise'
-  }
-}
-
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(price / 100)
-}
-
-const formatStorage = (bytes) => {
-  if (!bytes) return '0 MB'
-  const mb = bytes / (1024 * 1024)
-  return `${mb.toFixed(1)} MB`
-}
-
-const getUsagePercentage = (type) => {
-  const current = usage.value[type]
-  const limit = currentPlan.value?.limits?.[type]
-  
-  if (!limit || limit === 'unlimited') return 0
-  return Math.min((current / limit) * 100, 100)
-}
-
-const formatDate = (timestamp) => {
-  return new Date(timestamp * 1000).toLocaleDateString('pt-BR')
-}
-
-const getInvoiceStatusClass = (status) => {
-  return {
-    'status-paid': status === 'paid',
-    'status-pending': status === 'open',
-    'status-failed': status === 'uncollectible'
-  }
-}
-
-const getInvoiceStatusLabel = (status) => {
-  const labels = {
-    paid: 'Pago',
-    open: 'Pendente',
-    uncollectible: 'Falhou'
-  }
-  return labels[status] || status
-}
-
-// Lifecycle
-onMounted(() => {
-  loadUserData()
+onMounted(async () => {
+  const ok = await ensureSupabaseSession()
+  if (!ok) return
+  await Promise.all([
+    loadUsage(),
+    loadAccount(),
+    loadPlan()
+  ])
 })
 </script>
 

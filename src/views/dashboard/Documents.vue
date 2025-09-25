@@ -219,7 +219,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-import { useAuth } from '@clerk/vue'
+
 import { useAppStore } from '@/stores/app'
 import { supabase } from '@/services/supabase'
 import { useToast } from 'vue-toastification'
@@ -234,8 +234,10 @@ import {
   AudioIcon 
 } from '@/components/icons/FileIcons.vue'
 
-// Composables
-const { isSignedIn, user } = useAuth()
+// Sessão Supabase
+const session = ref(null)
+const uid = ref(null)
+
 const appStore = useAppStore()
 const toast = useToast()
 const router = useRouter()
@@ -247,15 +249,27 @@ const showSummaryModal = ref(false)
 const selectedDocumentForSummary = ref(null)
 const isGeneratingSummary = ref(null)
 
-// Filters
+// Filtros
 const searchQuery = ref('')
 const selectedType = ref('')
 const sortBy = ref('created_at')
 const sortOrder = ref('desc')
 const viewMode = ref('grid')
 
-// Data
+// Dados
 const documents = ref([])
+
+// Garantir sessão Supabase
+const ensureSupabaseSession = async () => {
+  try {
+    const { data } = await supabase.auth.getSession()
+    session.value = data?.session || null
+    uid.value = session.value?.user?.id || null
+    return !!uid.value
+  } catch (_) {
+    return false
+  }
+}
 
 // Computed
 const filteredDocuments = computed(() => {
@@ -295,14 +309,13 @@ const filteredDocuments = computed(() => {
   return filtered
 })
 
-// Methods
+// Métodos
 const loadDocuments = async () => {
   try {
     isLoading.value = true
-    
-    const userId = user.value?.id
+    const userId = uid.value
     if (!userId) return
-    
+
     const { data, error } = await supabase
       .from('documents')
       .select(`
@@ -311,15 +324,13 @@ const loadDocuments = async () => {
       `)
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
-    
+
     if (error) throw error
-    
-    // Process summaries count
+
     documents.value = data.map(doc => ({
       ...doc,
       summaries_count: doc.summaries_count?.[0]?.count || 0
     }))
-    
   } catch (error) {
     console.error('Erro ao carregar documentos:', error)
     toast.error('Erro ao carregar documentos')
@@ -328,9 +339,23 @@ const loadDocuments = async () => {
   }
 }
 
+// Watchers
+watch(uid, async (newUid) => {
+  if (newUid) {
+    await loadDocuments()
+  }
+})
+
+// Lifecycle
+onMounted(async () => {
+  await ensureSupabaseSession()
+  if (uid.value) {
+    await loadDocuments()
+  }
+})
 const selectDocument = (document) => {
   // Navigate to document details or open preview
-  router.push(`/documents/${document.id}`)
+  router.push('/dashboard/documentos')
 }
 
 const generateSummary = (document) => {

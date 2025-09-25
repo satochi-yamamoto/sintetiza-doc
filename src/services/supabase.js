@@ -21,7 +21,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 })
 
 // Nota: Em @supabase/supabase-js v2 não existe mais supabase.auth.setAuth.
-// Para autenticar com provedores externos (ex.: Clerk), use signInWithIdToken.
+// Para autenticar com provedores externos via OIDC, use signInWithIdToken.
 // Este helper foi mantido apenas por compatibilidade e agora não faz nada.
 export function setSupabaseAccessToken(_accessToken) {
   console.warn('[supabase] setSupabaseAccessToken não é suportado no supabase-js v2. Use ensureSupabaseAuth().')
@@ -257,7 +257,7 @@ export const supabaseRealtime = {
 
 export default supabase
 
-// Centraliza a autenticação Clerk → Supabase sem depender de JWT template
+// Centraliza autenticação externa (OIDC) → Supabase sem depender de JWT template
 export async function ensureSupabaseAuth(getTokenLike) {
   try {
     // 0) Se já há sessão válida do Supabase, evita trabalho
@@ -277,10 +277,15 @@ export async function ensureSupabaseAuth(getTokenLike) {
       return await fn(opts);
     };
 
-    // 1) Obter token do Clerk. Em muitos setups, o template "supabase" é o recomendado
+    // 1) Obter token do provedor externo (IdP). Em muitos setups, o template "supabase" é o recomendado
     //    para signInWithIdToken. Tentamos na ordem: env template → 'supabase' → default
     let token = null;
-    const envTemplate = (import.meta?.env?.VITE_CLERK_JWT_TEMPLATE || '').trim();
+    const envTemplate = (
+      (import.meta?.env?.VITE_SUPABASE_OIDC_TEMPLATE ||
+       import.meta?.env?.VITE_OIDC_JWT_TEMPLATE ||
+       import.meta?.env?.VITE_CLERK_JWT_TEMPLATE ||
+       '')
+    ).trim();
     if (envTemplate) {
       try {
         token = await callGetToken({ template: envTemplate });
@@ -308,12 +313,12 @@ export async function ensureSupabaseAuth(getTokenLike) {
     if (!token) return false;
 
     // 2) Fluxo compatível com supabase-js v2: usar signInWithIdToken
-    //    Requer habilitar OIDC no Supabase para "Clerk" (ou outro provedor configurado)
-    // Tentativas de provider: ENV → 'clerk' → 'oidc'
+    //    Requer habilitar OIDC no Supabase para o provedor configurado
+    // Tentativas de provider: ENV → 'oidc'
     const providersToTry = []
     const envProv = (import.meta?.env?.VITE_SUPABASE_OIDC_PROVIDER || '').trim()
     if (envProv) providersToTry.push(envProv)
-    providersToTry.push('clerk', 'oidc')
+    providersToTry.push('oidc')
 
     if (!supabase?.auth?.signInWithIdToken) {
       console.error('[ensureSupabaseAuth] signInWithIdToken indisponível nesta versão do SDK.');
@@ -328,7 +333,7 @@ export async function ensureSupabaseAuth(getTokenLike) {
         console.debug(`[ensureSupabaseAuth] tentativa com provider "${provider}" falhou:`, e2)
       }
     }
-    console.error('[ensureSupabaseAuth] Não foi possível autenticar com nenhum provider (ENV, clerk, oidc). Verifique a configuração OIDC no Supabase e o JWT template no Clerk.')
+    console.error('[ensureSupabaseAuth] Não foi possível autenticar com nenhum provider (ENV, oidc). Verifique a configuração OIDC no Supabase e o JWT template do seu IdP.')
     return false
   } catch (err) {
     console.error('[ensureSupabaseAuth] erro inesperado:', err);

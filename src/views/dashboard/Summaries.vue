@@ -11,7 +11,7 @@
         </div>
         
         <div class="header-right">
-          <router-link to="/documents" class="new-summary-btn">
+          <router-link to="/dashboard/documentos" class="new-summary-btn">
             <svg class="new-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
             </svg>
@@ -185,7 +185,7 @@
             : 'Comece gerando seu primeiro resumo a partir de um documento.' 
           }}
         </p>
-        <router-link v-if="!searchQuery" to="/documents" class="empty-action">
+        <router-link v-if="!searchQuery" to="/dashboard/documentos" class="empty-action">
           Gerar primeiro resumo
         </router-link>
       </div>
@@ -248,7 +248,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-import { useAuth } from '@clerk/vue'
+
 import { useAppStore } from '@/stores/app'
 import { supabase } from '@/services/supabase'
 import { useToast } from 'vue-toastification'
@@ -256,8 +256,10 @@ import { useRouter } from 'vue-router'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import ExportModal from '@/components/ExportModal.vue'
 
-// Composables
-const { isSignedIn, user } = useAuth()
+// Sessão Supabase
+const session = ref(null)
+const uid = ref(null)
+
 const appStore = useAppStore()
 const toast = useToast()
 const router = useRouter()
@@ -268,7 +270,7 @@ const showExportModal = ref(false)
 const showViewerModal = ref(false)
 const selectedSummary = ref(null)
 
-// Filters
+// Filtros
 const searchQuery = ref('')
 const selectedStyle = ref('')
 const selectedLanguage = ref('')
@@ -276,8 +278,20 @@ const sortBy = ref('created_at')
 const sortOrder = ref('desc')
 const viewMode = ref('grid')
 
-// Data
+// Dados
 const summaries = ref([])
+
+// Garantir sessão Supabase
+const ensureSupabaseSession = async () => {
+  try {
+    const { data } = await supabase.auth.getSession()
+    session.value = data?.session || null
+    uid.value = session.value?.user?.id || null
+    return !!uid.value
+  } catch (_) {
+    return false
+  }
+}
 
 // Computed
 const filteredSummaries = computed(() => {
@@ -323,27 +337,22 @@ const filteredSummaries = computed(() => {
   return filtered
 })
 
-// Methods
+// Métodos
 const loadSummaries = async () => {
   try {
     isLoading.value = true
-    
-    const userId = user.value?.id
+    const userId = uid.value
     if (!userId) return
-    
+
     const { data, error } = await supabase
       .from('summaries')
-      .select(`
-        *,
-        document:documents(id, name, file_type)
-      `)
+      .select('id, title, content, style, language, created_at, document:documents(name)')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
-    
+
     if (error) throw error
-    
+
     summaries.value = data || []
-    
   } catch (error) {
     console.error('Erro ao carregar resumos:', error)
     toast.error('Erro ao carregar resumos')
@@ -352,6 +361,21 @@ const loadSummaries = async () => {
   }
 }
 
+// Watchers
+watch(uid, async (newUid) => {
+  if (newUid) {
+    await loadSummaries()
+  }
+})
+
+// Lifecycle
+onMounted(async () => {
+  await ensureSupabaseSession()
+  if (uid.value) {
+    await loadSummaries()
+  }
+})
+</script>
 const viewSummary = (summary) => {
   selectedSummary.value = summary
   showViewerModal.value = true
@@ -365,7 +389,7 @@ const exportSummary = (summary) => {
 const shareSummary = async (summary) => {
   try {
     // Create shareable link or copy to clipboard
-    const shareUrl = `${window.location.origin}/summaries/${summary.id}`
+    const shareUrl = `${window.location.origin}/dashboard/resumos/${summary.id}`
     
     if (navigator.share) {
       await navigator.share({

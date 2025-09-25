@@ -263,14 +263,16 @@
 
 <script>
 import { ref, reactive, onMounted } from 'vue'
-import { useAuth } from '@clerk/vue'
 import { supabase } from '@/services/supabase'
-// Clerk service não é mais necessário - usar useAuth diretamente
+import { stripeService } from '@/services/stripe.js'
 
 export default {
   name: 'Profile',
   setup() {
-    const { isSignedIn, user } = useAuth()
+    // Sessão e UID do Supabase
+    const session = ref(null)
+    const uid = ref(null)
+
     const editMode = ref(false)
     const isLoading = ref(false)
     const isUpdating = ref(false)
@@ -302,40 +304,80 @@ export default {
       defaultLanguage: 'pt-BR'
     })
 
+    const ensureSupabaseSession = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession()
+        if (error) throw error
+        session.value = data.session
+        uid.value = data.session?.user?.id || null
+      } catch (e) {
+        console.error('Erro ao obter sessão do Supabase:', e)
+      }
+    }
+
     const loadUserProfile = async () => {
       try {
         isLoading.value = true
         
-        // Carregar dados do usuário do Clerk
-        const clerkUser = user.value
-        if (clerkUser) {
-          userProfile.name = clerkUser.firstName + ' ' + (clerkUser.lastName || '')
-          userProfile.email = clerkUser.primaryEmailAddress?.emailAddress || ''
-          userProfile.avatar = clerkUser.imageUrl
-
-          // Copiar para o formulário
-          Object.assign(profileForm, {
-            name: userProfile.name,
-            email: userProfile.email,
-            phone: userProfile.phone,
-            company: userProfile.company,
-            position: userProfile.position,
-            timezone: userProfile.timezone
-          })
+        await ensureSupabaseSession()
+        if (!uid.value) {
+          console.warn('Nenhuma sessão ativa encontrada.')
+          return
         }
         
-        // Carregar dados adicionais do Supabase
-        const { data: profile } = await supabase
+        // Carregar dados do usuário do Supabase Auth
+        const { data: userData } = await supabase.auth.getUser()
+        const authUser = userData?.user || session.value?.user
+        
+        const fullName = (authUser?.user_metadata?.name)
+          || [authUser?.user_metadata?.first_name, authUser?.user_metadata?.last_name].filter(Boolean).join(' ')
+          || ''
+        const email = authUser?.email || ''
+        const avatarUrl = authUser?.user_metadata?.avatar_url || null
+        
+        userProfile.name = fullName
+        userProfile.email = email
+        userProfile.avatar = avatarUrl
+        
+        Object.assign(profileForm, {
+          name: userProfile.name,
+          email: userProfile.email,
+          phone: userProfile.phone,
+          company: userProfile.company,
+          position: userProfile.position,
+          timezone: userProfile.timezone
+        })
+        
+        // Carregar dados adicionais do Supabase (tabela users)
+        let { data: profile, error: selectError } = await supabase
           .from('users')
-          .select('*')
-          .eq('clerk_id', clerkUser.id)
+          .select('email, phone, metadata')
+          .eq('id', uid.value)
           .single()
+        
+        // Se não existir, criar registro inicial vinculado ao auth.uid()
+        if (selectError && selectError.code === 'PGRST116') {
+          const { error: upsertError } = await supabase
+            .from('users')
+            .upsert({ id: uid.value, email })
+          if (upsertError) {
+            console.error('Erro ao criar perfil inicial:', upsertError)
+          } else {
+            const { data: created } = await supabase
+              .from('users')
+              .select('email, phone, metadata')
+              .eq('id', uid.value)
+              .single()
+            profile = created
+          }
+        }
         
         if (profile) {
           userProfile.phone = profile.phone || ''
-          userProfile.company = profile.company || ''
-          userProfile.position = profile.position || ''
-          userProfile.timezone = profile.timezone || 'America/Sao_Paulo'
+          const meta = profile.metadata || {}
+          userProfile.company = meta.company || ''
+          userProfile.position = meta.position || ''
+          userProfile.timezone = meta.timezone || 'America/Sao_Paulo'
 
           // Atualizar formulário
           profileForm.phone = userProfile.phone
@@ -344,10 +386,14 @@ export default {
           profileForm.timezone = userProfile.timezone
           
           // Carregar preferências
-          if (profile.preferences) {
-            Object.assign(preferences, profile.preferences)
+          if (meta.preferences) {
+            Object.assign(preferences, meta.preferences)
           }
         }
+
+        // Plano atual via Stripe
+        const plan = await stripeService.getCurrentPlan(uid.value)
+        userProfile.plan = plan?.name || 'Gratuito'
         
       } catch (error) {
         console.error('Erro ao carregar perfil:', error)
@@ -360,23 +406,43 @@ export default {
       try {
         isUpdating.value = true
         
-        // Atualizar dados no Clerk via user.update()
-        await user.value.update({
-          firstName: profileForm.name.split(' ')[0],
-          lastName: profileForm.name.split(' ').slice(1).join(' ')
-        })
+        await ensureSupabaseSession()
+        if (!uid.value) return
         
-        // Atualizar dados no Supabase
+        // Atualizar dados no Supabase Auth (nome e e-mail)
+        const { error: authError } = await supabase.auth.updateUser({
+          email: profileForm.email,
+          data: { name: profileForm.name.trim() }
+        })
+        if (authError) {
+          console.warn('Não foi possível atualizar dados de autenticação:', authError.message)
+        }
+        
+        // Manter/mesclar metadata existente
+        const { data: existing } = await supabase
+          .from('users')
+          .select('metadata')
+          .eq('id', uid.value)
+          .single()
+        const existingMeta = existing?.metadata || {}
+        
+        const newMeta = {
+          ...existingMeta,
+          company: profileForm.company,
+          position: profileForm.position,
+          timezone: profileForm.timezone,
+          preferences: { ...preferences }
+        }
+        
+        // Atualizar dados no Supabase (tabela users)
         const { error } = await supabase
           .from('users')
           .upsert({
-            clerk_id: user.value?.id,
+            id: uid.value,
+            email: profileForm.email,
             phone: profileForm.phone,
-            company: profileForm.company,
-            position: profileForm.position,
-            timezone: profileForm.timezone,
-            preferences: preferences
-          })
+            metadata: newMeta
+          }, { onConflict: 'id' })
         
         if (error) throw error
         
@@ -384,7 +450,6 @@ export default {
         Object.assign(userProfile, profileForm)
         editMode.value = false
         
-        // Mostrar toast de sucesso
         console.log('Perfil atualizado com sucesso!')
         
       } catch (error) {
@@ -396,7 +461,7 @@ export default {
 
     const uploadAvatar = async () => {
       try {
-        // Implementar upload de avatar via Clerk
+        // TODO: Implementar upload de avatar via Supabase Storage
         console.log('Upload de avatar')
       } catch (error) {
         console.error('Erro ao fazer upload do avatar:', error)
@@ -404,12 +469,12 @@ export default {
     }
 
     const changePassword = () => {
-      // Redirecionar para página de alteração de senha do Clerk
+      // Redirecionar para seção de segurança (alteração de senha) nas Configurações
       window.location.href = '/dashboard/configuracoes#security'
     }
 
     const setupTwoFactor = () => {
-      // Redirecionar para configuração de 2FA do Clerk
+      // Redirecionar para seção de 2FA nas Configurações
       window.location.href = '/dashboard/configuracoes#security'
     }
 

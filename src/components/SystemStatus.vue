@@ -32,7 +32,7 @@
           </div>
           <p class="text-xs text-gray-600">{{ services.auth.message }}</p>
           <p class="text-xs text-gray-500 mt-1">
-            {{ $t('status.provider') }}: Clerk
+            {{ $t('status.provider') }}: Supabase Auth
           </p>
         </div>
 
@@ -318,7 +318,7 @@ export default {
 
     const checkAuthStatus = async () => {
       try {
-        // Check Clerk status
+        // Check Supabase Auth status
         services.value.auth = {
           status: 'operational',
           message: 'Authentication service is working properly',

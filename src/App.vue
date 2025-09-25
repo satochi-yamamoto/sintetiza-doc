@@ -41,7 +41,7 @@ const showHeader = computed(() => {
 })
 
 const showFooter = computed(() => {
-  const hideFooterRoutes = ['dashboard', 'documents', 'summaries', 'settings', 'billing', 'profile', 'admin-dashboard', 'admin-users', 'admin-analytics', 'sign-in', 'sign-up']
+  const hideFooterRoutes = ['dashboard', 'dashboard-documents', 'dashboard-summaries', 'dashboard-settings', 'dashboard-billing', 'dashboard-profile', 'admin-dashboard', 'admin-users', 'admin-analytics', 'sign-in', 'sign-up']
   return !hideFooterRoutes.includes(route.name)
 })
 </script>

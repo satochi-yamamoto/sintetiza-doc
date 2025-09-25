@@ -36,7 +36,7 @@
             <p class="step-description">
               Acesse suas configurações de conta e gere uma nova chave de API.
             </p>
-            <router-link to="/settings" class="step-link">
+            <router-link to="/dashboard/configuracoes" class="step-link">
               Ir para Configurações →
             </router-link>
           </div>

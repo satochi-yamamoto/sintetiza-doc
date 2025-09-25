@@ -24,17 +24,7 @@ export const SUPABASE_CONFIG = {
 /**
  * Clerk Configuration
  */
-export const CLERK_CONFIG = {
-  PUBLISHABLE_KEY: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
-  SIGN_IN_URL: '/sign-in',
-  SIGN_UP_URL: '/sign-up',
-  AFTER_SIGN_IN_URL: '/dashboard',
-  AFTER_SIGN_UP_URL: '/dashboard'
-}
-
-/**
- * Stripe Configuration
- */
+export const CLERK_CONFIG = undefined
 export const STRIPE_CONFIG = {
   PUBLISHABLE_KEY: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
   WEBHOOK_SECRET: import.meta.env.VITE_STRIPE_WEBHOOK_SECRET
@@ -625,12 +615,12 @@ export const STORAGE_KEYS = {
 export const ROUTES = {
   HOME: '/',
   DASHBOARD: '/dashboard',
-  DOCUMENTS: '/documents',
-  SUMMARIES: '/summaries',
-  SETTINGS: '/settings',
-  PRICING: '/pricing',
+  DOCUMENTS: '/dashboard/documentos',
+  SUMMARIES: '/dashboard/resumos',
+  SETTINGS: '/dashboard/configuracoes',
+  PRICING: '/precos',
   ABOUT: '/about',
-  CONTACT: '/contact',
+  CONTACT: '/contato',
   HELP: '/help',
   BLOG: '/blog',
   STATUS: '/status',
@@ -647,7 +637,7 @@ export const ROUTES = {
 export default {
   API_CONFIG,
   SUPABASE_CONFIG,
-  CLERK_CONFIG,
+  // CLERK_CONFIG, // deprecated: removed Clerk
   STRIPE_CONFIG,
   OPENAI_CONFIG,
   FILE_UPLOAD,

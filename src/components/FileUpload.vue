@@ -256,28 +256,14 @@ const handleFileSelect = (e) => {
 
 const addFiles = async (newFiles) => {
   try {
-    if (!authLoaded.value || !userLoaded.value) {
-      toast.info('Carregando sistema de autenticação...')
-      return
-    }
-
-    if (!isSignedIn.value || !userId?.value || !user?.value?.id) {
-      // Removido log temporário de debug
+    const uid = await getUid()
+    if (!uid) {
       toast.error('Você precisa estar logado para fazer upload de arquivos')
       return
     }
 
-    // Garantir token do Clerk aplicado ao Supabase
-    const okAdd = await ensureSupabaseAuth(getToken)
-    if (!okAdd) {
-      toast.error('Falha ao autenticar com o Supabase. Tente novamente.')
-      return
-    }
+    const currentPlan = await stripeService.getCurrentPlan(uid)
 
-    // Removidos logs temporários de debug de autenticação e plano
-
-    const currentPlan = await stripeService.getCurrentPlan(userId.value)
-    
     for (const file of newFiles) {
       try {
         // Validar arquivo
@@ -332,25 +318,11 @@ const clearFiles = () => {
 
 const processFiles = async () => {
   try {
-    if (!authLoaded.value || !userLoaded.value) {
-      toast.info('Carregando sistema de autenticação...')
-      return
-    }
-
-    if (!isSignedIn.value || !userId?.value || !user?.value?.id) {
-      // Removido log temporário de debug
+    const uid = await getUid()
+    if (!uid) {
       toast.error('Você precisa estar logado para processar arquivos')
       return
     }
-
-    // Garantir token do Clerk aplicado ao Supabase
-    const okProc = await ensureSupabaseAuth(getToken)
-    if (!okProc) {
-      toast.error('Falha ao autenticar com o Supabase. Tente novamente.')
-      return
-    }
-
-    // Removidos logs temporários de debug de autenticação
 
     isUploading.value = true
     hasError.value = false
@@ -379,7 +351,7 @@ const processFiles = async () => {
         if (props.fileType === 'documents') {
           result = await fileProcessorService.processAndUploadDocument(
             fileItem.file,
-            { path: user.value.id }
+            { path: uid }
           )
         } else {
           result = await fileProcessorService.transcribeAudio(

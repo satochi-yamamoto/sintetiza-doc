@@ -184,8 +184,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useAuth } from '@clerk/vue'
-import { stripeService } from '@/services/stripe'
+import { supabase } from '@/services/supabase'
+import { stripeService, SUBSCRIPTION_PLANS } from '@/services/stripe'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
@@ -224,159 +224,30 @@ const BuildingIcon = {
 }
 
 // Composables
-const { isSignedIn, user } = useAuth()
+const session = ref(null)
+const uid = ref(null)
+const isSignedIn = computed(() => !!session.value)
 const toast = useToast()
 const router = useRouter()
 
-// Refs
-const isAnnual = ref(false)
-const isProcessing = ref(false)
-const currentPlan = ref('free')
-const activeFaq = ref(null)
-
-// Plans configuration
-const plans = [
-  {
-    id: 'free',
-    name: 'Gratuito',
-    description: 'Perfeito para começar',
-    icon: StarIcon,
-    monthlyPrice: 0,
-    annualPrice: 0,
-    popular: false,
-    features: [
-      'Upload de documentos PDF, DOCX, TXT',
-      'Resumos básicos com IA',
-      'Exportação em texto simples',
-      'Suporte por email'
-    ],
-    limits: {
-      documents: 5,
-      summaries: 5,
-      storage: 50 * 1024 * 1024 // 50MB
-    }
-  },
-  {
-    id: 'basic',
-    name: 'Básico',
-    description: 'Para uso pessoal regular',
-    icon: RocketIcon,
-    monthlyPrice: 1990, // R$ 19.90
-    annualPrice: 19104, // R$ 191.04 (20% desconto)
-    popular: true,
-    features: [
-      'Tudo do plano Gratuito',
-      'Múltiplos estilos de resumo',
-      'Processamento de áudio',
-      'Exportação em Word e PDF',
-      'Tradução português-inglês',
-      'Suporte prioritário'
-    ],
-    limits: {
-      documents: 50,
-      summaries: 50,
-      storage: 500 * 1024 * 1024 // 500MB
-    }
-  },
-  {
-    id: 'professional',
-    name: 'Profissional',
-    description: 'Para profissionais e pequenas equipes',
-    icon: BuildingIcon,
-    monthlyPrice: 4990, // R$ 49.90
-    annualPrice: 47904, // R$ 479.04 (20% desconto)
-    popular: false,
-    disabled: true,
-    features: [
-      'Tudo do plano Básico',
-      'Resumos técnicos avançados',
-      'Integração com Notion e Trello',
-      'Exportação para Excel',
-      'API para integrações',
-      'Análise de sentimento',
-      'Suporte por chat'
-    ],
-    limits: {
-      documents: 200,
-      summaries: 200,
-      storage: 2 * 1024 * 1024 * 1024 // 2GB
-    }
-  }
-]
-
-// FAQs
-const faqs = [
-  {
-    question: 'Posso cancelar minha assinatura a qualquer momento?',
-    answer: 'Sim, você pode cancelar sua assinatura a qualquer momento. O cancelamento será efetivo no final do período de faturamento atual e você manterá acesso a todos os recursos até lá.'
-  },
-  {
-    question: 'Como funciona o período de teste gratuito?',
-    answer: 'Todos os planos pagos incluem 7 dias de teste gratuito. Durante este período, você tem acesso completo a todos os recursos do plano escolhido. Você pode cancelar antes do fim do período sem ser cobrado.'
-  },
-  {
-    question: 'Posso fazer upgrade ou downgrade do meu plano?',
-    answer: 'Sim, você pode alterar seu plano a qualquer momento. Upgrades são aplicados imediatamente, enquanto downgrades entram em vigor no próximo ciclo de faturamento.'
-  },
-  {
-    question: 'Os dados dos meus documentos ficam seguros?',
-    answer: 'Absolutamente. Utilizamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança. Seus documentos são processados de forma segura e nunca compartilhados com terceiros.'
-  },
-  {
-    question: 'Quais formatos de arquivo são suportados?',
-    answer: 'Suportamos PDF, DOCX, TXT e arquivos de áudio (MP3, WAV, M4A). Estamos constantemente adicionando suporte para novos formatos baseado no feedback dos usuários.'
-  },
-  {
-    question: 'Como funciona o processamento de áudio?',
-    answer: 'Nosso sistema transcreve automaticamente arquivos de áudio para texto e depois gera resumos. É perfeito para reuniões, palestras e entrevistas.'
-  },
-  {
-    question: 'Posso usar a API em todos os planos?',
-    answer: 'A API está disponível apenas nos planos Profissional e Empresarial. Ela permite integrar nossos recursos de resumo diretamente em suas aplicações.'
-  },
-  {
-    question: 'Como funciona o suporte técnico?',
-    answer: 'Oferecemos suporte por email para todos os planos, suporte prioritário para o plano Básico, chat para o Profissional e suporte dedicado 24/7 para o Empresarial.'
-  }
-]
-
-// Computed
-const getPlanPrice = (plan) => {
-  if (plan.id === 'free') return '0'
-  
-  const price = isAnnual.value ? plan.annualPrice : plan.monthlyPrice
-  return (price / 100).toFixed(2).replace('.', ',')
-}
-
-const getAnnualSavings = (plan) => {
-  const monthlyCost = plan.monthlyPrice * 12
-  const savings = monthlyCost - plan.annualPrice
-  return (savings / 100).toFixed(2).replace('.', ',')
-}
-
-const getActionLabel = (planId) => {
-  if (!isSignedIn.value) {
-    return 'Começar teste grátis'
-  }
-  
-  const planHierarchy = ['free', 'basic', 'professional', 'enterprise']
-  const currentIndex = planHierarchy.indexOf(currentPlan.value)
-  const targetIndex = planHierarchy.indexOf(planId)
-  
-  if (targetIndex > currentIndex) {
-    return 'Fazer upgrade'
-  } else {
-    return 'Selecionar plano'
-  }
-}
-
-// Methods
-const loadCurrentPlan = async () => {
-  if (!isSignedIn.value) return
-  
+// Garantir sessão do Supabase
+async function ensureSupabaseSession() {
   try {
-    const planInfo = await stripeService.getCurrentPlan()
-    currentPlan.value = planInfo.name || 'free'
+    const { data: { session: s } } = await supabase.auth.getSession()
+    session.value = s
+    uid.value = s?.user?.id || null
+  } catch (error) {
+    console.error('Erro ao obter sessão do Supabase:', error)
+    session.value = null
+    uid.value = null
+  }
+}
+const loadCurrentPlan = async () => {
+  if (!isSignedIn.value || !uid.value) return
+
+  try {
+    const planInfo = await stripeService.getCurrentPlan(uid.value)
+    currentPlan.value = planInfo?.id || 'free'
   } catch (error) {
     console.error('Erro ao carregar plano atual:', error)
   }
@@ -384,7 +255,7 @@ const loadCurrentPlan = async () => {
 
 const selectFreePlan = () => {
   if (!isSignedIn.value) {
-    router.push('/auth/register')
+    router.push('/sign-up')
     return
   }
   
@@ -392,22 +263,17 @@ const selectFreePlan = () => {
 }
 
 const selectPlan = async (planId) => {
-  if (!isSignedIn.value) {
+  await ensureSupabaseSession()
+  if (!isSignedIn.value || !uid.value) {
     // Store selected plan and redirect to register
     localStorage.setItem('selectedPlan', planId)
-    router.push('/auth/register')
+    router.push('/sign-up')
     return
   }
   
   try {
     isProcessing.value = true
-    
-    const interval = isAnnual.value ? 'year' : 'month'
-    const checkoutUrl = await stripeService.createCheckoutSession(planId, interval)
-    
-    // Redirect to Stripe Checkout
-    window.location.href = checkoutUrl
-    
+    await stripeService.redirectToCheckout(planId, uid.value)
   } catch (error) {
     console.error('Erro ao processar plano:', error)
     toast.error('Erro ao processar seleção do plano')
@@ -438,9 +304,127 @@ const formatStorage = (bytes) => {
   }
 }
 
+const isAnnual = ref(false)
+const isProcessing = ref(false)
+const currentPlan = ref('free')
+const activeFaq = ref(null)
+
+const plans = computed(() => [
+  {
+    id: 'free',
+    name: SUBSCRIPTION_PLANS.free.name,
+    description: 'Ideal para começar',
+    price: SUBSCRIPTION_PLANS.free.price,
+    features: SUBSCRIPTION_PLANS.free.features,
+    limits: {
+      documents: SUBSCRIPTION_PLANS.free.limits.summariesPerMonth,
+      summaries: SUBSCRIPTION_PLANS.free.limits.summariesPerMonth,
+      storage: SUBSCRIPTION_PLANS.free.limits.maxFileSize
+    },
+    icon: StarIcon,
+    popular: false,
+    disabled: false
+  },
+  {
+    id: 'basic',
+    name: SUBSCRIPTION_PLANS.basic.name,
+    description: 'Para usuários regulares',
+    price: SUBSCRIPTION_PLANS.basic.price,
+    features: SUBSCRIPTION_PLANS.basic.features,
+    limits: {
+      documents: 50,
+      summaries: SUBSCRIPTION_PLANS.basic.limits.summariesPerMonth,
+      storage: SUBSCRIPTION_PLANS.basic.limits.maxFileSize
+    },
+    icon: RocketIcon,
+    popular: true,
+    disabled: false
+  },
+  {
+    id: 'professional',
+    name: SUBSCRIPTION_PLANS.professional.name,
+    description: 'Para profissionais e equipes',
+    price: SUBSCRIPTION_PLANS.professional.price,
+    features: SUBSCRIPTION_PLANS.professional.features,
+    limits: {
+      documents: 'unlimited',
+      summaries: SUBSCRIPTION_PLANS.professional.limits.summariesPerMonth,
+      storage: SUBSCRIPTION_PLANS.professional.limits.maxFileSize
+    },
+    icon: BuildingIcon,
+    popular: false,
+    disabled: false
+  },
+  {
+    id: 'enterprise',
+    name: SUBSCRIPTION_PLANS.enterprise.name,
+    description: 'Soluções sob medida para empresas',
+    price: SUBSCRIPTION_PLANS.enterprise.price,
+    features: SUBSCRIPTION_PLANS.enterprise.features,
+    limits: {
+      documents: 'unlimited',
+      summaries: SUBSCRIPTION_PLANS.enterprise.limits.summariesPerMonth,
+      storage: SUBSCRIPTION_PLANS.enterprise.limits.maxFileSize
+    },
+    icon: BuildingIcon,
+    popular: false,
+    disabled: true
+  }
+])
+
+function getPlanPrice(plan) {
+  if (plan.id === 'enterprise') return 'Sob consulta'
+  const price = plan.price
+  if (isAnnual.value) {
+    // 20% off annual
+    return (price * 12 * 0.8).toFixed(2)
+  }
+  return price.toFixed(2)
+}
+
+function getAnnualSavings(plan) {
+  if (plan.id === 'enterprise') return '—'
+  const monthly = plan.price * 12
+  const annual = monthly * 0.8
+  const savings = monthly - annual
+  return savings.toFixed(2)
+}
+
+function getActionLabel(planId) {
+  if (currentPlan.value === planId) return 'Plano atual'
+  switch (planId) {
+    case 'free':
+      return 'Começar grátis'
+    case 'basic':
+      return 'Assinar Básico'
+    case 'professional':
+      return 'Assinar Profissional'
+    case 'enterprise':
+      return 'Falar com vendas'
+    default:
+      return 'Selecionar plano'
+  }
+}
+
+const faqs = [
+  {
+    question: 'Posso mudar de plano a qualquer momento?',
+    answer: 'Sim, você pode alterar seu plano a qualquer momento nas configurações de cobrança.'
+  },
+  {
+    question: 'Existe teste grátis?',
+    answer: 'O plano gratuito permite testar as funcionalidades básicas sem custo.'
+  },
+  {
+    question: 'Como funciona a cobrança anual?',
+    answer: 'Na cobrança anual você obtém 20% de desconto em relação ao total mensal.'
+  }
+]
+
 // Lifecycle
-onMounted(() => {
-  loadCurrentPlan()
+onMounted(async () => {
+  await ensureSupabaseSession()
+  await loadCurrentPlan()
   
   // Check if user came from registration with selected plan
   const selectedPlan = localStorage.getItem('selectedPlan')
