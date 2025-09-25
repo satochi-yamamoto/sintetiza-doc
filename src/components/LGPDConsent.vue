@@ -5,6 +5,7 @@
         <input
           type="checkbox"
           v-model="privacyConsent"
+          @change="updatePrivacyConsent($event.target.checked)"
           class="mt-1 w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2"
           required
         />
@@ -40,6 +41,7 @@
         <input
           type="checkbox"
           v-model="marketingConsent"
+          @change="updateMarketingConsent($event.target.checked)"
           class="mt-1 w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2"
         />
         <span class="text-gray-700">

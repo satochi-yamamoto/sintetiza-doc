@@ -215,15 +215,17 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-import { useAuth, useUser } from '@clerk/vue'
+// Removido Clerk: useAuth/useUser
+// import { useAuth, useUser } from '@clerk/vue'
 import { useAppStore } from '@/stores/app'
-import { supabase, ensureSupabaseAuth } from '@/services/supabase'
+import { supabase } from '@/services/supabase'
 import { useToast } from 'vue-toastification'
 import FileUpload from '@/components/FileUpload.vue'
 
-// Composables
-const { isLoaded: authLoaded, isSignedIn, getToken } = useAuth()
-const { isLoaded: userLoaded, user } = useUser()
+// Estado de sessão Supabase
+const session = ref(null)
+const uid = ref(null)
+
 const appStore = useAppStore()
 const toast = useToast()
 
@@ -231,7 +233,7 @@ const toast = useToast()
 const showUploadModal = ref(false)
 const isLoading = ref(false)
 
-// Data
+// Dados
 const stats = reactive({
   totalDocuments: 0,
   totalSummaries: 0,
@@ -241,211 +243,172 @@ const stats = reactive({
 
 const recentActivity = ref([])
 
-// Garantir que o token do Clerk esteja aplicado ao cliente Supabase
+// Garantir sessão do Supabase (sem Clerk)
 const ensureSupabaseSession = async () => {
   try {
-    if (!authLoaded?.value || !userLoaded?.value) return false
-    if (!isSignedIn?.value) return false
-    const ok = await ensureSupabaseAuth(getToken)
-    return !!ok
-  } catch (err) {
-    // Silenciado para evitar ruído em produção
+    const { data } = await supabase.auth.getSession()
+    session.value = data?.session || null
+    uid.value = session.value?.user?.id || null
+    return !!uid.value
+  } catch (_) {
     return false
   }
 }
 
- // Computed
- const currentPlan = computed(() => {
-   return user?.value?.publicMetadata?.plan || 'Gratuito'
- })
- 
- const planBadgeClass = computed(() => {
-   const plan = (currentPlan.value || 'Gratuito').toLowerCase()
-   return {
-     'plan-free': plan === 'gratuito' || plan === 'free',
-     'plan-basic': plan === 'básico' || plan === 'basic',
-     'plan-pro': plan === 'profissional' || plan === 'professional',
-     'plan-enterprise': plan === 'empresarial' || plan === 'enterprise'
-   }
- })
- 
- const getUserName = computed(() => {
-   if (!user?.value) return null
- 
-   // Tentar diferentes propriedades do Clerk user
-   const firstName = user.value.firstName || user.value.first_name
-   const lastName = user.value.lastName || user.value.last_name
-   const fullName = user.value.fullName || user.value.full_name
-   const username = user.value.username
-   const emailName = user.value.primaryEmailAddress?.emailAddress?.split('@')[0]
- 
-   // Prioridade: firstName, fullName, username, parte do email
-   if (firstName) {
-     return lastName ? `${firstName} ${lastName}` : firstName
-   }
- 
-   if (fullName) return fullName
-   if (username) return username
-   if (emailName) return emailName
- 
-   return null
- })
- 
- // Methods
- const loadDashboardData = async () => {
-   try {
-     isLoading.value = true
-     appStore.setLoading(true)
- 
-     // Wait for user and session to be available
-    if (!user?.value?.id) {
-      console.log('User not loaded yet, skipping dashboard data load')
-      return
-    }
-    const sessionReady = await ensureSupabaseSession()
-    if (!sessionReady) {
-      console.log('Supabase session not ready, skipping data fetch')
-      return
-    }
- 
-     // Load user stats
-     await Promise.all([
-       loadStats(),
-       loadRecentActivity()
-     ])
-     
-   } catch (error) {
-     console.error('Erro ao carregar dados do dashboard:', error)
-     toast.error('Erro ao carregar dados do dashboard')
-   } finally {
-     isLoading.value = false
-     appStore.setLoading(false)
-   }
- }
- 
- const loadStats = async () => {
-   try {
-     const userId = user.value?.id
-     if (!userId) return
-     
-     // Load documents count
-     const { count: documentsCount } = await supabase
-       .from('documents')
-       .select('*', { count: 'exact', head: true })
-       .eq('user_id', userId)
-     
-     // Load summaries count
-     const { count: summariesCount } = await supabase
-       .from('summaries')
-       .select('*', { count: 'exact', head: true })
-       .eq('user_id', userId)
-     
-     // Load monthly usage (current month)
-     const startOfMonth = new Date()
-     startOfMonth.setDate(1)
-     startOfMonth.setHours(0, 0, 0, 0)
-     
-     const { count: monthlyCount } = await supabase
-       .from('summaries')
-       .select('*', { count: 'exact', head: true })
-       .eq('user_id', userId)
-       .gte('created_at', startOfMonth.toISOString())
-     
-     // Load storage usage
-     const { data: documents } = await supabase
-       .from('documents')
-       .select('file_size')
-       .eq('user_id', userId)
-     
-     const totalStorage = documents?.reduce((sum, doc) => sum + (doc.file_size || 0), 0) || 0
-     
-     // Update stats
-     stats.totalDocuments = documentsCount || 0
-     stats.totalSummaries = summariesCount || 0
-     stats.monthlyUsage = monthlyCount || 0
-     stats.storageUsed = totalStorage
-     
-   } catch (error) {
-     console.error('Erro ao carregar estatísticas:', error)
-   }
- }
- 
- const loadRecentActivity = async () => {
-   try {
-     const userId = user.value?.id
-     if (!userId) return
-     
-     // Load recent documents and summaries
-     const { data: documents } = await supabase
-       .from('documents')
-       .select('id, name, created_at')
-       .eq('user_id', userId)
-       .order('created_at', { ascending: false })
-       .limit(3)
-     
-     const { data: summaries } = await supabase
-       .from('summaries')
-       .select('id, title, created_at, document:documents(name)')
-       .eq('user_id', userId)
-       .order('created_at', { ascending: false })
-       .limit(3)
-     
-     // Combine and sort activities
-     const activities = []
-     
-     documents?.forEach(doc => {
-       activities.push({
-         id: `doc-${doc.id}`,
-         type: 'upload',
-         title: 'Documento enviado',
-         description: doc.name,
-         createdAt: doc.created_at
-       })
-     })
-     
-     summaries?.forEach(summary => {
-       activities.push({
-         id: `summary-${summary.id}`,
-         type: 'summary',
-         title: 'Resumo gerado',
-         description: summary.title || summary.document?.name || 'Documento',
-         createdAt: summary.created_at
-       })
-     })
-     
-     // Sort by date and take latest 5
-     recentActivity.value = activities
-       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-       .slice(0, 5)
-     
-   } catch (error) {
-     console.error('Erro ao carregar atividade recente:', error)
-   }
- }
- 
- // Watch for user changes
-watch(() => user?.value?.id, async (newUserId) => {
-  if (newUserId) {
-    await ensureSupabaseSession()
-    await loadDashboardData()
-  }
-}, { immediate: true })
+// Computed
+const currentPlan = computed(() => {
+  // Tenta obter do user_metadata ou fallback do store
+  return (
+    session.value?.user?.user_metadata?.plan || appStore?.plan || 'Gratuito'
+  )
+})
 
-// Lifecycle
-onMounted(async () => {
-  // Aplicar token assim que possível e carregar dados
-  await ensureSupabaseSession()
-  if (user?.value?.id) {
-    await loadDashboardData()
+const planBadgeClass = computed(() => {
+  const plan = (currentPlan.value || 'Gratuito').toLowerCase()
+  return {
+    'plan-free': plan === 'gratuito' || plan === 'free',
+    'plan-basic': plan === 'básico' || plan === 'basic',
+    'plan-pro': plan === 'profissional' || plan === 'professional',
+    'plan-enterprise': plan === 'empresarial' || plan === 'enterprise'
   }
 })
+
+const getUserName = computed(() => {
+  const u = session.value?.user
+  if (!u) return null
+  const meta = u.user_metadata || {}
+  const firstName = meta.firstName || meta.first_name
+  const lastName = meta.lastName || meta.last_name
+  const fullName = meta.fullName || meta.full_name
+  const emailName = (u.email || '').split('@')[0]
+
+  if (firstName) return lastName ? `${firstName} ${lastName}` : firstName
+  if (fullName) return fullName
+  if (emailName) return emailName
+  return null
+})
+
+// Métodos
+const loadDashboardData = async () => {
+  try {
+    isLoading.value = true
+    appStore.setLoading(true)
+
+    // Garante sessão e UID
+    const ready = await ensureSupabaseSession()
+    if (!ready) {
+      console.log('Sessão do Supabase não pronta, abortando carregamento do dashboard')
+      return
+    }
+
+    // Carregar estatísticas e atividade
+    await Promise.all([
+      loadStats(),
+      loadRecentActivity()
+    ])
+  } catch (error) {
+    console.error('Erro ao carregar dados do dashboard:', error)
+    toast.error('Erro ao carregar dados do dashboard')
+  } finally {
+    isLoading.value = false
+    appStore.setLoading(false)
+  }
+}
+
+const loadStats = async () => {
+  try {
+    const userId = uid.value
+    if (!userId) return
+
+    const { count: documentsCount } = await supabase
+      .from('documents')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+
+    const { count: summariesCount } = await supabase
+      .from('summaries')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+
+    const startOfMonth = new Date()
+    startOfMonth.setDate(1)
+    startOfMonth.setHours(0, 0, 0, 0)
+
+    const { count: monthlyCount } = await supabase
+      .from('summaries')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', startOfMonth.toISOString())
+
+    const { data: documents } = await supabase
+      .from('documents')
+      .select('file_size')
+      .eq('user_id', userId)
+
+    const totalStorage = documents?.reduce((sum, doc) => sum + (doc.file_size || 0), 0) || 0
+
+    stats.totalDocuments = documentsCount || 0
+    stats.totalSummaries = summariesCount || 0
+    stats.monthlyUsage = monthlyCount || 0
+    stats.storageUsed = totalStorage
+  } catch (error) {
+    console.error('Erro ao carregar estatísticas:', error)
+  }
+}
+
+const loadRecentActivity = async () => {
+  try {
+    const userId = uid.value
+    if (!userId) return
+
+    const { data: documents } = await supabase
+      .from('documents')
+      .select('id, name, created_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(3)
+
+    const { data: summaries } = await supabase
+      .from('summaries')
+      .select('id, title, created_at, document:documents(name)')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(3)
+
+    const activities = []
+    documents?.forEach(doc => {
+      activities.push({
+        id: `doc-${doc.id}`,
+        type: 'upload',
+        title: 'Documento enviado',
+        description: doc.name,
+        createdAt: doc.created_at
+      })
+    })
+    summaries?.forEach(summary => {
+      activities.push({
+        id: `summary-${summary.id}`,
+        type: 'summary',
+        title: 'Resumo gerado',
+        description: summary.title || summary.document?.name || 'Documento',
+        createdAt: summary.created_at
+      })
+    })
+
+    recentActivity.value = activities
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 5)
+  } catch (error) {
+    console.error('Erro ao carregar atividade recente:', error)
+  }
+}
+
+// Formatação
 const formatStorage = (bytes) => {
   if (bytes === 0) return '0 B'
-  
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i]
 }
 
@@ -453,16 +416,10 @@ const formatTime = (timestamp) => {
   const date = new Date(timestamp)
   const now = new Date()
   const diffInHours = (now - date) / (1000 * 60 * 60)
-  
-  if (diffInHours < 1) {
-    return 'Agora há pouco'
-  } else if (diffInHours < 24) {
-    return `${Math.floor(diffInHours)}h atrás`
-  } else if (diffInHours < 48) {
-    return 'Ontem'
-  } else {
-    return date.toLocaleDateString('pt-BR')
-  }
+  if (diffInHours < 1) return 'Agora há pouco'
+  if (diffInHours < 24) return `${Math.floor(diffInHours)}h atrás`
+  if (diffInHours < 48) return 'Ontem'
+  return date.toLocaleDateString('pt-BR')
 }
 
 const closeUploadModal = () => {
@@ -471,22 +428,21 @@ const closeUploadModal = () => {
 
 const handleUploadComplete = () => {
   closeUploadModal()
-  loadDashboardData() // Refresh data
+  loadDashboardData()
   toast.success('Upload concluído com sucesso!')
 }
 
-// Watch for user changes
-watch(() => user?.value?.id, async (newUserId) => {
-  if (newUserId) {
-    await ensureSupabaseSession()
+// Watchers (usando UID do Supabase)
+watch(uid, async (newUid) => {
+  if (newUid) {
     await loadDashboardData()
   }
-}, { immediate: true })
+})
 
 // Lifecycle
 onMounted(async () => {
   await ensureSupabaseSession()
-  if (user?.value?.id) {
+  if (uid.value) {
     await loadDashboardData()
   }
 })
