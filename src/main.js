@@ -178,11 +178,37 @@ Sentry.init({
   ],
   // Performance
   tracesSampleRate: import.meta.env.DEV ? 1.0 : 0.2,
-  tracePropagationTargets: ['localhost', /^http:\/\/localhost:3000/],
+  tracePropagationTargets: ['localhost', /^http:\/\/localhost:3012/, import.meta.env.VITE_API_BASE_URL].filter(Boolean),
   // Session Replay
   replaysSessionSampleRate: import.meta.env.DEV ? 1.0 : 0.1,
-  replaysOnErrorSampleRate: 1.0
+  replaysOnErrorSampleRate: 1.0,
+  environment: import.meta.env.MODE,
+  beforeSend(event, hint) {
+    try {
+      const msg = event?.exception?.values?.[0]?.value || hint?.originalException?.message || ''
+      if (typeof msg === 'string' && msg.includes('Sentry dev test error')) {
+        // Ignora eventos de teste explicitamente marcados
+        return null
+      }
+    } catch (_) {}
+    return event
+  }
 })
+
+// Gatilho temporário de erro para validar Sentry em desenvolvimento
+const DEV_TEST_ENABLED = import.meta.env.VITE_SENTRY_DEV_TEST === 'true'
+if (import.meta.env.DEV && DEV_TEST_ENABLED && import.meta.env.VITE_SENTRY_DSN) {
+  const FLAG_KEY = '__SENTRY_DEV_TRIGGERED__'
+  if (!window[FLAG_KEY]) {
+    window[FLAG_KEY] = true
+    // Aguarda a aplicação estabilizar antes de disparar
+    setTimeout(() => {
+      const explicitErr = new Error('Sentry dev test error: explicit capture (safe to ignore)')
+      Sentry.captureException(explicitErr)
+      // Não lançar exceções não tratadas; mantemos apenas captura explícita
+    }, 1500)
+  }
+}
 
 // Pinia com plugin do Sentry
 const pinia = createPinia()

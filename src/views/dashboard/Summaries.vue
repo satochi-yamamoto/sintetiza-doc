@@ -346,13 +346,18 @@ const loadSummaries = async () => {
 
     const { data, error } = await supabase
       .from('summaries')
-      .select('id, title, content, style, language, created_at, document:documents(name)')
+      .select('id, content, type, language, created_at, document:documents(name)')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
 
     if (error) throw error
 
-    summaries.value = data || []
+    // Mapear para compatibilidade com UI (title derivado do documento, style do type)
+    summaries.value = (data || []).map(r => ({
+      ...r,
+      title: r.title || r.document?.name || 'Resumo',
+      style: r.style || r.type
+    }))
   } catch (error) {
     console.debug('Erro ao carregar resumos:', error)
     toast.error('Erro ao carregar resumos')
@@ -375,7 +380,6 @@ onMounted(async () => {
     await loadSummaries()
   }
 })
-</script>
 const viewSummary = (summary) => {
   selectedSummary.value = summary
   showViewerModal.value = true
@@ -414,21 +418,23 @@ const duplicateSummary = async (summary) => {
     const { data, error } = await supabase
       .from('summaries')
       .insert({
-        user_id: user.value?.id,
+        user_id: uid.value,
         document_id: summary.document_id,
-        title: `${summary.title} (Cópia)`,
         content: summary.content,
-        style: summary.style,
-        language: summary.language,
-        analysis_type: summary.analysis_type,
-        size: summary.size
+        type: summary.type || summary.style || 'standard',
+        language: summary.language
       })
-      .select()
+      .select('id, content, type, language, created_at, document:documents(name)')
     
     if (error) throw error
     
-    // Add to local list
-    summaries.value.unshift(data[0])
+    // Add to local list (derivar campos usados pela UI)
+    const inserted = {
+      ...data[0],
+      title: data[0]?.document?.name || 'Resumo',
+      style: data[0]?.type || 'standard'
+    }
+    summaries.value.unshift(inserted)
     
     toast.success('Resumo duplicado com sucesso')
     

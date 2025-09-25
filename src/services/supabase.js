@@ -184,30 +184,74 @@ export const supabaseData = {
   // Buscar dados
   async select(table, columns = '*', filters = {}, options = {}) {
     try {
-      let query = supabase.from(table).select(columns)
+      if (import.meta?.env?.DEV) {
+        console.debug('[supabaseData.select] chamada', {
+          table,
+          columnsType: typeof columns,
+          columns,
+          filters,
+          options
+        })
+      }
+  
+      // Normalização: permitir objeto de consulta no parâmetro "columns"
+      let selectStr = columns
+      let eqMap = filters || {}
+      let gteMap = {}
+      let lteMap = {}
+      let inMap = {}
+      let orderByOpt = options?.orderBy
+      let limitOpt = options?.limit
+      let offsetOpt = options?.offset
+  
+      if (columns && typeof columns === 'object' && !Array.isArray(columns)) {
+        selectStr = columns.select || '*'
+        eqMap = columns.eq || {}
+        gteMap = columns.gte || {}
+        lteMap = columns.lte || {}
+        inMap = columns.in || {}
+        orderByOpt = columns.orderBy ?? orderByOpt
+        limitOpt = columns.limit ?? limitOpt
+        offsetOpt = columns.offset ?? offsetOpt
+      }
+  
+      let query = supabase.from(table).select(selectStr)
       
-      // Aplicar filtros
-      Object.entries(filters).forEach(([key, value]) => {
+      // Aplicar filtros de igualdade/IN
+      Object.entries(eqMap).forEach(([key, value]) => {
         if (Array.isArray(value)) {
           query = query.in(key, value)
         } else {
           query = query.eq(key, value)
         }
       })
+  
+      // Aplicar filtros IN explícitos
+      Object.entries(inMap).forEach(([key, value]) => {
+        query = query.in(key, value)
+      })
+      
+      // Aplicar operadores de comparação
+      Object.entries(gteMap).forEach(([key, value]) => {
+        query = query.gte(key, value)
+      })
+      Object.entries(lteMap).forEach(([key, value]) => {
+        query = query.lte(key, value)
+      })
       
       // Aplicar opções
-      if (options.orderBy) {
-        query = query.order(options.orderBy.column, { 
-          ascending: options.orderBy.ascending !== false 
+      if (orderByOpt) {
+        query = query.order(orderByOpt.column, { 
+          ascending: orderByOpt.ascending !== false 
         })
       }
       
-      if (options.limit) {
-        query = query.limit(options.limit)
+      if (limitOpt) {
+        query = query.limit(limitOpt)
       }
       
-      if (options.offset) {
-        query = query.range(options.offset, options.offset + (options.limit || 10) - 1)
+      if (offsetOpt) {
+        query = query.range(offsetOpt, offsetOpt + (limitOpt || 10) - 1)
       }
       
       const { data, error } = await query
@@ -223,6 +267,14 @@ export const supabaseData = {
   // Buscar um único registro
   async selectOne(table, columns = '*', filters = {}) {
     try {
+      if (import.meta?.env?.DEV) {
+        console.debug('[supabaseData.selectOne] chamada', {
+          table,
+          columnsType: typeof columns,
+          columns,
+          filters
+        })
+      }
       const data = await this.select(table, columns, filters, { limit: 1 })
       return data?.[0] || null
     } catch (error) {

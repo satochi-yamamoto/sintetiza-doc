@@ -1,8 +1,22 @@
 import { loadStripe } from '@stripe/stripe-js'
 import { supabaseData } from './supabase.js'
 
-// Inicializar Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+// Inicializar Stripe com chave apropriada para o ambiente e protocolo
+const env = import.meta.env
+const isHttps = typeof window !== 'undefined' && window.location?.protocol === 'https:'
+const isLocalhost = typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location?.hostname)
+// Suporte a variáveis separadas de live/test, com fallback para VITE_STRIPE_PUBLISHABLE_KEY
+const liveKey = env.VITE_STRIPE_PUBLISHABLE_KEY_LIVE || env.VITE_STRIPE_PUBLISHABLE_KEY || ''
+const testKey = env.VITE_STRIPE_PUBLISHABLE_KEY_TEST || env.VITE_STRIPE_TEST_KEY || ''
+let publishableKey = env.MODE === 'production' ? liveKey : (testKey || liveKey)
+
+// Evita usar chave live em contexto não-HTTPS fora do localhost
+if (!isHttps && !isLocalhost && publishableKey?.startsWith('pk_live_')) {
+  console.warn('[stripe] Chave live detectada fora de HTTPS. Desabilitando Stripe ou usando chave de teste, se disponível.')
+  publishableKey = testKey || ''
+}
+
+const stripePromise = publishableKey ? loadStripe(publishableKey) : Promise.resolve(null)
 
 // Configuração dos planos
 export const SUBSCRIPTION_PLANS = {
@@ -139,7 +153,7 @@ export const stripeService = {
       const { sessionId } = await response.json()
       return sessionId
     } catch (error) {
-      console.error('Erro ao criar checkout:', error)
+      console.error('Erro ao criar sessão de checkout:', error)
       throw error
     }
   },
@@ -149,12 +163,11 @@ export const stripeService = {
     try {
       const plan = SUBSCRIPTION_PLANS[planId]
       if (!plan || !plan.stripePriceId) {
-        throw new Error('Plano inválido ou não disponível para compra')
+        throw new Error('Plano inválido ou não configurado')
       }
       
-      const stripe = await this.getStripe()
-      const successUrl = `${window.location.origin}/dashboard/billing/success`
-      const cancelUrl = `${window.location.origin}/dashboard/billing/cancel`
+      const successUrl = `${window.location.origin}/dashboard/billing?status=success`
+      const cancelUrl = `${window.location.origin}/dashboard/billing?status=cancel`
       
       const sessionId = await this.createCheckoutSession(
         plan.stripePriceId,
@@ -162,6 +175,11 @@ export const stripeService = {
         successUrl,
         cancelUrl
       )
+      
+      const stripe = await this.getStripe()
+      if (!stripe) {
+        throw new Error('Stripe indisponível neste ambiente (requer HTTPS para chaves live).')
+      }
       
       const { error } = await stripe.redirectToCheckout({ sessionId })
       
@@ -204,18 +222,14 @@ export const stripeService = {
   async getSubscriptionInfo(userId) {
     try {
       console.log('🔍 getSubscriptionInfo - Buscando subscription para userId:', userId)
-      const { data, error } = await supabaseData.selectOne(
-        'user_subscriptions',
+      const subscription = await supabaseData.selectOne(
+        'subscriptions',
+        '*',
         { user_id: userId }
       )
 
-      if (error) {
-        console.error('❌ getSubscriptionInfo - Erro ao buscar assinatura:', error)
-        return null
-      }
-
-      console.log('📊 getSubscriptionInfo - Dados retornados:', data)
-      return data
+      console.log('📊 getSubscriptionInfo - Dados retornados:', subscription)
+      return subscription
     } catch (error) {
       console.error('❌ getSubscriptionInfo - Erro ao obter informações da assinatura:', error)
       return null
@@ -267,131 +281,8 @@ export const stripeService = {
       
       return { allowed: true, plan }
     } catch (error) {
-      console.error('Erro ao verificar limites:', error)
+      console.error('Erro ao verificar limites do plano:', error)
       return { allowed: false, reason: 'Erro interno' }
-    }
-  },
-  
-  // Verificar se formato é suportado pelo plano
-  isFormatSupported(planId, format) {
-    const plan = SUBSCRIPTION_PLANS[planId]
-    if (!plan) return false
-    
-    return plan.limits.supportedFormats.includes(format)
-  },
-  
-  // Verificar se provedor de IA é suportado
-  isAIProviderSupported(planId, provider) {
-    const plan = SUBSCRIPTION_PLANS[planId]
-    if (!plan) return false
-    
-    return plan.limits.aiProviders.includes(provider)
-  },
-  
-  // Verificar se formato de exportação é suportado
-  isExportFormatSupported(planId, format) {
-    const plan = SUBSCRIPTION_PLANS[planId]
-    if (!plan) return false
-    
-    if (plan.limits.exportFormats === 'all') return true
-    return plan.limits.exportFormats.includes(format)
-  },
-  
-  // Obter uso atual do usuário
-  async getCurrentUsage(userId) {
-    try {
-      const startOfMonth = new Date()
-      startOfMonth.setDate(1)
-      startOfMonth.setHours(0, 0, 0, 0)
-      
-      // Resumos criados este mês
-      const { data: summaries } = await supabaseData.select(
-        'summaries',
-        {
-          select: 'id, created_at',
-          eq: { user_id: userId },
-          gte: { created_at: startOfMonth.toISOString() }
-        }
-      )
-      
-      // Documentos processados este mês
-      const { data: documents } = await supabaseData.select(
-        'documents',
-        {
-          select: 'id, file_size',
-          eq: { user_id: userId },
-          gte: { created_at: startOfMonth.toISOString() }
-        }
-      )
-      
-      const totalFileSize = documents?.reduce((sum, doc) => sum + (doc.file_size || 0), 0) || 0
-      
-      return {
-        summariesThisMonth: summaries?.length || 0,
-        documentsThisMonth: documents?.length || 0,
-        totalFileSizeThisMonth: totalFileSize,
-        period: {
-          start: startOfMonth,
-          end: new Date(startOfMonth.getFullYear(), startOfMonth.getMonth() + 1, 0)
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao obter uso atual:', error)
-      return {
-        summariesThisMonth: 0,
-        documentsThisMonth: 0,
-        totalFileSizeThisMonth: 0
-      }
-    }
-  },
-  
-  // Formatar preço
-  formatPrice(price, currency = 'BRL') {
-    if (price === null || price === undefined) {
-      return 'Sob consulta'
-    }
-    
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: currency
-    }).format(price)
-  },
-  
-  // Obter próxima data de cobrança
-  getNextBillingDate(subscription) {
-    if (!subscription || !subscription.current_period_end) {
-      return null
-    }
-    
-    return new Date(subscription.current_period_end)
-  },
-  
-  // Verificar se assinatura está ativa
-  isSubscriptionActive(subscription) {
-    if (!subscription) return false
-    
-    const validStatuses = ['active', 'trialing']
-    return validStatuses.includes(subscription.status)
-  },
-  
-  // Obter plano atual do usuário
-  async getCurrentPlan(userId) {
-    try {
-      console.log('🔍 getCurrentPlan - Buscando plano para userId:', userId)
-      const subscription = await this.getSubscriptionInfo(userId)
-      console.log('📊 getCurrentPlan - Subscription encontrada:', subscription)
-
-      if (!subscription || !this.isSubscriptionActive(subscription)) {
-        console.log('📋 getCurrentPlan - Retornando plano gratuito (sem subscription ativa)')
-        return SUBSCRIPTION_PLANS.free
-      }
-
-      const plan = SUBSCRIPTION_PLANS[subscription.plan_id] || SUBSCRIPTION_PLANS.free
-      console.log('✅ getCurrentPlan - Plano retornado:', plan)
-      return plan
-    } catch (error) {
-      console.error('❌ getCurrentPlan - Erro ao obter plano atual:', error)
-      return SUBSCRIPTION_PLANS.free
     }
   }
 }

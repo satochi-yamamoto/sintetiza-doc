@@ -369,7 +369,7 @@ const loadRecentActivity = async () => {
 
     const { data: summaries } = await supabase
       .from('summaries')
-      .select('id, title, created_at, document:documents(name)')
+      .select('id, type, created_at, document:documents(name)')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(3)
@@ -389,7 +389,7 @@ const loadRecentActivity = async () => {
         id: `summary-${summary.id}`,
         type: 'summary',
         title: 'Resumo gerado',
-        description: summary.title || summary.document?.name || 'Documento',
+        description: summary.document?.name || 'Documento',
         createdAt: summary.created_at
       })
     })

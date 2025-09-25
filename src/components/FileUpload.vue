@@ -169,6 +169,7 @@ import { useToast } from 'vue-toastification'
 import { fileProcessorService } from '../services/fileProcessor.js'
 import { stripeService, SUBSCRIPTION_PLANS } from '../services/stripe.js'
 import { supabase } from '@/services/supabase.js'
+import { formatFileSize } from '@/utils/index.js'
 
 // Props
 const props = defineProps({
@@ -415,9 +416,7 @@ const processFiles = async () => {
   }
 }
 
-const formatFileSize = (bytes) => {
-  return fileProcessorService.formatFileSize(bytes)
-}
+// formatFileSize: usando helper importado de '@/utils/index.js'
 
 const getFileTypeLabel = (mimeType) => {
   const typeMap = {
