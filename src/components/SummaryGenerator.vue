@@ -311,7 +311,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 import { aiService } from '../services/ai.js'
-// import { useAuth } from '@clerk/vue'
+
 import { stripeService } from '../services/stripe.js'
 import { DocumentIcon, PdfIcon, WordIcon, AudioIcon } from './icons/FileIcons.vue'
 import { supabase } from '../services/supabase.js'

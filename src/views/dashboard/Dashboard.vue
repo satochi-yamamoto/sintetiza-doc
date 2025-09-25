@@ -215,8 +215,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-// Removido Clerk: useAuth/useUser
-// import { useAuth, useUser } from '@clerk/vue'
+
 import { useAppStore } from '@/stores/app'
 import { supabase } from '@/services/supabase'
 import { useToast } from 'vue-toastification'
