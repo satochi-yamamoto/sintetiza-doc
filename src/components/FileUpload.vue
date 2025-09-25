@@ -167,8 +167,8 @@
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'vue-toastification'
 import { fileProcessorService } from '../services/fileProcessor.js'
-import { stripeService } from '../services/stripe.js'
-import supabase from '@/services/supabase'
+import { stripeService, SUBSCRIPTION_PLANS } from '../services/stripe.js'
+import { supabase } from '@/services/supabase.js'
 
 // Props
 const props = defineProps({
@@ -195,8 +195,21 @@ const toast = useToast()
 
 // Helper: obter UID do usuário autenticado no Supabase
 const getUid = async () => {
-  const { data: { session } } = await supabase.auth.getSession()
-  return session?.user?.id || null
+  try {
+    const { data, error } = await supabase.auth.getSession()
+    if (error) {
+      console.debug('Sessão Supabase indisponível (getSession error):', error)
+      return null
+    }
+    if (!data?.session) {
+      console.debug('Sessão Supabase ausente (data.session vazio)')
+      return null
+    }
+    return data.session.user?.id || null
+  } catch (e) {
+    console.debug('Exceção ao obter UID (getSession):', e)
+    return null
+  }
 }
 
 // Refs
@@ -263,6 +276,10 @@ const addFiles = async (newFiles) => {
     }
 
     const currentPlan = await stripeService.getCurrentPlan(uid)
+    const plan = currentPlan && currentPlan.limits ? currentPlan : SUBSCRIPTION_PLANS.free
+    if (!currentPlan?.limits) {
+      toast.info('Plano não identificado, aplicando regras do plano gratuito.')
+    }
 
     for (const file of newFiles) {
       try {
@@ -271,13 +288,13 @@ const addFiles = async (newFiles) => {
         
         // Verificar se o formato é suportado pelo plano
         const fileExtension = file.name.split('.').pop().toLowerCase()
-        if (!stripeService.isFormatSupported(currentPlan.id, fileExtension)) {
+        if (!stripeService.isFormatSupported(plan.id, fileExtension)) {
           throw new Error(`Formato ${fileExtension.toUpperCase()} não suportado no seu plano atual`)
         }
 
         // Verificar tamanho máximo do plano
-        if (file.size > currentPlan.limits.maxFileSize) {
-          throw new Error(`Arquivo muito grande para o seu plano. Máximo: ${formatFileSize(currentPlan.limits.maxFileSize)}`)
+        if (file.size > plan.limits.maxFileSize) {
+          throw new Error(`Arquivo muito grande para o seu plano. Máximo: ${formatFileSize(plan.limits.maxFileSize)}`)
         }
         
         // Adicionar à lista

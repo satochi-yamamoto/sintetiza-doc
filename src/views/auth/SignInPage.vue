@@ -95,7 +95,7 @@ const onSubmit = async () => {
     toast.success('Login realizado com sucesso!')
     await router.push('/dashboard')
   } catch (err) {
-    console.error('Erro no login:', err)
+    console.debug('Erro no login:', err)
     error.value = err?.message || 'Falha ao entrar. Verifique suas credenciais.'
   } finally {
     loading.value = false

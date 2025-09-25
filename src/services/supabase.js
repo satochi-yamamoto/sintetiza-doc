@@ -319,24 +319,25 @@ export async function ensureSupabaseAuth(getTokenLike) {
     const envProv = (import.meta?.env?.VITE_SUPABASE_OIDC_PROVIDER || '').trim()
     if (envProv) providersToTry.push(envProv)
     providersToTry.push('oidc')
-
-    if (!supabase?.auth?.signInWithIdToken) {
-      console.error('[ensureSupabaseAuth] signInWithIdToken indisponível nesta versão do SDK.');
-      return false;
-    }
-    for (const provider of providersToTry) {
-      try {
-        const { error } = await supabase.auth.signInWithIdToken({ provider, token })
-        if (!error) return true
-        console.debug(`[ensureSupabaseAuth] signInWithIdToken erro com provider "${provider}":`, error)
-      } catch (e2) {
-        console.debug(`[ensureSupabaseAuth] tentativa com provider "${provider}" falhou:`, e2)
+    
+    const enableBootstrap = import.meta.env?.VITE_ENABLE_OIDC_BOOTSTRAP === 'true'
+    if (!enableBootstrap) {
+      console.debug('[ensureSupabaseAuth] OIDC bootstrap desativado por VITE_ENABLE_OIDC_BOOTSTRAP=false; ignorando tentativa de sign-in.')
+    } else {
+      for (const provider of providersToTry) {
+        try {
+          const { error } = await supabase.auth.signInWithIdToken({ provider, token })
+          if (!error) return true
+          console.debug(`[ensureSupabaseAuth] signInWithIdToken erro com provider "${provider}":`, error)
+        } catch (e2) {
+          console.debug(`[ensureSupabaseAuth] tentativa com provider "${provider}" falhou:`, e2)
+        }
       }
     }
-    console.error('[ensureSupabaseAuth] Não foi possível autenticar com nenhum provider (ENV, oidc). Verifique a configuração OIDC no Supabase e o JWT template do seu IdP.')
+    console.warn('[ensureSupabaseAuth] Não foi possível autenticar com nenhum provider (ENV, oidc). Verifique a configuração OIDC no Supabase e o JWT template do seu IdP.')
     return false
   } catch (err) {
-    console.error('[ensureSupabaseAuth] erro inesperado:', err);
+    console.warn('[ensureSupabaseAuth] erro inesperado:', err);
     return false;
   }
 }

@@ -354,7 +354,7 @@ const loadSummaries = async () => {
 
     summaries.value = data || []
   } catch (error) {
-    console.error('Erro ao carregar resumos:', error)
+    console.debug('Erro ao carregar resumos:', error)
     toast.error('Erro ao carregar resumos')
   } finally {
     isLoading.value = false
@@ -404,7 +404,7 @@ const shareSummary = async (summary) => {
     }
     
   } catch (error) {
-    console.error('Erro ao compartilhar:', error)
+    console.debug('Erro ao compartilhar:', error)
     toast.error('Erro ao compartilhar resumo')
   }
 }
@@ -433,7 +433,7 @@ const duplicateSummary = async (summary) => {
     toast.success('Resumo duplicado com sucesso')
     
   } catch (error) {
-    console.error('Erro ao duplicar resumo:', error)
+    console.debug('Erro ao duplicar resumo:', error)
     toast.error('Erro ao duplicar resumo')
   }
 }
@@ -457,7 +457,7 @@ const deleteSummary = async (summary) => {
     toast.success('Resumo excluído com sucesso')
     
   } catch (error) {
-    console.error('Erro ao excluir resumo:', error)
+    console.debug('Erro ao excluir resumo:', error)
     toast.error('Erro ao excluir resumo')
   }
 }

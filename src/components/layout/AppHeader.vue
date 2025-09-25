@@ -245,13 +245,23 @@ const refreshSession = async () => {
   try {
     const { data, error } = await supabase.auth.getSession()
     if (error) {
-      console.error('❌ Erro ao obter sessão Supabase:', error)
+      console.debug('Sessão Supabase indisponível (getSession error):', error)
+      isSignedIn.value = false
+      currentUser.value = null
+      return
     }
-    isSignedIn.value = !!data?.session
-    currentUser.value = data?.session?.user || null
-    // ... existing code ...
+    if (!data?.session) {
+      console.debug('Sessão Supabase ausente (data.session vazio)')
+      isSignedIn.value = false
+      currentUser.value = null
+      return
+    }
+    isSignedIn.value = true
+    currentUser.value = data.session.user
   } catch (e) {
-    console.error('❌ Exceção ao atualizar sessão Supabase:', e)
+    console.debug('Exceção ao atualizar sessão Supabase:', e)
+    isSignedIn.value = false
+    currentUser.value = null
   }
 }
 
@@ -358,7 +368,7 @@ const logout = async () => {
     toast.success('Você saiu da sua conta')
     router.push('/')
   } catch (e) {
-    console.error('❌ Erro ao sair:', e)
+    console.debug('❌ Erro ao sair:', e)
     toast.error('Não foi possível sair. Tente novamente.')
   }
 }
@@ -373,6 +383,21 @@ const markAllAsRead = () => {
 
 const formatTime = (timestamp) => {
   return appStore.formatRelativeTime(timestamp)
+}
+
+const signOut = async () => {
+  try {
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      console.debug('Sair: supabase.auth.signOut retornou erro:', error)
+      toast.error('Não foi possível sair. Tente novamente.')
+      return
+    }
+    toast.success('Você saiu com sucesso')
+  } catch (e) {
+    console.debug('Exceção ao sair:', e)
+    toast.error('Não foi possível sair. Tente novamente.')
+  }
 }
 
 

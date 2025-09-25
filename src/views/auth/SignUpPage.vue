@@ -144,7 +144,7 @@ export default {
           await router.push('/dashboard')
         }
       } catch (err) {
-        console.error('Erro no cadastro:', err)
+        console.debug('Erro no cadastro:', err)
         error.value = err?.message || 'Falha ao criar conta.'
       } finally {
         loading.value = false

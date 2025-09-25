@@ -7,6 +7,8 @@ import 'vue-toastification/dist/index.css'
 import App from './App.vue'
 import router from './router'
 import './style.css'
+import * as Sentry from '@sentry/vue'
+import { createSentryPiniaPlugin } from '@sentry/vue'
 
 // Configuração do i18n
 const messages = {
@@ -162,7 +164,31 @@ const toastOptions = {
 
 const app = createApp(App)
 
-app.use(createPinia())
+// Inicialização do Sentry (mantém logs ativos; captura apenas error/warn no console)
+Sentry.init({
+  app,
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  sendDefaultPii: true,
+  integrations: [
+    Sentry.browserTracingIntegration({ router }),
+    Sentry.replayIntegration(),
+    // Captura logs de console para Sentry sem enviar debug/info
+    // Mantém console local inalterado
+    Sentry.captureConsoleIntegration({ levels: ['error', 'warn'] })
+  ],
+  // Performance
+  tracesSampleRate: import.meta.env.DEV ? 1.0 : 0.2,
+  tracePropagationTargets: ['localhost', /^http:\/\/localhost:3000/],
+  // Session Replay
+  replaysSessionSampleRate: import.meta.env.DEV ? 1.0 : 0.1,
+  replaysOnErrorSampleRate: 1.0
+})
+
+// Pinia com plugin do Sentry
+const pinia = createPinia()
+pinia.use(createSentryPiniaPlugin())
+
+app.use(pinia)
 app.use(router)
 app.use(i18n)
 app.use(Toast, toastOptions)

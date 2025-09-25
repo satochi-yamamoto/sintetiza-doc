@@ -1,10 +1,22 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    // Plugin do Sentry deve vir após todos os outros plugins
+    sentryVitePlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      telemetry: false,
+      // Desabilita quando variáveis não estiverem presentes (dev sem token)
+      disable: !(process.env.SENTRY_ORG && process.env.SENTRY_PROJECT && process.env.SENTRY_AUTH_TOKEN)
+    })
+  ],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
@@ -19,6 +31,7 @@ export default defineConfig({
   server: {
     port: 3012,
     host: true,
+    hmr: { overlay: false },
     proxy: {
       '/api': {
         target: 'http://localhost:3000',

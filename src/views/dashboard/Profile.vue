@@ -311,7 +311,7 @@ export default {
         session.value = data.session
         uid.value = data.session?.user?.id || null
       } catch (e) {
-        console.error('Erro ao obter sessão do Supabase:', e)
+        console.debug('Erro ao obter sessão do Supabase:', e)
       }
     }
 
@@ -321,7 +321,7 @@ export default {
         
         await ensureSupabaseSession()
         if (!uid.value) {
-          console.warn('Nenhuma sessão ativa encontrada.')
+          console.debug('Nenhuma sessão ativa encontrada.')
           return
         }
         
@@ -361,7 +361,7 @@ export default {
             .from('users')
             .upsert({ id: uid.value, email })
           if (upsertError) {
-            console.error('Erro ao criar perfil inicial:', upsertError)
+            console.debug('Erro ao criar perfil inicial:', upsertError)
           } else {
             const { data: created } = await supabase
               .from('users')
@@ -396,7 +396,7 @@ export default {
         userProfile.plan = plan?.name || 'Gratuito'
         
       } catch (error) {
-        console.error('Erro ao carregar perfil:', error)
+        console.debug('Erro ao carregar perfil:', error)
       } finally {
         isLoading.value = false
       }
@@ -415,7 +415,8 @@ export default {
           data: { name: profileForm.name.trim() }
         })
         if (authError) {
-          console.warn('Não foi possível atualizar dados de autenticação:', authError.message)
+          console.debug('Não foi possível atualizar dados de autenticação:', authError.message)
+          toast.info('Falha ao atualizar dados de autenticação. Continue e salve novamente mais tarde.')
         }
         
         // Manter/mesclar metadata existente
@@ -451,9 +452,11 @@ export default {
         editMode.value = false
         
         console.log('Perfil atualizado com sucesso!')
+        toast.success('Perfil atualizado com sucesso')
         
       } catch (error) {
-        console.error('Erro ao salvar perfil:', error)
+        console.debug('Erro ao salvar perfil:', error)
+        toast.error('Erro ao salvar perfil')
       } finally {
         isUpdating.value = false
       }
@@ -464,7 +467,8 @@ export default {
         // TODO: Implementar upload de avatar via Supabase Storage
         console.log('Upload de avatar')
       } catch (error) {
-        console.error('Erro ao fazer upload do avatar:', error)
+        console.debug('Erro ao fazer upload do avatar:', error)
+        toast.error('Erro ao fazer upload do avatar')
       }
     }
 

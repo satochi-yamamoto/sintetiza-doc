@@ -339,10 +339,14 @@ const toast = useToast()
 const getUid = async () => {
   const { data, error } = await supabase.auth.getSession()
   if (error) {
-    console.error('Erro ao obter sessão do Supabase:', error)
+    console.debug('Sessão Supabase indisponível (getSession error):', error)
     return null
   }
-  return data?.session?.user?.id || null
+  if (!data?.session) {
+    console.debug('Sessão Supabase ausente (data.session vazio)')
+    return null
+  }
+  return data.session.user?.id || null
 }
 
 // Refs
@@ -523,7 +527,7 @@ const generateSummary = async () => {
     toast.success('Resumo gerado com sucesso!')
     
   } catch (error) {
-    console.error('Erro ao gerar resumo:', error)
+    console.debug('Erro ao gerar resumo:', error)
     toast.error(`Erro ao gerar resumo: ${error.message}`)
   } finally {
     isGenerating.value = false
@@ -604,15 +608,23 @@ onMounted(async () => {
       selectedLanguage.value = storedLang
       return
     }
-    const { data } = await supabase.auth.getSession()
-    const lang = data?.session?.user?.user_metadata?.preferences?.language
-      || data?.session?.user?.user_metadata?.language
-      || data?.session?.user?.app_metadata?.language
+    const { data, error } = await supabase.auth.getSession()
+    if (error) {
+      console.debug('Sessão Supabase indisponível (getSession error):', error)
+      return
+    }
+    if (!data?.session) {
+      console.debug('Sessão Supabase ausente (data.session vazio)')
+      return
+    }
+    const lang = data.session.user?.user_metadata?.preferences?.language
+      || data.session.user?.user_metadata?.language
+      || data.session.user?.app_metadata?.language
     if (lang) {
       selectedLanguage.value = lang
     }
   } catch (e) {
-    console.warn('Não foi possível obter idioma preferido', e)
+    console.debug('Não foi possível obter idioma preferido', e)
   }
 })
 

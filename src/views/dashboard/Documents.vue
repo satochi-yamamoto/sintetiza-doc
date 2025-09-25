@@ -332,7 +332,7 @@ const loadDocuments = async () => {
       summaries_count: doc.summaries_count?.[0]?.count || 0
     }))
   } catch (error) {
-    console.error('Erro ao carregar documentos:', error)
+    console.debug('Erro ao carregar documentos:', error)
     toast.error('Erro ao carregar documentos')
   } finally {
     isLoading.value = false
@@ -383,7 +383,7 @@ const downloadDocument = async (document) => {
     toast.success('Download iniciado')
     
   } catch (error) {
-    console.error('Erro ao fazer download:', error)
+    console.debug('Erro ao fazer download:', error)
     toast.error('Erro ao fazer download do documento')
   }
 }
@@ -417,7 +417,7 @@ const deleteDocument = async (document) => {
     toast.success('Documento excluído com sucesso')
     
   } catch (error) {
-    console.error('Erro ao excluir documento:', error)
+    console.debug('Erro ao excluir documento:', error)
     toast.error('Erro ao excluir documento')
   }
 }
