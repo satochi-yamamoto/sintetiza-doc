@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuth } from '@clerk/vue'
-import { watch } from 'vue'
+import supabase from '@/services/supabase'
 
 // Importação lazy das views
 const Home = () => import('@/views/Home.vue')
@@ -61,23 +60,28 @@ const routes = [
   },
   // Rotas de Autenticação com Clerk
   {
-    path: '/sign-in',
+    // Clerk may navigate to nested steps like /sign-in/factor-one, so allow subpaths
+    path: '/sign-in/:pathMatch(.*)*',
     name: 'sign-in',
     component: SignInPage,
     meta: {
-      title: 'Entrar - Sintetiza Doc'
+      title: 'Entrar - Sintetiza Doc',
+      requiresGuest: true
     }
   },
   {
-    path: '/sign-up',
+    // Similarly, sign-up flow may include additional path segments
+    path: '/sign-up/:pathMatch(.*)*',
     name: 'sign-up',
     component: SignUpPage,
     meta: {
-      title: 'Criar Conta - Sintetiza Doc'
+      title: 'Criar Conta - Sintetiza Doc',
+      requiresGuest: true
     }
   },
   {
-    path: '/user-profile',
+    // Clerk UserProfile includes internal routing segments (e.g., tabs)
+    path: '/user-profile/:pathMatch(.*)*',
     name: 'user-profile',
     component: UserProfilePage,
     meta: {
@@ -203,23 +207,8 @@ const router = createRouter({
   }
 })
 
-// Guards de navegação
+// Guards de navegação (Supabase)
 router.beforeEach(async (to, from, next) => {
-  // Aguardar carregamento do Clerk
-  const { isLoaded, isSignedIn, user } = useAuth()
-  
-  if (!isLoaded.value) {
-    // Aguardar o Clerk carregar
-    await new Promise(resolve => {
-      const unwatch = watch(isLoaded, (loaded) => {
-        if (loaded) {
-          unwatch()
-          resolve()
-        }
-      })
-    })
-  }
-  
   // Atualizar título da página
   if (to.meta.title) {
     document.title = to.meta.title
@@ -232,28 +221,47 @@ router.beforeEach(async (to, from, next) => {
       metaDescription.setAttribute('content', to.meta.description)
     }
   }
-  
+
+  // Obter sessão do Supabase
+  const { data: { session } } = await supabase.auth.getSession()
+  const uid = session?.user?.id || null
+
   // Verificar autenticação
-  if (to.meta.requiresAuth && !isSignedIn.value) {
+  if (to.meta.requiresAuth && !uid) {
     next({ name: 'sign-in', query: { redirect: to.fullPath } })
     return
   }
   
   // Verificar se usuário já está logado (para páginas de guest)
-  if (to.meta.requiresGuest && isSignedIn.value) {
+  if (to.meta.requiresGuest && uid) {
     next({ name: 'dashboard' })
     return
   }
   
-  // Verificar se é admin (usando Clerk metadata)
+  // Verificar se é admin (via metadata em users)
   if (to.meta.requiresAdmin) {
-    const isAdmin = user.value?.publicMetadata?.role === 'admin'
+    let isAdmin = false
+    if (uid) {
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('metadata')
+          .eq('id', uid)
+          .single()
+        if (!error && data?.metadata) {
+          const role = data.metadata.role
+          isAdmin = role === 'admin' || data.metadata.is_admin === true
+        }
+      } catch (e) {
+        isAdmin = false
+      }
+    }
     if (!isAdmin) {
       next({ name: 'dashboard' })
       return
     }
   }
-  
+
   next()
 })
 

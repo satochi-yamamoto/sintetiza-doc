@@ -72,8 +72,9 @@
           </svg>
         </button>
 
-        <!-- Componentes de Autenticação do Clerk -->
-        <SignedIn>
+        <!-- Autenticação (Supabase) -->
+        <!-- Bloco quando autenticado -->
+        <template v-if="isSignedIn">
           <!-- Dashboard Link -->
           <router-link
             to="/dashboard"
@@ -128,38 +129,51 @@
             </div>
           </div>
 
-          <!-- User Button do Clerk -->
-          <div class="clerk-user-button">
-            <UserButton
-              :appearance="{
-                elements: {
-                  avatarBox: 'w-8 h-8',
-                  userButtonPopoverCard: 'shadow-lg border border-gray-200 dark:border-gray-700',
-                  userButtonPopoverActionButton: 'hover:bg-gray-50 dark:hover:bg-gray-700',
-                  userButtonPopoverActionButtonText: 'text-gray-700 dark:text-gray-300',
-                  userButtonPopoverFooter: 'hidden'
-                }
-              }"
-              :user-profile-url="'/user-profile'"
-            />
-          </div>
-        </SignedIn>
+          <!-- Menu de Usuário -->
+          <div class="user-menu">
+            <button @click="showUserMenu = !showUserMenu" class="user-menu-btn">
+              <div v-if="userAvatarUrl" class="w-8 h-8 rounded-full overflow-hidden">
+                <img :src="userAvatarUrl" alt="Avatar" class="user-avatar" />
+              </div>
+              <div v-else class="user-avatar-placeholder">
+                {{ userInitials }}
+              </div>
+            </button>
 
-        <SignedOut>
-          <!-- Botões de Autenticação -->
-          <div class="auth-buttons">
-            <SignInButton mode="modal">
-              <button class="btn-secondary">
-                Entrar
+            <div v-if="showUserMenu" class="user-dropdown">
+              <div class="user-info">
+                <div class="user-name">{{ currentUserEmail }}</div>
+                <div class="user-plan">{{ appStore.currentPlanLabel || 'Plano padrão' }}</div>
+              </div>
+              <div class="menu-divider"></div>
+              <router-link to="/perfil" class="menu-item" @click="showUserMenu = false">
+                <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 2C6.686 2 4 4.686 4 8s2.686 6 6 6 6-2.686 6-6-2.686-6-6-6zM2 18a8 8 0 0116 0H2z" />
+                </svg>
+                <span>Perfil</span>
+              </router-link>
+              <button class="menu-item logout" @click="logout">
+                <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v3a1 1 0 11-2 0V4H5v12h6v-3a1 1 0 112 0v3a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
+                  <path d="M12 10a1 1 0 011-1h4a1 1 0 110 2h-4a1 1 0 01-1-1z" />
+                </svg>
+                <span>Sair</span>
               </button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <button class="btn-primary">
-                Cadastrar
-              </button>
-            </SignUpButton>
+            </div>
           </div>
-        </SignedOut>
+        </template>
+
+        <!-- Bloco quando NÃO autenticado -->
+        <template v-else>
+          <div class="auth-buttons">
+            <router-link to="/sign-in" class="btn-secondary">
+              Entrar
+            </router-link>
+            <router-link to="/sign-up" class="btn-primary">
+              Cadastrar
+            </router-link>
+          </div>
+        </template>
 
         <!-- Menu Mobile -->
         <button 
@@ -188,7 +202,8 @@
         </router-link>
       </nav>
       
-      <SignedOut>
+      <!-- Autenticação Mobile: mostrar botões quando não logado -->
+      <template v-if="!isSignedIn">
         <div class="mobile-auth">
           <router-link to="/sign-in" class="mobile-auth-link" @click="closeMobileMenu">
             Entrar
@@ -197,15 +212,15 @@
             Cadastrar
           </router-link>
         </div>
-      </SignedOut>
+      </template>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useAuth, useUser } from '@clerk/vue'
+import { supabase } from '../../services/supabase.js'
 import { useAppStore } from '../../stores/app.js'
 import { useToast } from 'vue-toastification'
 
@@ -214,26 +229,41 @@ const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
 const toast = useToast()
-const { isSignedIn, isLoaded } = useAuth()
-const { user } = useUser()
+
+// Estado de autenticação (Supabase)
+const isSignedIn = ref(false)
+const currentUser = ref(null)
 
 // Debug logs para autenticação
-console.log('🔍 AppHeader - Estado inicial de autenticação:', {
-  isSignedIn: isSignedIn?.value,
-  user: user?.value,
-  isLoaded: isLoaded?.value
+console.log('🔍 AppHeader - Estado inicial de autenticação (Supabase):', {
+  isSignedIn: isSignedIn.value,
+  user: currentUser.value
 })
 
-// Watch para mudanças no estado de autenticação
-watch([isSignedIn, user, isLoaded], ([newIsSignedIn, newUser, newIsLoaded]) => {
-  console.log('🔍 AppHeader - Mudança no estado de autenticação:', {
-    isSignedIn: newIsSignedIn,
-    user: newUser,
-    isLoaded: newIsLoaded,
-    userId: newUser?.id,
-    userEmail: newUser?.primaryEmailAddress?.emailAddress
+// Atualiza estado a partir da sessão
+const refreshSession = async () => {
+  try {
+    const { data, error } = await supabase.auth.getSession()
+    if (error) {
+      console.error('❌ Erro ao obter sessão Supabase:', error)
+    }
+    isSignedIn.value = !!data?.session
+    currentUser.value = data?.session?.user || null
+    // ... existing code ...
+  } catch (e) {
+    console.error('❌ Exceção ao atualizar sessão Supabase:', e)
+  }
+}
+
+// Listener de mudanças de auth
+const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+  isSignedIn.value = !!session
+  currentUser.value = session?.user || null
+  console.log('🔄 AppHeader - Mudança no estado de autenticação (Supabase):', {
+    isSignedIn: isSignedIn.value,
+    user: currentUser.value
   })
-}, { immediate: true })
+})
 
 // Refs
 const showLanguageMenu = ref(false)
@@ -271,6 +301,14 @@ const unreadCount = computed(() => {
 const hasUnreadNotifications = computed(() => {
   return unreadCount.value > 0
 })
+
+const currentUserEmail = computed(() => currentUser.value?.email || '')
+const userInitials = computed(() => {
+  const email = currentUserEmail.value
+  if (!email) return 'U'
+  return email.slice(0, 1).toUpperCase()
+})
+const userAvatarUrl = computed(() => currentUser.value?.user_metadata?.avatar_url || '')
 
 // Methods
 const isActiveRoute = (path) => {
@@ -312,6 +350,18 @@ const changeLanguage = (langCode) => {
   toast.success(`Idioma alterado para ${availableLanguages.find(l => l.code === langCode)?.name}`)
 }
 
+const logout = async () => {
+  try {
+    await supabase.auth.signOut()
+    await refreshSession()
+    showUserMenu.value = false
+    toast.success('Você saiu da sua conta')
+    router.push('/')
+  } catch (e) {
+    console.error('❌ Erro ao sair:', e)
+    toast.error('Não foi possível sair. Tente novamente.')
+  }
+}
 
 const markAsRead = (notificationId) => {
   appStore.markNotificationAsRead(notificationId)
@@ -337,15 +387,21 @@ const handleClickOutside = (event) => {
   if (!target.closest('.notifications')) {
     showNotifications.value = false
   }
+  if (!target.closest('.user-menu')) {
+    showUserMenu.value = false
+  }
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('click', handleClickOutside)
+  await refreshSession()
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+  // Limpar listener de auth, se existir
+  try { authListener?.subscription?.unsubscribe?.() } catch {}
 })
 </script>
 

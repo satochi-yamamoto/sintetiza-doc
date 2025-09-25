@@ -43,6 +43,16 @@ export const SUPPORTED_FILE_TYPES = {
 
 // Serviço de processamento de arquivos
 export const fileProcessorService = {
+  // Retorna os tipos suportados para a categoria informada
+  getSupportedFileTypes(type = 'documents') {
+    const supportedTypes = SUPPORTED_FILE_TYPES[type] || {}
+    return Object.entries(supportedTypes).map(([mime, config]) => ({
+      mime,
+      extension: config.ext,
+      maxSize: config.maxSize
+    }))
+  },
+  
   // Validar arquivo
   validateFile(file, type = 'documents') {
     const supportedTypes = SUPPORTED_FILE_TYPES[type]

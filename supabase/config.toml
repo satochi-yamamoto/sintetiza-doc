@@ -27,6 +27,10 @@ client_id = "env(CLERK_CLIENT_ID)"
 secret = "env(CLERK_SECRET_KEY)"
 redirect_uri = "http://localhost:54321/auth/v1/callback"
 
+[auth.third_party.clerk]
+enabled = true
+domain = "causal-salmon-4.clerk.accounts.dev"
+
 [db]
 port = 54322
 shadow_port = 54320

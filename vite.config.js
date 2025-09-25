@@ -35,7 +35,6 @@ export default defineConfig({
         manualChunks: {
           vendor: ['vue', 'vue-router', 'pinia'],
           supabase: ['@supabase/supabase-js'],
-          clerk: ['@clerk/vue'],
           stripe: ['@stripe/stripe-js'],
           ai: ['openai', '@anthropic-ai/sdk'],
           utils: ['axios', '@vueuse/core']

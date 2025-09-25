@@ -167,9 +167,8 @@
 import { ref, computed, watch } from 'vue'
 import { useToast } from 'vue-toastification'
 import { fileProcessorService } from '../services/fileProcessor.js'
-import { useAuth, useUser } from '@clerk/vue'
 import { stripeService } from '../services/stripe.js'
-import { ensureSupabaseAuth } from '@/services/supabase'
+import supabase from '@/services/supabase'
 
 // Props
 const props = defineProps({
@@ -194,9 +193,11 @@ const emit = defineEmits(['files-processed', 'file-error', 'processing-start', '
 // Composables
 const toast = useToast()
 
-// Estados de autenticação do Clerk
-const { isLoaded: authLoaded, isSignedIn, userId, getToken } = useAuth()
-const { isLoaded: userLoaded, user } = useUser()
+// Helper: obter UID do usuário autenticado no Supabase
+const getUid = async () => {
+  const { data: { session } } = await supabase.auth.getSession()
+  return session?.user?.id || null
+}
 
 // Refs
 const fileInput = ref(null)

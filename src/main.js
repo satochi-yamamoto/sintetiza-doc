@@ -3,7 +3,6 @@ import { createPinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
-import { clerkPlugin } from '@clerk/vue'
 
 import App from './App.vue'
 import router from './router'
@@ -163,36 +162,9 @@ const toastOptions = {
 
 const app = createApp(App)
 
-// Verificar se a chave do Clerk está configurada
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-if (!PUBLISHABLE_KEY) {
-  throw new Error('Missing Clerk Publishable Key')
-}
-
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
 app.use(Toast, toastOptions)
-app.use(clerkPlugin, {
-  publishableKey: PUBLISHABLE_KEY,
-  afterSignOutUrl: '/',
-  signInUrl: '/sign-in',
-  signUpUrl: '/sign-up',
-  // afterSignInUrl: '/dashboard',
-  // afterSignUpUrl: '/dashboard',
-  fallbackRedirectUrl: '/dashboard',
-  // forceRedirectUrl: '/dashboard', // use se quiser forçar sempre o dashboard
-  appearance: {
-    variables: {
-      colorPrimary: '#4f46e5',
-      colorBackground: '#ffffff',
-      colorInputBackground: '#ffffff',
-      colorInputText: '#1f2937'
-    }
-  },
-  localization: {
-    locale: 'pt-BR'
-  }
-})
 
 app.mount('#app')
