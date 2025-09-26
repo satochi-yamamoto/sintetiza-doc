@@ -479,6 +479,15 @@ const closeSummaryModal = () => {
 
 const handleFilesProcessed = async (results) => {
   try {
+    // Garantir que temos sessão/uid antes de salvar
+    if (!uid.value) {
+      await ensureSupabaseSession()
+      if (!uid.value) {
+        toast.error('Sessão não encontrada. Faça login novamente para salvar documentos.')
+        return
+      }
+    }
+
     // Salvar cada documento processado no banco
     for (const result of results) {
       const { file, result: processingResult } = result
@@ -486,7 +495,7 @@ const handleFilesProcessed = async (results) => {
       await supabase
         .from('documents')
         .insert({
-          user_id: user.value?.id,
+          user_id: uid.value,
           name: file.name,
           file_type: getFileTypeFromMime(file.type),
           file_size: file.size,
@@ -534,18 +543,19 @@ const handleSummaryGenerated = () => {
 }
 
 // Lifecycle
-onMounted(() => {
-  loadDocuments()
-})
+// Removido onMounted duplicado para evitar chamadas sem sessão
+// onMounted(() => {
+//   loadDocuments()
+// })
 
-// Watch for auth changes
-watch(() => user?.value, (newUser) => {
-  if (newUser) {
-    loadDocuments()
-  } else {
-    documents.value = []
-  }
-})
+// Removido watcher que referenciava 'user' indefinido; já existe watcher por uid acima
+// watch(() => user?.value, (newUser) => {
+//   if (newUser) {
+//     loadDocuments()
+//   } else {
+//     documents.value = []
+//   }
+// })
 </script>
 
 <style scoped>

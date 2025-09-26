@@ -542,13 +542,14 @@ onMounted(() => {
 })
 
 // Watch for auth changes
-watch(() => user?.value, (newUser) => {
-  if (newUser) {
-    loadSummaries()
-  } else {
-    summaries.value = []
-  }
-})
+// Removido watcher que referenciava 'user' indefinido; o watcher por uid já cobre mudanças de sessão
+// watch(() => user?.value, (newUser) => {
+//   if (newUser) {
+//     loadSummaries()
+//   } else {
+//     summaries.value = []
+//   }
+// })
 </script>
 
 <style scoped>

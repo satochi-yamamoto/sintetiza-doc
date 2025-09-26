@@ -3,12 +3,19 @@ import { supabaseData } from './supabase.js'
 
 // Inicializar Stripe com chave apropriada para o ambiente e protocolo
 const env = import.meta.env
+const isDev = !!env?.DEV
 const isHttps = typeof window !== 'undefined' && window.location?.protocol === 'https:'
 const isLocalhost = typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location?.hostname)
+const STRIPE_DISABLED = isDev || env.VITE_STRIPE_DISABLED === 'true'
 // Suporte a variáveis separadas de live/test, com fallback para VITE_STRIPE_PUBLISHABLE_KEY
 const liveKey = env.VITE_STRIPE_PUBLISHABLE_KEY_LIVE || env.VITE_STRIPE_PUBLISHABLE_KEY || ''
 const testKey = env.VITE_STRIPE_PUBLISHABLE_KEY_TEST || env.VITE_STRIPE_TEST_KEY || ''
 let publishableKey = env.MODE === 'production' ? liveKey : (testKey || liveKey)
+
+// Kill-switch: desativa Stripe em desenvolvimento ou quando VITE_STRIPE_DISABLED=true
+if (STRIPE_DISABLED) {
+  publishableKey = ''
+}
 
 // Evita usar chave live em contexto não-HTTPS fora do localhost
 if (!isHttps && !isLocalhost && publishableKey?.startsWith('pk_live_')) {
@@ -132,6 +139,9 @@ export const stripeService = {
   
   // Criar sessão de checkout
   async createCheckoutSession(priceId, userId, successUrl, cancelUrl) {
+    if (STRIPE_DISABLED) {
+      throw new Error('Stripe desativado no ambiente de desenvolvimento')
+    }
     try {
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
@@ -160,6 +170,9 @@ export const stripeService = {
   
   // Redirecionar para checkout
   async redirectToCheckout(planId, userId) {
+    if (STRIPE_DISABLED) {
+      throw new Error('Stripe desativado no ambiente de desenvolvimento')
+    }
     try {
       const plan = SUBSCRIPTION_PLANS[planId]
       if (!plan || !plan.stripePriceId) {
@@ -178,7 +191,7 @@ export const stripeService = {
       
       const stripe = await this.getStripe()
       if (!stripe) {
-        throw new Error('Stripe indisponível neste ambiente (requer HTTPS para chaves live).')
+        throw new Error('Stripe indisponível neste ambiente (desativado no desenvolvimento).')
       }
       
       const { error } = await stripe.redirectToCheckout({ sessionId })
@@ -194,6 +207,9 @@ export const stripeService = {
   
   // Criar portal do cliente
   async createCustomerPortal(userId) {
+    if (STRIPE_DISABLED) {
+      throw new Error('Stripe desativado no ambiente de desenvolvimento')
+    }
     try {
       const response = await fetch('/api/stripe/create-portal-session', {
         method: 'POST',
@@ -283,6 +299,53 @@ export const stripeService = {
     } catch (error) {
       console.error('Erro ao verificar limites do plano:', error)
       return { allowed: false, reason: 'Erro interno' }
+    }
+  },
+
+  // Compatibilidade: obter plano atual no formato esperado pelos componentes
+  async getCurrentPlan(userId) {
+    try {
+      const subscription = await this.getSubscriptionInfo(userId)
+      const planId = subscription?.plan_id || 'free'
+      const plan = SUBSCRIPTION_PLANS[planId] || SUBSCRIPTION_PLANS.free
+      return plan
+    } catch (error) {
+      console.error('getCurrentPlan - erro ao determinar plano:', error)
+      return SUBSCRIPTION_PLANS.free
+    }
+  },
+
+  // Compatibilidade: verificar se formato de arquivo é suportado pelo plano
+  isFormatSupported(planId, extension) {
+    try {
+      const plan = SUBSCRIPTION_PLANS[planId] || SUBSCRIPTION_PLANS.free
+      const formats = plan?.limits?.supportedFormats
+      if (!formats) return false
+      if (formats === 'all') return true
+      if (Array.isArray(formats)) {
+        return formats.includes(String(extension).toLowerCase())
+      }
+      return false
+    } catch (error) {
+      console.error('isFormatSupported - erro ao validar formato:', error)
+      return false
+    }
+  },
+
+  // Compatibilidade: verificar se formato de exportação é suportado pelo plano
+  isExportFormatSupported(planId, formatId) {
+    try {
+      const plan = SUBSCRIPTION_PLANS[planId] || SUBSCRIPTION_PLANS.free
+      const exportFormats = plan?.limits?.exportFormats
+      if (!exportFormats) return false
+      if (exportFormats === 'all') return true
+      if (Array.isArray(exportFormats)) {
+        return exportFormats.includes(String(formatId).toLowerCase())
+      }
+      return false
+    } catch (error) {
+      console.error('isExportFormatSupported - erro ao validar exportação:', error)
+      return false
     }
   }
 }
