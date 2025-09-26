@@ -9,6 +9,7 @@ import router from './router'
 import './style.css'
 import * as Sentry from '@sentry/vue'
 import { createSentryPiniaPlugin } from '@sentry/vue'
+import { prepareSentryError, safeConsoleError } from '@/utils/errorHandler'
 
 // Configuração do i18n
 const messages = {
@@ -190,7 +191,17 @@ Sentry.init({
         // Ignora eventos de teste explicitamente marcados
         return null
       }
-    } catch (_) {}
+      
+      // Garante que o erro está devidamente formatado
+      if (hint?.originalException) {
+        const safeError = prepareSentryError(hint.originalException)
+        if (event.exception?.values?.[0]) {
+          event.exception.values[0].value = safeError.message
+        }
+      }
+    } catch (error) {
+      safeConsoleError('Erro no beforeSend do Sentry:', error)
+    }
     return event
   }
 })
@@ -204,11 +215,43 @@ if (import.meta.env.DEV && DEV_TEST_ENABLED && import.meta.env.VITE_SENTRY_DSN) 
     // Aguarda a aplicação estabilizar antes de disparar
     setTimeout(() => {
       const explicitErr = new Error('Sentry dev test error: explicit capture (safe to ignore)')
-      Sentry.captureException(explicitErr)
+      Sentry.captureException(prepareSentryError(explicitErr))
       // Não lançar exceções não tratadas; mantemos apenas captura explícita
     }, 1500)
   }
 }
+
+// Handler global de erros não capturados
+window.addEventListener('error', (event) => {
+  const error = event.error || event.message
+  safeConsoleError('Erro global capturado:', error, {
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno
+  })
+  
+  // Envia para o Sentry apenas se não for um erro de teste
+  if (!event.message?.includes('Sentry dev test error')) {
+    Sentry.captureException(prepareSentryError(error, {
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno
+    }))
+  }
+})
+
+// Handler global de promises rejeitadas
+window.addEventListener('unhandledrejection', (event) => {
+  const error = event.reason
+  safeConsoleError('Promise rejeitada capturada:', error)
+  
+  // Envia para o Sentry apenas se não for um erro de teste
+  if (!String(error).includes('Sentry dev test error')) {
+    Sentry.captureException(prepareSentryError(error, {
+      type: 'unhandledrejection'
+    }))
+  }
+})
 
 // Pinia com plugin do Sentry
 const pinia = createPinia()

@@ -3,7 +3,9 @@
     <!-- Header -->
     <div class="docs-header">
       <div class="header-content">
-        <h1 class="page-title">Documentação da API</h1>
+        <h1 class="page-title">
+          Documentação da API
+        </h1>
         <p class="page-subtitle">
           Integre o Sintetiza Doc em suas aplicações com nossa API RESTful
         </p>
@@ -27,47 +29,78 @@
     <!-- Quick Start -->
     <div class="quick-start-section">
       <div class="section-container">
-        <h2 class="section-title">Início Rápido</h2>
+        <h2 class="section-title">
+          Início Rápido
+        </h2>
         
         <div class="quick-start-grid">
           <div class="step-card">
-            <div class="step-number">1</div>
-            <h3 class="step-title">Obtenha sua API Key</h3>
+            <div class="step-number">
+              1
+            </div>
+            <h3 class="step-title">
+              Obtenha sua API Key
+            </h3>
             <p class="step-description">
               Acesse suas configurações de conta e gere uma nova chave de API.
             </p>
-            <router-link to="/dashboard/configuracoes" class="step-link">
+            <router-link
+              to="/dashboard/configuracoes"
+              class="step-link"
+            >
               Ir para Configurações →
             </router-link>
           </div>
           
           <div class="step-card">
-            <div class="step-number">2</div>
-            <h3 class="step-title">Faça sua primeira requisição</h3>
+            <div class="step-number">
+              2
+            </div>
+            <h3 class="step-title">
+              Faça sua primeira requisição
+            </h3>
             <p class="step-description">
               Use curl ou sua biblioteca HTTP favorita para testar a API.
             </p>
-            <button @click="showExample = !showExample" class="step-link">
+            <button
+              class="step-link"
+              @click="showExample = !showExample"
+            >
               Ver Exemplo →
             </button>
           </div>
           
           <div class="step-card">
-            <div class="step-number">3</div>
-            <h3 class="step-title">Explore os endpoints</h3>
+            <div class="step-number">
+              3
+            </div>
+            <h3 class="step-title">
+              Explore os endpoints
+            </h3>
             <p class="step-description">
               Navegue pela documentação completa dos endpoints disponíveis.
             </p>
-            <a href="#endpoints" class="step-link">
+            <a
+              href="#endpoints"
+              class="step-link"
+            >
               Ver Endpoints →
             </a>
           </div>
         </div>
         
-        <div v-if="showExample" class="example-code">
+        <div
+          v-if="showExample"
+          class="example-code"
+        >
           <div class="code-header">
-            <h4 class="code-title">Exemplo de Requisição</h4>
-            <button @click="copyCode" class="copy-button">
+            <h4 class="code-title">
+              Exemplo de Requisição
+            </h4>
+            <button
+              class="copy-button"
+              @click="copyCode"
+            >
               <ClipboardIcon class="copy-icon" />
               {{ copied ? 'Copiado!' : 'Copiar' }}
             </button>
@@ -87,13 +120,17 @@
     <!-- Authentication -->
     <div class="auth-section">
       <div class="section-container">
-        <h2 class="section-title">Autenticação</h2>
+        <h2 class="section-title">
+          Autenticação
+        </h2>
         
         <div class="auth-content">
           <div class="auth-info">
             <KeyIcon class="auth-icon" />
             <div class="auth-details">
-              <h3 class="auth-title">API Key Authentication</h3>
+              <h3 class="auth-title">
+                API Key Authentication
+              </h3>
               <p class="auth-description">
                 Todas as requisições devem incluir sua chave de API no header Authorization.
               </p>
@@ -101,7 +138,9 @@
           </div>
           
           <div class="auth-example">
-            <h4 class="example-title">Header de Autenticação</h4>
+            <h4 class="example-title">
+              Header de Autenticação
+            </h4>
             <div class="code-snippet">
               <code>Authorization: Bearer YOUR_API_KEY</code>
             </div>
@@ -110,7 +149,9 @@
           <div class="auth-security">
             <ShieldIcon class="security-icon" />
             <div class="security-content">
-              <h4 class="security-title">Segurança</h4>
+              <h4 class="security-title">
+                Segurança
+              </h4>
               <ul class="security-list">
                 <li>Mantenha sua API key segura e nunca a exponha publicamente</li>
                 <li>Use HTTPS para todas as requisições</li>
@@ -126,11 +167,15 @@
     <!-- Rate Limits -->
     <div class="limits-section">
       <div class="section-container">
-        <h2 class="section-title">Limites de Taxa</h2>
+        <h2 class="section-title">
+          Limites de Taxa
+        </h2>
         
         <div class="limits-grid">
           <div class="limit-card">
-            <h3 class="limit-plan">Plano Gratuito</h3>
+            <h3 class="limit-plan">
+              Plano Gratuito
+            </h3>
             <div class="limit-details">
               <div class="limit-item">
                 <span class="limit-label">Requisições por minuto:</span>
@@ -148,7 +193,9 @@
           </div>
           
           <div class="limit-card">
-            <h3 class="limit-plan">Plano Básico</h3>
+            <h3 class="limit-plan">
+              Plano Básico
+            </h3>
             <div class="limit-details">
               <div class="limit-item">
                 <span class="limit-label">Requisições por minuto:</span>
@@ -166,7 +213,9 @@
           </div>
           
           <div class="limit-card">
-            <h3 class="limit-plan">Plano Profissional</h3>
+            <h3 class="limit-plan">
+              Plano Profissional
+            </h3>
             <div class="limit-details">
               <div class="limit-item">
                 <span class="limit-label">Requisições por minuto:</span>
@@ -184,7 +233,9 @@
           </div>
           
           <div class="limit-card">
-            <h3 class="limit-plan">Plano Empresarial</h3>
+            <h3 class="limit-plan">
+              Plano Empresarial
+            </h3>
             <div class="limit-details">
               <div class="limit-item">
                 <span class="limit-label">Requisições por minuto:</span>
@@ -203,7 +254,9 @@
         </div>
         
         <div class="rate-limit-headers">
-          <h3 class="headers-title">Headers de Rate Limit</h3>
+          <h3 class="headers-title">
+            Headers de Rate Limit
+          </h3>
           <p class="headers-description">
             Todas as respostas incluem headers informativos sobre seus limites:
           </p>
@@ -226,19 +279,30 @@
     </div>
     
     <!-- Endpoints -->
-    <div id="endpoints" class="endpoints-section">
+    <div
+      id="endpoints"
+      class="endpoints-section"
+    >
       <div class="section-container">
-        <h2 class="section-title">Endpoints da API</h2>
+        <h2 class="section-title">
+          Endpoints da API
+        </h2>
         
         <!-- Documents Endpoints -->
         <div class="endpoint-group">
-          <h3 class="group-title">Documentos</h3>
+          <h3 class="group-title">
+            Documentos
+          </h3>
           
           <!-- Upload Document -->
           <div class="endpoint-card">
             <div class="endpoint-header">
-              <div class="endpoint-method post">POST</div>
-              <div class="endpoint-path">/documents/upload</div>
+              <div class="endpoint-method post">
+                POST
+              </div>
+              <div class="endpoint-path">
+                /documents/upload
+              </div>
             </div>
             <div class="endpoint-content">
               <p class="endpoint-description">
@@ -246,25 +310,45 @@
               </p>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Parâmetros</h4>
+                <h4 class="section-subtitle">
+                  Parâmetros
+                </h4>
                 <div class="params-table">
                   <div class="param-row">
-                    <div class="param-name">file</div>
-                    <div class="param-type">multipart/form-data</div>
-                    <div class="param-required">Obrigatório</div>
-                    <div class="param-description">Arquivo a ser processado (PDF, DOCX, TXT)</div>
+                    <div class="param-name">
+                      file
+                    </div>
+                    <div class="param-type">
+                      multipart/form-data
+                    </div>
+                    <div class="param-required">
+                      Obrigatório
+                    </div>
+                    <div class="param-description">
+                      Arquivo a ser processado (PDF, DOCX, TXT)
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">metadata</div>
-                    <div class="param-type">JSON</div>
-                    <div class="param-optional">Opcional</div>
-                    <div class="param-description">Metadados adicionais do documento</div>
+                    <div class="param-name">
+                      metadata
+                    </div>
+                    <div class="param-type">
+                      JSON
+                    </div>
+                    <div class="param-optional">
+                      Opcional
+                    </div>
+                    <div class="param-description">
+                      Metadados adicionais do documento
+                    </div>
                   </div>
                 </div>
               </div>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Resposta</h4>
+                <h4 class="section-subtitle">
+                  Resposta
+                </h4>
                 <div class="response-example">
                   <pre><code>{
   "id": "doc_123456789",
@@ -281,8 +365,12 @@
           <!-- Get Document -->
           <div class="endpoint-card">
             <div class="endpoint-header">
-              <div class="endpoint-method get">GET</div>
-              <div class="endpoint-path">/documents/{id}</div>
+              <div class="endpoint-method get">
+                GET
+              </div>
+              <div class="endpoint-path">
+                /documents/{id}
+              </div>
             </div>
             <div class="endpoint-content">
               <p class="endpoint-description">
@@ -290,13 +378,23 @@
               </p>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Parâmetros de URL</h4>
+                <h4 class="section-subtitle">
+                  Parâmetros de URL
+                </h4>
                 <div class="params-table">
                   <div class="param-row">
-                    <div class="param-name">id</div>
-                    <div class="param-type">string</div>
-                    <div class="param-required">Obrigatório</div>
-                    <div class="param-description">ID único do documento</div>
+                    <div class="param-name">
+                      id
+                    </div>
+                    <div class="param-type">
+                      string
+                    </div>
+                    <div class="param-required">
+                      Obrigatório
+                    </div>
+                    <div class="param-description">
+                      ID único do documento
+                    </div>
                   </div>
                 </div>
               </div>
@@ -306,8 +404,12 @@
           <!-- List Documents -->
           <div class="endpoint-card">
             <div class="endpoint-header">
-              <div class="endpoint-method get">GET</div>
-              <div class="endpoint-path">/documents</div>
+              <div class="endpoint-method get">
+                GET
+              </div>
+              <div class="endpoint-path">
+                /documents
+              </div>
             </div>
             <div class="endpoint-content">
               <p class="endpoint-description">
@@ -315,25 +417,51 @@
               </p>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Query Parameters</h4>
+                <h4 class="section-subtitle">
+                  Query Parameters
+                </h4>
                 <div class="params-table">
                   <div class="param-row">
-                    <div class="param-name">page</div>
-                    <div class="param-type">integer</div>
-                    <div class="param-optional">Opcional</div>
-                    <div class="param-description">Número da página (padrão: 1)</div>
+                    <div class="param-name">
+                      page
+                    </div>
+                    <div class="param-type">
+                      integer
+                    </div>
+                    <div class="param-optional">
+                      Opcional
+                    </div>
+                    <div class="param-description">
+                      Número da página (padrão: 1)
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">limit</div>
-                    <div class="param-type">integer</div>
-                    <div class="param-optional">Opcional</div>
-                    <div class="param-description">Itens por página (padrão: 20, máx: 100)</div>
+                    <div class="param-name">
+                      limit
+                    </div>
+                    <div class="param-type">
+                      integer
+                    </div>
+                    <div class="param-optional">
+                      Opcional
+                    </div>
+                    <div class="param-description">
+                      Itens por página (padrão: 20, máx: 100)
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">search</div>
-                    <div class="param-type">string</div>
-                    <div class="param-optional">Opcional</div>
-                    <div class="param-description">Termo de busca no nome do arquivo</div>
+                    <div class="param-name">
+                      search
+                    </div>
+                    <div class="param-type">
+                      string
+                    </div>
+                    <div class="param-optional">
+                      Opcional
+                    </div>
+                    <div class="param-description">
+                      Termo de busca no nome do arquivo
+                    </div>
                   </div>
                 </div>
               </div>
@@ -343,13 +471,19 @@
         
         <!-- Summaries Endpoints -->
         <div class="endpoint-group">
-          <h3 class="group-title">Resumos</h3>
+          <h3 class="group-title">
+            Resumos
+          </h3>
           
           <!-- Create Summary -->
           <div class="endpoint-card">
             <div class="endpoint-header">
-              <div class="endpoint-method post">POST</div>
-              <div class="endpoint-path">/documents/summarize</div>
+              <div class="endpoint-method post">
+                POST
+              </div>
+              <div class="endpoint-path">
+                /documents/summarize
+              </div>
             </div>
             <div class="endpoint-content">
               <p class="endpoint-description">
@@ -357,44 +491,90 @@
               </p>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Body Parameters</h4>
+                <h4 class="section-subtitle">
+                  Body Parameters
+                </h4>
                 <div class="params-table">
                   <div class="param-row">
-                    <div class="param-name">text</div>
-                    <div class="param-type">string</div>
-                    <div class="param-required">Obrigatório*</div>
-                    <div class="param-description">Texto a ser resumido</div>
+                    <div class="param-name">
+                      text
+                    </div>
+                    <div class="param-type">
+                      string
+                    </div>
+                    <div class="param-required">
+                      Obrigatório*
+                    </div>
+                    <div class="param-description">
+                      Texto a ser resumido
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">document_id</div>
-                    <div class="param-type">string</div>
-                    <div class="param-required">Obrigatório*</div>
-                    <div class="param-description">ID do documento a ser resumido</div>
+                    <div class="param-name">
+                      document_id
+                    </div>
+                    <div class="param-type">
+                      string
+                    </div>
+                    <div class="param-required">
+                      Obrigatório*
+                    </div>
+                    <div class="param-description">
+                      ID do documento a ser resumido
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">style</div>
-                    <div class="param-type">enum</div>
-                    <div class="param-optional">Opcional</div>
-                    <div class="param-description">Estilo do resumo: executive, technical, educational, bullet_points</div>
+                    <div class="param-name">
+                      style
+                    </div>
+                    <div class="param-type">
+                      enum
+                    </div>
+                    <div class="param-optional">
+                      Opcional
+                    </div>
+                    <div class="param-description">
+                      Estilo do resumo: executive, technical, educational, bullet_points
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">language</div>
-                    <div class="param-type">enum</div>
-                    <div class="param-optional">Opcional</div>
-                    <div class="param-description">Idioma: pt, en (padrão: pt)</div>
+                    <div class="param-name">
+                      language
+                    </div>
+                    <div class="param-type">
+                      enum
+                    </div>
+                    <div class="param-optional">
+                      Opcional
+                    </div>
+                    <div class="param-description">
+                      Idioma: pt, en (padrão: pt)
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">length</div>
-                    <div class="param-type">enum</div>
-                    <div class="param-optional">Opcional</div>
-                    <div class="param-description">Tamanho: short, medium, long (padrão: medium)</div>
+                    <div class="param-name">
+                      length
+                    </div>
+                    <div class="param-type">
+                      enum
+                    </div>
+                    <div class="param-optional">
+                      Opcional
+                    </div>
+                    <div class="param-description">
+                      Tamanho: short, medium, long (padrão: medium)
+                    </div>
                   </div>
                 </div>
-                <p class="param-note">* Forneça text OU document_id, não ambos</p>
+                <p class="param-note">
+                  * Forneça text OU document_id, não ambos
+                </p>
               </div>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Exemplo de Requisição</h4>
+                <h4 class="section-subtitle">
+                  Exemplo de Requisição
+                </h4>
                 <div class="request-example">
                   <pre><code>{
   "text": "Seu texto longo aqui...",
@@ -406,7 +586,9 @@
               </div>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Resposta</h4>
+                <h4 class="section-subtitle">
+                  Resposta
+                </h4>
                 <div class="response-example">
                   <pre><code>{
   "id": "sum_123456789",
@@ -425,8 +607,12 @@
           <!-- Get Summary -->
           <div class="endpoint-card">
             <div class="endpoint-header">
-              <div class="endpoint-method get">GET</div>
-              <div class="endpoint-path">/summaries/{id}</div>
+              <div class="endpoint-method get">
+                GET
+              </div>
+              <div class="endpoint-path">
+                /summaries/{id}
+              </div>
             </div>
             <div class="endpoint-content">
               <p class="endpoint-description">
@@ -438,13 +624,19 @@
         
         <!-- Translation Endpoints -->
         <div class="endpoint-group">
-          <h3 class="group-title">Tradução</h3>
+          <h3 class="group-title">
+            Tradução
+          </h3>
           
           <!-- Translate Text -->
           <div class="endpoint-card">
             <div class="endpoint-header">
-              <div class="endpoint-method post">POST</div>
-              <div class="endpoint-path">/translate</div>
+              <div class="endpoint-method post">
+                POST
+              </div>
+              <div class="endpoint-path">
+                /translate
+              </div>
             </div>
             <div class="endpoint-content">
               <p class="endpoint-description">
@@ -452,25 +644,51 @@
               </p>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Body Parameters</h4>
+                <h4 class="section-subtitle">
+                  Body Parameters
+                </h4>
                 <div class="params-table">
                   <div class="param-row">
-                    <div class="param-name">text</div>
-                    <div class="param-type">string</div>
-                    <div class="param-required">Obrigatório</div>
-                    <div class="param-description">Texto a ser traduzido</div>
+                    <div class="param-name">
+                      text
+                    </div>
+                    <div class="param-type">
+                      string
+                    </div>
+                    <div class="param-required">
+                      Obrigatório
+                    </div>
+                    <div class="param-description">
+                      Texto a ser traduzido
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">from</div>
-                    <div class="param-type">enum</div>
-                    <div class="param-required">Obrigatório</div>
-                    <div class="param-description">Idioma de origem: pt, en</div>
+                    <div class="param-name">
+                      from
+                    </div>
+                    <div class="param-type">
+                      enum
+                    </div>
+                    <div class="param-required">
+                      Obrigatório
+                    </div>
+                    <div class="param-description">
+                      Idioma de origem: pt, en
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">to</div>
-                    <div class="param-type">enum</div>
-                    <div class="param-required">Obrigatório</div>
-                    <div class="param-description">Idioma de destino: pt, en</div>
+                    <div class="param-name">
+                      to
+                    </div>
+                    <div class="param-type">
+                      enum
+                    </div>
+                    <div class="param-required">
+                      Obrigatório
+                    </div>
+                    <div class="param-description">
+                      Idioma de destino: pt, en
+                    </div>
                   </div>
                 </div>
               </div>
@@ -480,13 +698,19 @@
         
         <!-- Transcription Endpoints -->
         <div class="endpoint-group">
-          <h3 class="group-title">Transcrição</h3>
+          <h3 class="group-title">
+            Transcrição
+          </h3>
           
           <!-- Transcribe Audio -->
           <div class="endpoint-card">
             <div class="endpoint-header">
-              <div class="endpoint-method post">POST</div>
-              <div class="endpoint-path">/transcribe</div>
+              <div class="endpoint-method post">
+                POST
+              </div>
+              <div class="endpoint-path">
+                /transcribe
+              </div>
             </div>
             <div class="endpoint-content">
               <p class="endpoint-description">
@@ -494,19 +718,37 @@
               </p>
               
               <div class="endpoint-section">
-                <h4 class="section-subtitle">Parâmetros</h4>
+                <h4 class="section-subtitle">
+                  Parâmetros
+                </h4>
                 <div class="params-table">
                   <div class="param-row">
-                    <div class="param-name">audio</div>
-                    <div class="param-type">multipart/form-data</div>
-                    <div class="param-required">Obrigatório</div>
-                    <div class="param-description">Arquivo de áudio (MP3, WAV, M4A)</div>
+                    <div class="param-name">
+                      audio
+                    </div>
+                    <div class="param-type">
+                      multipart/form-data
+                    </div>
+                    <div class="param-required">
+                      Obrigatório
+                    </div>
+                    <div class="param-description">
+                      Arquivo de áudio (MP3, WAV, M4A)
+                    </div>
                   </div>
                   <div class="param-row">
-                    <div class="param-name">language</div>
-                    <div class="param-type">enum</div>
-                    <div class="param-optional">Opcional</div>
-                    <div class="param-description">Idioma do áudio: pt, en (auto-detectado se omitido)</div>
+                    <div class="param-name">
+                      language
+                    </div>
+                    <div class="param-type">
+                      enum
+                    </div>
+                    <div class="param-optional">
+                      Opcional
+                    </div>
+                    <div class="param-description">
+                      Idioma do áudio: pt, en (auto-detectado se omitido)
+                    </div>
                   </div>
                 </div>
               </div>
@@ -519,7 +761,9 @@
     <!-- Error Codes -->
     <div class="errors-section">
       <div class="section-container">
-        <h2 class="section-title">Códigos de Erro</h2>
+        <h2 class="section-title">
+          Códigos de Erro
+        </h2>
         
         <div class="error-intro">
           <p class="error-description">
@@ -530,56 +774,94 @@
         
         <div class="errors-grid">
           <div class="error-card">
-            <div class="error-code">400</div>
+            <div class="error-code">
+              400
+            </div>
             <div class="error-content">
-              <h3 class="error-title">Bad Request</h3>
-              <p class="error-text">Requisição malformada ou parâmetros inválidos</p>
+              <h3 class="error-title">
+                Bad Request
+              </h3>
+              <p class="error-text">
+                Requisição malformada ou parâmetros inválidos
+              </p>
             </div>
           </div>
           
           <div class="error-card">
-            <div class="error-code">401</div>
+            <div class="error-code">
+              401
+            </div>
             <div class="error-content">
-              <h3 class="error-title">Unauthorized</h3>
-              <p class="error-text">API key inválida ou ausente</p>
+              <h3 class="error-title">
+                Unauthorized
+              </h3>
+              <p class="error-text">
+                API key inválida ou ausente
+              </p>
             </div>
           </div>
           
           <div class="error-card">
-            <div class="error-code">403</div>
+            <div class="error-code">
+              403
+            </div>
             <div class="error-content">
-              <h3 class="error-title">Forbidden</h3>
-              <p class="error-text">Acesso negado ao recurso</p>
+              <h3 class="error-title">
+                Forbidden
+              </h3>
+              <p class="error-text">
+                Acesso negado ao recurso
+              </p>
             </div>
           </div>
           
           <div class="error-card">
-            <div class="error-code">404</div>
+            <div class="error-code">
+              404
+            </div>
             <div class="error-content">
-              <h3 class="error-title">Not Found</h3>
-              <p class="error-text">Recurso não encontrado</p>
+              <h3 class="error-title">
+                Not Found
+              </h3>
+              <p class="error-text">
+                Recurso não encontrado
+              </p>
             </div>
           </div>
           
           <div class="error-card">
-            <div class="error-code">429</div>
+            <div class="error-code">
+              429
+            </div>
             <div class="error-content">
-              <h3 class="error-title">Too Many Requests</h3>
-              <p class="error-text">Limite de taxa excedido</p>
+              <h3 class="error-title">
+                Too Many Requests
+              </h3>
+              <p class="error-text">
+                Limite de taxa excedido
+              </p>
             </div>
           </div>
           
           <div class="error-card">
-            <div class="error-code">500</div>
+            <div class="error-code">
+              500
+            </div>
             <div class="error-content">
-              <h3 class="error-title">Internal Server Error</h3>
-              <p class="error-text">Erro interno do servidor</p>
+              <h3 class="error-title">
+                Internal Server Error
+              </h3>
+              <p class="error-text">
+                Erro interno do servidor
+              </p>
             </div>
           </div>
         </div>
         
         <div class="error-example">
-          <h3 class="example-title">Exemplo de Resposta de Erro</h3>
+          <h3 class="example-title">
+            Exemplo de Resposta de Erro
+          </h3>
           <div class="error-response">
             <pre><code>{
   "error": {
@@ -600,7 +882,9 @@
     <!-- SDKs -->
     <div class="sdks-section">
       <div class="section-container">
-        <h2 class="section-title">SDKs e Bibliotecas</h2>
+        <h2 class="section-title">
+          SDKs e Bibliotecas
+        </h2>
         
         <div class="sdks-intro">
           <p class="sdks-description">
@@ -613,48 +897,76 @@
             <div class="sdk-icon">
               <JavaScriptIcon class="language-icon" />
             </div>
-            <h3 class="sdk-title">JavaScript/Node.js</h3>
-            <p class="sdk-description">SDK oficial para aplicações JavaScript e Node.js</p>
+            <h3 class="sdk-title">
+              JavaScript/Node.js
+            </h3>
+            <p class="sdk-description">
+              SDK oficial para aplicações JavaScript e Node.js
+            </p>
             <div class="sdk-install">
               <code>npm install sintetiza-doc-sdk</code>
             </div>
-            <a href="#" class="sdk-link">Ver Documentação →</a>
+            <a
+              href="#"
+              class="sdk-link"
+            >Ver Documentação →</a>
           </div>
           
           <div class="sdk-card">
             <div class="sdk-icon">
               <PythonIcon class="language-icon" />
             </div>
-            <h3 class="sdk-title">Python</h3>
-            <p class="sdk-description">SDK oficial para aplicações Python</p>
+            <h3 class="sdk-title">
+              Python
+            </h3>
+            <p class="sdk-description">
+              SDK oficial para aplicações Python
+            </p>
             <div class="sdk-install">
               <code>pip install sintetiza-doc</code>
             </div>
-            <a href="#" class="sdk-link">Ver Documentação →</a>
+            <a
+              href="#"
+              class="sdk-link"
+            >Ver Documentação →</a>
           </div>
           
           <div class="sdk-card">
             <div class="sdk-icon">
               <PHPIcon class="language-icon" />
             </div>
-            <h3 class="sdk-title">PHP</h3>
-            <p class="sdk-description">SDK oficial para aplicações PHP</p>
+            <h3 class="sdk-title">
+              PHP
+            </h3>
+            <p class="sdk-description">
+              SDK oficial para aplicações PHP
+            </p>
             <div class="sdk-install">
               <code>composer require sintetiza-doc/sdk</code>
             </div>
-            <a href="#" class="sdk-link">Ver Documentação →</a>
+            <a
+              href="#"
+              class="sdk-link"
+            >Ver Documentação →</a>
           </div>
           
           <div class="sdk-card">
             <div class="sdk-icon">
               <CurlIcon class="language-icon" />
             </div>
-            <h3 class="sdk-title">cURL</h3>
-            <p class="sdk-description">Exemplos usando cURL para testes rápidos</p>
+            <h3 class="sdk-title">
+              cURL
+            </h3>
+            <p class="sdk-description">
+              Exemplos usando cURL para testes rápidos
+            </p>
             <div class="sdk-install">
               <code>curl --version</code>
             </div>
-            <a href="#" class="sdk-link">Ver Exemplos →</a>
+            <a
+              href="#"
+              class="sdk-link"
+            >Ver Exemplos →</a>
           </div>
         </div>
       </div>
@@ -663,49 +975,71 @@
     <!-- Support -->
     <div class="support-section">
       <div class="section-container">
-        <h2 class="section-title">Suporte e Recursos</h2>
+        <h2 class="section-title">
+          Suporte e Recursos
+        </h2>
         
         <div class="support-grid">
           <div class="support-card">
             <ChatIcon class="support-icon" />
-            <h3 class="support-title">Suporte Técnico</h3>
+            <h3 class="support-title">
+              Suporte Técnico
+            </h3>
             <p class="support-description">
               Nossa equipe está pronta para ajudar com integrações e questões técnicas.
             </p>
-            <a href="mailto:api-support@sintetiza-doc.com" class="support-link">
+            <a
+              href="mailto:api-support@sintetiza-doc.com"
+              class="support-link"
+            >
               api-support@sintetiza-doc.com
             </a>
           </div>
           
           <div class="support-card">
             <BookIcon class="support-icon" />
-            <h3 class="support-title">Guias e Tutoriais</h3>
+            <h3 class="support-title">
+              Guias e Tutoriais
+            </h3>
             <p class="support-description">
               Acesse guias detalhados e exemplos práticos de implementação.
             </p>
-            <a href="#" class="support-link">
+            <a
+              href="#"
+              class="support-link"
+            >
               Ver Guias →
             </a>
           </div>
           
           <div class="support-card">
             <UsersIcon class="support-icon" />
-            <h3 class="support-title">Comunidade</h3>
+            <h3 class="support-title">
+              Comunidade
+            </h3>
             <p class="support-description">
               Participe da nossa comunidade de desenvolvedores no Discord.
             </p>
-            <a href="#" class="support-link">
+            <a
+              href="#"
+              class="support-link"
+            >
               Entrar no Discord →
             </a>
           </div>
           
           <div class="support-card">
             <BugIcon class="support-icon" />
-            <h3 class="support-title">Reportar Bugs</h3>
+            <h3 class="support-title">
+              Reportar Bugs
+            </h3>
             <p class="support-description">
               Encontrou um problema? Reporte bugs e solicite melhorias.
             </p>
-            <a href="#" class="support-link">
+            <a
+              href="#"
+              class="support-link"
+            >
               GitHub Issues →
             </a>
           </div>

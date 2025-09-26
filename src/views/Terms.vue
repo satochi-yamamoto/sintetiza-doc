@@ -3,7 +3,9 @@
     <!-- Header -->
     <div class="terms-header">
       <div class="header-content">
-        <h1 class="page-title">Termos de Uso</h1>
+        <h1 class="page-title">
+          Termos de Uso
+        </h1>
         <p class="page-subtitle">
           Última atualização: {{ lastUpdated }}
         </p>
@@ -19,14 +21,16 @@
     <!-- Table of Contents -->
     <div class="toc-section">
       <div class="toc-container">
-        <h2 class="toc-title">Índice</h2>
+        <h2 class="toc-title">
+          Índice
+        </h2>
         <nav class="toc-nav">
           <a 
             v-for="section in sections" 
             :key="section.id"
             :href="`#${section.id}`"
-            @click="scrollToSection(section.id)"
             class="toc-link"
+            @click="scrollToSection(section.id)"
           >
             {{ section.title }}
           </a>
@@ -37,8 +41,13 @@
     <!-- Content -->
     <div class="terms-content">
       <!-- Section 1: Aceitação dos Termos -->
-      <section id="aceitacao" class="content-section">
-        <h2 class="section-title">1. Aceitação dos Termos</h2>
+      <section
+        id="aceitacao"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          1. Aceitação dos Termos
+        </h2>
         
         <p class="section-text">
           Ao acessar e usar o Sintetiza Doc ("Serviço", "Plataforma"), operado pela 
@@ -49,7 +58,9 @@
         <div class="important-notice">
           <ExclamationIcon class="notice-icon" />
           <div class="notice-content">
-            <h4 class="notice-title">Importante</h4>
+            <h4 class="notice-title">
+              Importante
+            </h4>
             <p class="notice-text">
               Se você não concordar com qualquer parte destes termos, não deve usar nosso serviço.
             </p>
@@ -57,7 +68,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">1.1 Capacidade Legal</h3>
+          <h3 class="subsection-title">
+            1.1 Capacidade Legal
+          </h3>
           <p class="section-text">
             Você declara que:
           </p>
@@ -70,7 +83,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">1.2 Alterações dos Termos</h3>
+          <h3 class="subsection-title">
+            1.2 Alterações dos Termos
+          </h3>
           <p class="section-text">
             Reservamo-nos o direito de modificar estes termos a qualquer momento. 
             Alterações significativas serão notificadas com pelo menos 30 dias de antecedência. 
@@ -80,8 +95,13 @@
       </section>
       
       <!-- Section 2: Descrição do Serviço -->
-      <section id="descricao-servico" class="content-section">
-        <h2 class="section-title">2. Descrição do Serviço</h2>
+      <section
+        id="descricao-servico"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          2. Descrição do Serviço
+        </h2>
         
         <p class="section-text">
           O Sintetiza Doc é uma plataforma de inteligência artificial que oferece:
@@ -90,7 +110,9 @@
         <div class="services-grid">
           <div class="service-item">
             <DocumentTextIcon class="service-icon" />
-            <h4 class="service-title">Geração de Resumos</h4>
+            <h4 class="service-title">
+              Geração de Resumos
+            </h4>
             <p class="service-text">
               Criação automática de resumos de documentos em múltiplos formatos e estilos.
             </p>
@@ -98,7 +120,9 @@
           
           <div class="service-item">
             <TranslateIcon class="service-icon" />
-            <h4 class="service-title">Tradução</h4>
+            <h4 class="service-title">
+              Tradução
+            </h4>
             <p class="service-text">
               Tradução bidirecional entre português e inglês com alta precisão.
             </p>
@@ -106,7 +130,9 @@
           
           <div class="service-item">
             <MicrophoneIcon class="service-icon" />
-            <h4 class="service-title">Transcrição</h4>
+            <h4 class="service-title">
+              Transcrição
+            </h4>
             <p class="service-text">
               Conversão de áudio em texto para reuniões e apresentações.
             </p>
@@ -114,7 +140,9 @@
           
           <div class="service-item">
             <ShareIcon class="service-icon" />
-            <h4 class="service-title">Exportação</h4>
+            <h4 class="service-title">
+              Exportação
+            </h4>
             <p class="service-text">
               Exportação para múltiplos formatos e integração com ferramentas populares.
             </p>
@@ -122,7 +150,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">2.1 Disponibilidade</h3>
+          <h3 class="subsection-title">
+            2.1 Disponibilidade
+          </h3>
           <p class="section-text">
             Embora nos esforcemos para manter o serviço disponível 24/7, não garantimos 
             disponibilidade ininterrupta. O serviço pode estar temporariamente indisponível 
@@ -131,7 +161,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">2.2 Limitações Técnicas</h3>
+          <h3 class="subsection-title">
+            2.2 Limitações Técnicas
+          </h3>
           <p class="section-text">
             O serviço está sujeito a limitações técnicas, incluindo:
           </p>
@@ -145,11 +177,18 @@
       </section>
       
       <!-- Section 3: Contas de Usuário -->
-      <section id="contas-usuario" class="content-section">
-        <h2 class="section-title">3. Contas de Usuário</h2>
+      <section
+        id="contas-usuario"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          3. Contas de Usuário
+        </h2>
         
         <div class="subsection">
-          <h3 class="subsection-title">3.1 Criação de Conta</h3>
+          <h3 class="subsection-title">
+            3.1 Criação de Conta
+          </h3>
           <p class="section-text">
             Para usar nosso serviço, você deve:
           </p>
@@ -162,7 +201,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">3.2 Responsabilidade da Conta</h3>
+          <h3 class="subsection-title">
+            3.2 Responsabilidade da Conta
+          </h3>
           <p class="section-text">
             Você é totalmente responsável por:
           </p>
@@ -175,7 +216,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">3.3 Suspensão e Encerramento</h3>
+          <h3 class="subsection-title">
+            3.3 Suspensão e Encerramento
+          </h3>
           <p class="section-text">
             Podemos suspender ou encerrar sua conta se:
           </p>
@@ -189,8 +232,13 @@
       </section>
       
       <!-- Section 4: Uso Aceitável -->
-      <section id="uso-aceitavel" class="content-section">
-        <h2 class="section-title">4. Política de Uso Aceitável</h2>
+      <section
+        id="uso-aceitavel"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          4. Política de Uso Aceitável
+        </h2>
         
         <div class="acceptable-use">
           <div class="use-section allowed">
@@ -225,7 +273,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">4.1 Monitoramento</h3>
+          <h3 class="subsection-title">
+            4.1 Monitoramento
+          </h3>
           <p class="section-text">
             Reservamo-nos o direito de monitorar o uso do serviço para garantir 
             conformidade com estes termos. Isso pode incluir análise automatizada 
@@ -234,7 +284,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">4.2 Consequências de Violação</h3>
+          <h3 class="subsection-title">
+            4.2 Consequências de Violação
+          </h3>
           <p class="section-text">
             Violações da política de uso aceitável podem resultar em:
           </p>
@@ -248,11 +300,18 @@
       </section>
       
       <!-- Section 5: Propriedade Intelectual -->
-      <section id="propriedade-intelectual" class="content-section">
-        <h2 class="section-title">5. Propriedade Intelectual</h2>
+      <section
+        id="propriedade-intelectual"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          5. Propriedade Intelectual
+        </h2>
         
         <div class="subsection">
-          <h3 class="subsection-title">5.1 Nossos Direitos</h3>
+          <h3 class="subsection-title">
+            5.1 Nossos Direitos
+          </h3>
           <p class="section-text">
             O Sintetiza Doc e todos os seus componentes são protegidos por direitos 
             de propriedade intelectual. Isso inclui:
@@ -266,7 +325,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">5.2 Seus Direitos</h3>
+          <h3 class="subsection-title">
+            5.2 Seus Direitos
+          </h3>
           <p class="section-text">
             Você mantém todos os direitos sobre:
           </p>
@@ -278,7 +339,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">5.3 Licença de Uso</h3>
+          <h3 class="subsection-title">
+            5.3 Licença de Uso
+          </h3>
           <p class="section-text">
             Concedemos a você uma licença limitada, não exclusiva e revogável para 
             usar nosso serviço de acordo com estes termos. Esta licença não inclui:
@@ -292,7 +355,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">5.4 Licença de Conteúdo</h3>
+          <h3 class="subsection-title">
+            5.4 Licença de Conteúdo
+          </h3>
           <p class="section-text">
             Ao carregar conteúdo, você nos concede uma licença limitada para:
           </p>
@@ -306,33 +371,58 @@
       </section>
       
       <!-- Section 6: Pagamentos e Assinaturas -->
-      <section id="pagamentos" class="content-section">
-        <h2 class="section-title">6. Pagamentos e Assinaturas</h2>
+      <section
+        id="pagamentos"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          6. Pagamentos e Assinaturas
+        </h2>
         
         <div class="pricing-overview">
-          <h3 class="subsection-title">6.1 Planos Disponíveis</h3>
+          <h3 class="subsection-title">
+            6.1 Planos Disponíveis
+          </h3>
           <div class="plans-grid">
             <div class="plan-item">
-              <h4 class="plan-name">Gratuito</h4>
-              <p class="plan-description">Funcionalidades básicas com limitações</p>
+              <h4 class="plan-name">
+                Gratuito
+              </h4>
+              <p class="plan-description">
+                Funcionalidades básicas com limitações
+              </p>
             </div>
             <div class="plan-item">
-              <h4 class="plan-name">Básico</h4>
-              <p class="plan-description">Para usuários individuais</p>
+              <h4 class="plan-name">
+                Básico
+              </h4>
+              <p class="plan-description">
+                Para usuários individuais
+              </p>
             </div>
             <div class="plan-item">
-              <h4 class="plan-name">Profissional</h4>
-              <p class="plan-description">Para profissionais e pequenas equipes</p>
+              <h4 class="plan-name">
+                Profissional
+              </h4>
+              <p class="plan-description">
+                Para profissionais e pequenas equipes
+              </p>
             </div>
             <div class="plan-item">
-              <h4 class="plan-name">Empresarial</h4>
-              <p class="plan-description">Para organizações e grandes equipes</p>
+              <h4 class="plan-name">
+                Empresarial
+              </h4>
+              <p class="plan-description">
+                Para organizações e grandes equipes
+              </p>
             </div>
           </div>
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">6.2 Cobrança</h3>
+          <h3 class="subsection-title">
+            6.2 Cobrança
+          </h3>
           <p class="section-text">
             Para planos pagos:
           </p>
@@ -345,7 +435,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">6.3 Cancelamento e Reembolsos</h3>
+          <h3 class="subsection-title">
+            6.3 Cancelamento e Reembolsos
+          </h3>
           <p class="section-text">
             Política de cancelamento:
           </p>
@@ -358,7 +450,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">6.4 Alterações de Preço</h3>
+          <h3 class="subsection-title">
+            6.4 Alterações de Preço
+          </h3>
           <p class="section-text">
             Podemos alterar preços com:
           </p>
@@ -371,23 +465,37 @@
       </section>
       
       <!-- Section 7: Privacidade e Dados -->
-      <section id="privacidade-dados" class="content-section">
-        <h2 class="section-title">7. Privacidade e Proteção de Dados</h2>
+      <section
+        id="privacidade-dados"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          7. Privacidade e Proteção de Dados
+        </h2>
         
         <div class="privacy-summary">
           <ShieldIcon class="privacy-icon" />
           <div class="privacy-content">
-            <h3 class="privacy-title">Compromisso com a Privacidade</h3>
+            <h3 class="privacy-title">
+              Compromisso com a Privacidade
+            </h3>
             <p class="privacy-text">
               Levamos sua privacidade a sério. Nossa 
-              <router-link to="/privacy" class="privacy-link">Política de Privacidade</router-link> 
+              <router-link
+                to="/privacy"
+                class="privacy-link"
+              >
+                Política de Privacidade
+              </router-link> 
               detalha como coletamos, usamos e protegemos suas informações.
             </p>
           </div>
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">7.1 Processamento de Documentos</h3>
+          <h3 class="subsection-title">
+            7.1 Processamento de Documentos
+          </h3>
           <p class="section-text">
             Quando você carrega documentos:
           </p>
@@ -400,7 +508,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">7.2 Conformidade Legal</h3>
+          <h3 class="subsection-title">
+            7.2 Conformidade Legal
+          </h3>
           <p class="section-text">
             Cumprimos regulamentações aplicáveis:
           </p>
@@ -414,13 +524,20 @@
       </section>
       
       <!-- Section 8: Limitações e Isenções -->
-      <section id="limitacoes" class="content-section">
-        <h2 class="section-title">8. Limitações de Responsabilidade</h2>
+      <section
+        id="limitacoes"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          8. Limitações de Responsabilidade
+        </h2>
         
         <div class="disclaimer-notice">
           <ExclamationTriangleIcon class="disclaimer-icon" />
           <div class="disclaimer-content">
-            <h4 class="disclaimer-title">Isenção de Garantias</h4>
+            <h4 class="disclaimer-title">
+              Isenção de Garantias
+            </h4>
             <p class="disclaimer-text">
               O serviço é fornecido "como está" e "conforme disponível", 
               sem garantias de qualquer tipo, expressas ou implícitas.
@@ -429,7 +546,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">8.1 Limitações Gerais</h3>
+          <h3 class="subsection-title">
+            8.1 Limitações Gerais
+          </h3>
           <p class="section-text">
             Em nenhuma circunstância seremos responsáveis por:
           </p>
@@ -443,7 +562,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">8.2 Limitação Monetária</h3>
+          <h3 class="subsection-title">
+            8.2 Limitação Monetária
+          </h3>
           <p class="section-text">
             Nossa responsabilidade total não excederá o valor pago por você 
             nos 12 meses anteriores ao evento que deu origem à reclamação.
@@ -451,7 +572,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">8.3 Precisão do Conteúdo</h3>
+          <h3 class="subsection-title">
+            8.3 Precisão do Conteúdo
+          </h3>
           <p class="section-text">
             Embora nos esforcemos para fornecer resultados precisos:
           </p>
@@ -465,8 +588,13 @@
       </section>
       
       <!-- Section 9: Indenização -->
-      <section id="indenizacao" class="content-section">
-        <h2 class="section-title">9. Indenização</h2>
+      <section
+        id="indenizacao"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          9. Indenização
+        </h2>
         
         <p class="section-text">
           Você concorda em nos indenizar e isentar de responsabilidade contra 
@@ -484,11 +612,18 @@
       </section>
       
       <!-- Section 10: Resolução de Disputas -->
-      <section id="resolucao-disputas" class="content-section">
-        <h2 class="section-title">10. Resolução de Disputas</h2>
+      <section
+        id="resolucao-disputas"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          10. Resolução de Disputas
+        </h2>
         
         <div class="subsection">
-          <h3 class="subsection-title">10.1 Negociação Direta</h3>
+          <h3 class="subsection-title">
+            10.1 Negociação Direta
+          </h3>
           <p class="section-text">
             Encorajamos a resolução amigável de disputas. Entre em contato 
             conosco primeiro através de nossos canais de suporte.
@@ -496,7 +631,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">10.2 Mediação</h3>
+          <h3 class="subsection-title">
+            10.2 Mediação
+          </h3>
           <p class="section-text">
             Se não conseguirmos resolver a disputa diretamente, concordamos 
             em tentar mediação através de um mediador mutuamente aceito.
@@ -504,7 +641,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">10.3 Jurisdição</h3>
+          <h3 class="subsection-title">
+            10.3 Jurisdição
+          </h3>
           <p class="section-text">
             Estes termos são regidos pelas leis brasileiras. Disputas não 
             resolvidas serão submetidas à jurisdição dos tribunais de São Paulo, SP.
@@ -512,7 +651,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">10.4 Prazo para Reclamações</h3>
+          <h3 class="subsection-title">
+            10.4 Prazo para Reclamações
+          </h3>
           <p class="section-text">
             Qualquer reclamação deve ser apresentada dentro de 1 (um) ano 
             após o evento que deu origem à disputa.
@@ -521,11 +662,18 @@
       </section>
       
       <!-- Section 11: Disposições Gerais -->
-      <section id="disposicoes-gerais" class="content-section">
-        <h2 class="section-title">11. Disposições Gerais</h2>
+      <section
+        id="disposicoes-gerais"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          11. Disposições Gerais
+        </h2>
         
         <div class="subsection">
-          <h3 class="subsection-title">11.1 Integralidade</h3>
+          <h3 class="subsection-title">
+            11.1 Integralidade
+          </h3>
           <p class="section-text">
             Estes termos, juntamente com nossa Política de Privacidade, 
             constituem o acordo completo entre você e nós.
@@ -533,7 +681,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">11.2 Divisibilidade</h3>
+          <h3 class="subsection-title">
+            11.2 Divisibilidade
+          </h3>
           <p class="section-text">
             Se qualquer disposição destes termos for considerada inválida, 
             as demais disposições permanecerão em pleno vigor.
@@ -541,7 +691,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">11.3 Renúncia</h3>
+          <h3 class="subsection-title">
+            11.3 Renúncia
+          </h3>
           <p class="section-text">
             A falha em fazer cumprir qualquer direito ou disposição não 
             constitui renúncia a esse direito ou disposição.
@@ -549,7 +701,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">11.4 Cessão</h3>
+          <h3 class="subsection-title">
+            11.4 Cessão
+          </h3>
           <p class="section-text">
             Você não pode ceder seus direitos sob estes termos sem nosso 
             consentimento prévio por escrito. Podemos ceder nossos direitos 
@@ -558,7 +712,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">11.5 Sobrevivência</h3>
+          <h3 class="subsection-title">
+            11.5 Sobrevivência
+          </h3>
           <p class="section-text">
             As disposições que por sua natureza devem sobreviver ao 
             encerramento destes termos continuarão em vigor.
@@ -567,12 +723,19 @@
       </section>
       
       <!-- Section 12: Contato -->
-      <section id="contato" class="content-section">
-        <h2 class="section-title">12. Informações de Contato</h2>
+      <section
+        id="contato"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          12. Informações de Contato
+        </h2>
         
         <div class="contact-grid">
           <div class="contact-card">
-            <h3 class="contact-title">Suporte Geral</h3>
+            <h3 class="contact-title">
+              Suporte Geral
+            </h3>
             <div class="contact-details">
               <div class="contact-item">
                 <MailIcon class="contact-icon" />
@@ -586,7 +749,9 @@
           </div>
           
           <div class="contact-card">
-            <h3 class="contact-title">Questões Legais</h3>
+            <h3 class="contact-title">
+              Questões Legais
+            </h3>
             <div class="contact-details">
               <div class="contact-item">
                 <MailIcon class="contact-icon" />
@@ -596,7 +761,9 @@
           </div>
           
           <div class="contact-card">
-            <h3 class="contact-title">Endereço</h3>
+            <h3 class="contact-title">
+              Endereço
+            </h3>
             <div class="contact-details">
               <div class="contact-item">
                 <MapPinIcon class="contact-icon" />

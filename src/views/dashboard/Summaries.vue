@@ -4,16 +4,29 @@
     <div class="summaries-header">
       <div class="header-content">
         <div class="header-left">
-          <h1 class="page-title">Meus Resumos</h1>
+          <h1 class="page-title">
+            Meus Resumos
+          </h1>
           <p class="page-subtitle">
             Visualize, gerencie e exporte todos os seus resumos
           </p>
         </div>
         
         <div class="header-right">
-          <router-link to="/dashboard/documentos" class="new-summary-btn">
-            <svg class="new-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          <router-link
+            to="/dashboard/documentos"
+            class="new-summary-btn"
+          >
+            <svg
+              class="new-icon"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>Novo Resumo</span>
           </router-link>
@@ -25,8 +38,16 @@
     <div class="filters-section">
       <div class="search-bar">
         <div class="search-input-wrapper">
-          <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+          <svg
+            class="search-icon"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd"
+            />
           </svg>
           <input 
             v-model="searchQuery" 
@@ -38,49 +59,105 @@
       </div>
       
       <div class="filter-controls">
-        <select v-model="selectedStyle" class="filter-select">
-          <option value="">Todos os estilos</option>
-          <option value="standard">Padrão</option>
-          <option value="executive">Executivo</option>
-          <option value="technical">Técnico</option>
-          <option value="educational">Educacional</option>
+        <select
+          v-model="selectedStyle"
+          class="filter-select"
+        >
+          <option value="">
+            Todos os estilos
+          </option>
+          <option value="standard">
+            Padrão
+          </option>
+          <option value="executive">
+            Executivo
+          </option>
+          <option value="technical">
+            Técnico
+          </option>
+          <option value="educational">
+            Educacional
+          </option>
         </select>
         
-        <select v-model="selectedLanguage" class="filter-select">
-          <option value="">Todos os idiomas</option>
-          <option value="pt">Português</option>
-          <option value="en">Inglês</option>
+        <select
+          v-model="selectedLanguage"
+          class="filter-select"
+        >
+          <option value="">
+            Todos os idiomas
+          </option>
+          <option value="pt">
+            Português
+          </option>
+          <option value="en">
+            Inglês
+          </option>
         </select>
         
-        <select v-model="sortBy" class="filter-select">
-          <option value="created_at">Data de criação</option>
-          <option value="title">Título</option>
-          <option value="updated_at">Última modificação</option>
+        <select
+          v-model="sortBy"
+          class="filter-select"
+        >
+          <option value="created_at">
+            Data de criação
+          </option>
+          <option value="title">
+            Título
+          </option>
+          <option value="updated_at">
+            Última modificação
+          </option>
         </select>
         
-        <button @click="toggleSortOrder" class="sort-btn" :class="{ 'desc': sortOrder === 'desc' }">
-          <svg viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        <button
+          class="sort-btn"
+          :class="{ 'desc': sortOrder === 'desc' }"
+          @click="toggleSortOrder"
+        >
+          <svg
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            />
           </svg>
         </button>
         
         <div class="view-toggle">
           <button 
-            @click="viewMode = 'grid'" 
-            :class="{ active: viewMode === 'grid' }"
+            :class="{ active: viewMode === 'grid' }" 
             class="view-btn"
+            @click="viewMode = 'grid'"
           >
-            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" fill="currentColor" />
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                fill="currentColor"
+              />
             </svg>
           </button>
           <button 
-            @click="viewMode = 'list'" 
-            :class="{ active: viewMode === 'list' }"
+            :class="{ active: viewMode === 'list' }" 
             class="view-btn"
+            @click="viewMode = 'list'"
           >
-            <svg viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+            <svg
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"
+              />
             </svg>
           </button>
         </div>
@@ -89,9 +166,16 @@
     
     <!-- Summaries List/Grid -->
     <div class="summaries-content">
-      <LoadingSpinner v-if="isLoading" :show="true" message="Carregando resumos..." />
+      <LoadingSpinner
+        v-if="isLoading"
+        :show="true"
+        message="Carregando resumos..."
+      />
       
-      <div v-else-if="filteredSummaries.length > 0" :class="viewMode === 'grid' ? 'summaries-grid' : 'summaries-list'">
+      <div
+        v-else-if="filteredSummaries.length > 0"
+        :class="viewMode === 'grid' ? 'summaries-grid' : 'summaries-list'"
+      >
         <div 
           v-for="summary in filteredSummaries" 
           :key="summary.id"
@@ -99,69 +183,121 @@
           @click="viewSummary(summary)"
         >
           <!-- Summary Icon -->
-          <div class="summary-icon" :class="getStyleClass(summary.style)">
-            <svg viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+          <div
+            class="summary-icon"
+            :class="getStyleClass(summary.style)"
+          >
+            <svg
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"
+              />
             </svg>
           </div>
           
           <!-- Summary Info -->
           <div class="summary-info">
-            <h3 class="summary-title" :title="summary.title">{{ summary.title || 'Resumo sem título' }}</h3>
+            <h3
+              class="summary-title"
+              :title="summary.title"
+            >
+              {{ summary.title || 'Resumo sem título' }}
+            </h3>
             <div class="summary-meta">
               <span class="summary-style">{{ getStyleLabel(summary.style) }}</span>
               <span class="summary-language">{{ getLanguageLabel(summary.language) }}</span>
               <span class="summary-date">{{ formatDate(summary.created_at) }}</span>
-              <span v-if="summary.document?.name" class="document-name">
+              <span
+                v-if="summary.document?.name"
+                class="document-name"
+              >
                 {{ summary.document.name }}
               </span>
             </div>
-            <p v-if="viewMode === 'grid'" class="summary-preview">
+            <p
+              v-if="viewMode === 'grid'"
+              class="summary-preview"
+            >
               {{ truncateText(summary.content, 120) }}
             </p>
           </div>
           
           <!-- Summary Actions -->
-          <div class="summary-actions" @click.stop>
+          <div
+            class="summary-actions"
+            @click.stop
+          >
             <button 
-              @click="exportSummary(summary)" 
-              class="action-btn export"
+              class="action-btn export" 
               title="Exportar"
+              @click="exportSummary(summary)"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+              <svg
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </button>
             
             <button 
-              @click="shareSummary(summary)" 
-              class="action-btn share"
+              class="action-btn share" 
               title="Compartilhar"
+              @click="shareSummary(summary)"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
               </svg>
             </button>
             
             <button 
-              @click="duplicateSummary(summary)" 
-              class="action-btn duplicate"
+              class="action-btn duplicate" 
               title="Duplicar"
+              @click="duplicateSummary(summary)"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 001 1h6a1 1 0 001-1V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                <path
+                  fill-rule="evenodd"
+                  d="M4 5a2 2 0 012-2v1a1 1 0 001 1h6a1 1 0 001-1V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </button>
             
             <button 
-              @click="deleteSummary(summary)" 
-              class="action-btn delete"
+              class="action-btn delete" 
               title="Excluir"
+              @click="deleteSummary(summary)"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd" />
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              <svg
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"
+                  clip-rule="evenodd"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </button>
           </div>
@@ -169,11 +305,28 @@
       </div>
       
       <!-- Empty State -->
-      <div v-else class="empty-state">
+      <div
+        v-else
+        class="empty-state"
+      >
         <div class="empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9 12L11 14L15 10"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+              stroke="currentColor"
+              stroke-width="2"
+            />
           </svg>
         </div>
         <h3 class="empty-title">
@@ -185,7 +338,11 @@
             : 'Comece gerando seu primeiro resumo a partir de um documento.' 
           }}
         </p>
-        <router-link v-if="!searchQuery" to="/dashboard/documentos" class="empty-action">
+        <router-link
+          v-if="!searchQuery"
+          to="/dashboard/documentos"
+          class="empty-action"
+        >
           Gerar primeiro resumo
         </router-link>
       </div>
@@ -199,13 +356,25 @@
     />
     
     <!-- Summary Viewer Modal -->
-    <div v-if="showViewerModal" class="modal-overlay" @click="closeViewerModal">
-      <div class="modal-content large" @click.stop>
+    <div
+      v-if="showViewerModal"
+      class="modal-overlay"
+      @click="closeViewerModal"
+    >
+      <div
+        class="modal-content large"
+        @click.stop
+      >
         <div class="modal-header">
           <div class="modal-title-section">
-            <h3 class="modal-title">{{ selectedSummary?.title || 'Resumo' }}</h3>
+            <h3 class="modal-title">
+              {{ selectedSummary?.title || 'Resumo' }}
+            </h3>
             <div class="summary-badges">
-              <span class="badge style" :class="getStyleClass(selectedSummary?.style)">
+              <span
+                class="badge style"
+                :class="getStyleClass(selectedSummary?.style)"
+              >
                 {{ getStyleLabel(selectedSummary?.style) }}
               </span>
               <span class="badge language">
@@ -213,28 +382,57 @@
               </span>
             </div>
           </div>
-          <button @click="closeViewerModal" class="modal-close">
-            <svg viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+          <button
+            class="modal-close"
+            @click="closeViewerModal"
+          >
+            <svg
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
             </svg>
           </button>
         </div>
         
         <div class="modal-body">
           <div class="summary-content">
-            <div class="content-text" v-html="formatContent(selectedSummary?.content)"></div>
+            <div
+              class="content-text"
+              v-html="formatContent(selectedSummary?.content)"
+            />
           </div>
           
           <div class="modal-actions">
-            <button @click="exportSummary(selectedSummary)" class="action-button export">
-              <svg viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <button
+              class="action-button export"
+              @click="exportSummary(selectedSummary)"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
               </svg>
               Exportar
             </button>
             
-            <button @click="shareSummary(selectedSummary)" class="action-button share">
-              <svg viewBox="0 0 20 20" fill="currentColor">
+            <button
+              class="action-button share"
+              @click="shareSummary(selectedSummary)"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
               </svg>
               Compartilhar

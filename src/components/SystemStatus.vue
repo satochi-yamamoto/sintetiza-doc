@@ -1,11 +1,22 @@
 <template>
   <div class="system-status">
-    <div v-if="isPublicStatus" class="bg-white rounded-lg shadow-lg p-6">
+    <div
+      v-if="isPublicStatus"
+      class="bg-white rounded-lg shadow-lg p-6"
+    >
       <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">{{ $t('status.title') }}</h1>
+        <h1 class="text-2xl font-bold text-gray-900">
+          {{ $t('status.title') }}
+        </h1>
         <div class="flex items-center space-x-2">
-          <div :class="overallStatusClass" class="w-3 h-3 rounded-full"></div>
-          <span class="text-sm font-medium" :class="overallStatusTextClass">
+          <div
+            :class="overallStatusClass"
+            class="w-3 h-3 rounded-full"
+          />
+          <span
+            class="text-sm font-medium"
+            :class="overallStatusTextClass"
+          >
             {{ overallStatusText }}
           </span>
         </div>
@@ -15,10 +26,17 @@
         <!-- API Status -->
         <div class="bg-gray-50 rounded-lg p-4">
           <div class="flex items-center justify-between mb-2">
-            <h3 class="text-sm font-medium text-gray-900">{{ $t('status.api') }}</h3>
-            <div :class="services.api.statusClass" class="w-2 h-2 rounded-full"></div>
+            <h3 class="text-sm font-medium text-gray-900">
+              {{ $t('status.api') }}
+            </h3>
+            <div
+              :class="services.api.statusClass"
+              class="w-2 h-2 rounded-full"
+            />
           </div>
-          <p class="text-xs text-gray-600">{{ services.api.message }}</p>
+          <p class="text-xs text-gray-600">
+            {{ services.api.message }}
+          </p>
           <p class="text-xs text-gray-500 mt-1">
             {{ $t('status.responseTime') }}: {{ services.api.responseTime }}ms
           </p>
@@ -27,10 +45,17 @@
         <!-- Authentication Status -->
         <div class="bg-gray-50 rounded-lg p-4">
           <div class="flex items-center justify-between mb-2">
-            <h3 class="text-sm font-medium text-gray-900">{{ $t('status.auth') }}</h3>
-            <div :class="services.auth.statusClass" class="w-2 h-2 rounded-full"></div>
+            <h3 class="text-sm font-medium text-gray-900">
+              {{ $t('status.auth') }}
+            </h3>
+            <div
+              :class="services.auth.statusClass"
+              class="w-2 h-2 rounded-full"
+            />
           </div>
-          <p class="text-xs text-gray-600">{{ services.auth.message }}</p>
+          <p class="text-xs text-gray-600">
+            {{ services.auth.message }}
+          </p>
           <p class="text-xs text-gray-500 mt-1">
             {{ $t('status.provider') }}: Supabase Auth
           </p>
@@ -39,10 +64,17 @@
         <!-- AI Services Status -->
         <div class="bg-gray-50 rounded-lg p-4">
           <div class="flex items-center justify-between mb-2">
-            <h3 class="text-sm font-medium text-gray-900">{{ $t('status.aiServices') }}</h3>
-            <div :class="services.ai.statusClass" class="w-2 h-2 rounded-full"></div>
+            <h3 class="text-sm font-medium text-gray-900">
+              {{ $t('status.aiServices') }}
+            </h3>
+            <div
+              :class="services.ai.statusClass"
+              class="w-2 h-2 rounded-full"
+            />
           </div>
-          <p class="text-xs text-gray-600">{{ services.ai.message }}</p>
+          <p class="text-xs text-gray-600">
+            {{ services.ai.message }}
+          </p>
           <p class="text-xs text-gray-500 mt-1">
             {{ $t('status.primary') }}: OpenAI | {{ $t('status.fallback') }}: Claude
           </p>
@@ -51,10 +83,17 @@
         <!-- Database Status -->
         <div class="bg-gray-50 rounded-lg p-4">
           <div class="flex items-center justify-between mb-2">
-            <h3 class="text-sm font-medium text-gray-900">{{ $t('status.database') }}</h3>
-            <div :class="services.database.statusClass" class="w-2 h-2 rounded-full"></div>
+            <h3 class="text-sm font-medium text-gray-900">
+              {{ $t('status.database') }}
+            </h3>
+            <div
+              :class="services.database.statusClass"
+              class="w-2 h-2 rounded-full"
+            />
           </div>
-          <p class="text-xs text-gray-600">{{ services.database.message }}</p>
+          <p class="text-xs text-gray-600">
+            {{ services.database.message }}
+          </p>
           <p class="text-xs text-gray-500 mt-1">
             {{ $t('status.provider') }}: Supabase
           </p>
@@ -63,10 +102,17 @@
         <!-- Storage Status -->
         <div class="bg-gray-50 rounded-lg p-4">
           <div class="flex items-center justify-between mb-2">
-            <h3 class="text-sm font-medium text-gray-900">{{ $t('status.storage') }}</h3>
-            <div :class="services.storage.statusClass" class="w-2 h-2 rounded-full"></div>
+            <h3 class="text-sm font-medium text-gray-900">
+              {{ $t('status.storage') }}
+            </h3>
+            <div
+              :class="services.storage.statusClass"
+              class="w-2 h-2 rounded-full"
+            />
           </div>
-          <p class="text-xs text-gray-600">{{ services.storage.message }}</p>
+          <p class="text-xs text-gray-600">
+            {{ services.storage.message }}
+          </p>
           <p class="text-xs text-gray-500 mt-1">
             {{ $t('status.provider') }}: Supabase Storage
           </p>
@@ -75,10 +121,17 @@
         <!-- Payment Status -->
         <div class="bg-gray-50 rounded-lg p-4">
           <div class="flex items-center justify-between mb-2">
-            <h3 class="text-sm font-medium text-gray-900">{{ $t('status.payments') }}</h3>
-            <div :class="services.payments.statusClass" class="w-2 h-2 rounded-full"></div>
+            <h3 class="text-sm font-medium text-gray-900">
+              {{ $t('status.payments') }}
+            </h3>
+            <div
+              :class="services.payments.statusClass"
+              class="w-2 h-2 rounded-full"
+            />
           </div>
-          <p class="text-xs text-gray-600">{{ services.payments.message }}</p>
+          <p class="text-xs text-gray-600">
+            {{ services.payments.message }}
+          </p>
           <p class="text-xs text-gray-500 mt-1">
             {{ $t('status.provider') }}: Stripe
           </p>
@@ -87,37 +140,68 @@
 
       <!-- System Metrics -->
       <div class="mt-8 border-t pt-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">{{ $t('status.metrics') }}</h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-4">
+          {{ $t('status.metrics') }}
+        </h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="text-center">
-            <div class="text-2xl font-bold text-indigo-600">{{ metrics.uptime }}%</div>
-            <div class="text-sm text-gray-500">{{ $t('status.uptime') }}</div>
+            <div class="text-2xl font-bold text-indigo-600">
+              {{ metrics.uptime }}%
+            </div>
+            <div class="text-sm text-gray-500">
+              {{ $t('status.uptime') }}
+            </div>
           </div>
           <div class="text-center">
-            <div class="text-2xl font-bold text-green-600">{{ metrics.avgResponseTime }}ms</div>
-            <div class="text-sm text-gray-500">{{ $t('status.avgResponse') }}</div>
+            <div class="text-2xl font-bold text-green-600">
+              {{ metrics.avgResponseTime }}ms
+            </div>
+            <div class="text-sm text-gray-500">
+              {{ $t('status.avgResponse') }}
+            </div>
           </div>
           <div class="text-center">
-            <div class="text-2xl font-bold text-blue-600">{{ metrics.documentsProcessed }}</div>
-            <div class="text-sm text-gray-500">{{ $t('status.documentsProcessed') }}</div>
+            <div class="text-2xl font-bold text-blue-600">
+              {{ metrics.documentsProcessed }}
+            </div>
+            <div class="text-sm text-gray-500">
+              {{ $t('status.documentsProcessed') }}
+            </div>
           </div>
           <div class="text-center">
-            <div class="text-2xl font-bold text-purple-600">{{ metrics.activeUsers }}</div>
-            <div class="text-sm text-gray-500">{{ $t('status.activeUsers') }}</div>
+            <div class="text-2xl font-bold text-purple-600">
+              {{ metrics.activeUsers }}
+            </div>
+            <div class="text-sm text-gray-500">
+              {{ $t('status.activeUsers') }}
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Incident History -->
-      <div v-if="incidents.length > 0" class="mt-8 border-t pt-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">{{ $t('status.recentIncidents') }}</h3>
+      <div
+        v-if="incidents.length > 0"
+        class="mt-8 border-t pt-6"
+      >
+        <h3 class="text-lg font-medium text-gray-900 mb-4">
+          {{ $t('status.recentIncidents') }}
+        </h3>
         <div class="space-y-3">
-          <div v-for="incident in incidents" :key="incident.id" class="bg-red-50 border border-red-200 rounded-lg p-3">
+          <div
+            v-for="incident in incidents"
+            :key="incident.id"
+            class="bg-red-50 border border-red-200 rounded-lg p-3"
+          >
             <div class="flex items-center justify-between">
-              <h4 class="text-sm font-medium text-red-800">{{ incident.title }}</h4>
+              <h4 class="text-sm font-medium text-red-800">
+                {{ incident.title }}
+              </h4>
               <span class="text-xs text-red-600">{{ formatDate(incident.date) }}</span>
             </div>
-            <p class="text-sm text-red-700 mt-1">{{ incident.description }}</p>
+            <p class="text-sm text-red-700 mt-1">
+              {{ incident.description }}
+            </p>
             <p class="text-xs text-red-600 mt-1">
               {{ $t('status.duration') }}: {{ incident.duration }}
             </p>
@@ -131,9 +215,9 @@
           {{ $t('status.lastUpdated') }}: {{ formatDate(lastUpdated) }}
         </p>
         <button
-          @click="refreshStatus"
           :disabled="isRefreshing"
           class="mt-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          @click="refreshStatus"
         >
           <span v-if="isRefreshing">{{ $t('status.refreshing') }}...</span>
           <span v-else>{{ $t('status.refresh') }}</span>
@@ -142,9 +226,18 @@
     </div>
 
     <!-- Embedded Status Widget -->
-    <div v-else class="flex items-center space-x-2">
-      <div :class="overallStatusClass" class="w-2 h-2 rounded-full"></div>
-      <span class="text-sm" :class="overallStatusTextClass">
+    <div
+      v-else
+      class="flex items-center space-x-2"
+    >
+      <div
+        :class="overallStatusClass"
+        class="w-2 h-2 rounded-full"
+      />
+      <span
+        class="text-sm"
+        :class="overallStatusTextClass"
+      >
         {{ overallStatusText }}
       </span>
     </div>

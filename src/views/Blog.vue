@@ -4,7 +4,9 @@
     <div class="blog-header">
       <div class="header-content">
         <div class="header-text">
-          <h1 class="page-title">Blog & Novidades</h1>
+          <h1 class="page-title">
+            Blog & Novidades
+          </h1>
           <p class="page-description">
             Fique por dentro das últimas atualizações, dicas e novidades do SintetizaDoc
           </p>
@@ -33,14 +35,21 @@
           </div>
           <div class="featured-content">
             <div class="post-meta">
-              <span class="post-category" :class="featuredPost.category.toLowerCase()">
+              <span
+                class="post-category"
+                :class="featuredPost.category.toLowerCase()"
+              >
                 {{ featuredPost.category }}
               </span>
               <span class="post-date">{{ formatDate(featuredPost.date) }}</span>
               <span class="post-read-time">{{ featuredPost.readTime }} min de leitura</span>
             </div>
-            <h2 class="featured-title">{{ featuredPost.title }}</h2>
-            <p class="featured-excerpt">{{ featuredPost.excerpt }}</p>
+            <h2 class="featured-title">
+              {{ featuredPost.title }}
+            </h2>
+            <p class="featured-excerpt">
+              {{ featuredPost.excerpt }}
+            </p>
             <div class="featured-author">
               <img 
                 :src="featuredPost.author.avatar" 
@@ -61,7 +70,9 @@
     <div class="filters-section">
       <div class="section-container">
         <div class="filters-header">
-          <h2 class="section-title">Todos os Posts</h2>
+          <h2 class="section-title">
+            Todos os Posts
+          </h2>
           <div class="filters-controls">
             <div class="search-container">
               <MagnifyingGlassIcon class="search-icon" />
@@ -76,10 +87,13 @@
               <button 
                 v-for="category in categories" 
                 :key="category.id"
-                @click="toggleCategory(category.id)"
                 :class="['filter-button', { active: selectedCategories.includes(category.id) }]"
+                @click="toggleCategory(category.id)"
               >
-                <component :is="category.icon" class="filter-icon" />
+                <component
+                  :is="category.icon"
+                  class="filter-icon"
+                />
                 {{ category.name }}
               </button>
             </div>
@@ -91,26 +105,39 @@
     <!-- Posts Grid -->
     <div class="posts-section">
       <div class="section-container">
-        <div v-if="loading" class="loading-state">
-          <div class="loading-spinner"></div>
-          <p class="loading-text">Carregando posts...</p>
+        <div
+          v-if="loading"
+          class="loading-state"
+        >
+          <div class="loading-spinner" />
+          <p class="loading-text">
+            Carregando posts...
+          </p>
         </div>
         
-        <div v-else-if="filteredPosts.length === 0" class="empty-state">
+        <div
+          v-else-if="filteredPosts.length === 0"
+          class="empty-state"
+        >
           <DocumentTextIcon class="empty-icon" />
-          <h3 class="empty-title">Nenhum post encontrado</h3>
+          <h3 class="empty-title">
+            Nenhum post encontrado
+          </h3>
           <p class="empty-description">
             Não encontramos posts com os filtros selecionados.
           </p>
           <button 
-            @click="clearFilters" 
-            class="clear-filters-button"
+            class="clear-filters-button" 
+            @click="clearFilters"
           >
             Limpar Filtros
           </button>
         </div>
         
-        <div v-else class="posts-grid">
+        <div
+          v-else
+          class="posts-grid"
+        >
           <article 
             v-for="post in paginatedPosts" 
             :key="post.id"
@@ -130,14 +157,21 @@
             
             <div class="post-content">
               <div class="post-meta">
-                <span class="post-category" :class="post.category.toLowerCase()">
+                <span
+                  class="post-category"
+                  :class="post.category.toLowerCase()"
+                >
                   {{ post.category }}
                 </span>
                 <span class="post-date">{{ formatDate(post.date) }}</span>
               </div>
               
-              <h3 class="post-title">{{ post.title }}</h3>
-              <p class="post-excerpt">{{ post.excerpt }}</p>
+              <h3 class="post-title">
+                {{ post.title }}
+              </h3>
+              <p class="post-excerpt">
+                {{ post.excerpt }}
+              </p>
               
               <div class="post-footer">
                 <div class="post-author">
@@ -158,11 +192,14 @@
         </div>
         
         <!-- Pagination -->
-        <div v-if="totalPages > 1" class="pagination">
+        <div
+          v-if="totalPages > 1"
+          class="pagination"
+        >
           <button 
-            @click="currentPage = Math.max(1, currentPage - 1)"
             :disabled="currentPage === 1"
             class="pagination-button"
+            @click="currentPage = Math.max(1, currentPage - 1)"
           >
             <ChevronLeftIcon class="pagination-icon" />
             Anterior
@@ -172,17 +209,17 @@
             <button 
               v-for="page in visiblePages" 
               :key="page"
-              @click="currentPage = page"
               :class="['pagination-number', { active: currentPage === page }]"
+              @click="currentPage = page"
             >
               {{ page }}
             </button>
           </div>
           
           <button 
-            @click="currentPage = Math.min(totalPages, currentPage + 1)"
             :disabled="currentPage === totalPages"
             class="pagination-button"
+            @click="currentPage = Math.min(totalPages, currentPage + 1)"
           >
             Próximo
             <ChevronRightIcon class="pagination-icon" />
@@ -198,13 +235,18 @@
           <div class="newsletter-content">
             <EnvelopeIcon class="newsletter-icon" />
             <div class="newsletter-info">
-              <h3 class="newsletter-title">Receba nossas novidades</h3>
+              <h3 class="newsletter-title">
+                Receba nossas novidades
+              </h3>
               <p class="newsletter-description">
                 Seja o primeiro a saber sobre novas funcionalidades, dicas e atualizações.
               </p>
             </div>
           </div>
-          <form @submit.prevent="subscribeNewsletter" class="newsletter-form">
+          <form
+            class="newsletter-form"
+            @submit.prevent="subscribeNewsletter"
+          >
             <div class="form-group">
               <input 
                 v-model="newsletterEmail" 
@@ -224,7 +266,12 @@
             </div>
             <p class="newsletter-privacy">
               Ao se inscrever, você concorda com nossa 
-              <router-link to="/privacy" class="privacy-link">Política de Privacidade</router-link>.
+              <router-link
+                to="/privacy"
+                class="privacy-link"
+              >
+                Política de Privacidade
+              </router-link>.
             </p>
           </form>
         </div>
@@ -243,8 +290,8 @@
       >
         <div class="modal-header">
           <button 
-            @click="closePost" 
-            class="close-button"
+            class="close-button" 
+            @click="closePost"
           >
             <XMarkIcon class="close-icon" />
           </button>
@@ -261,14 +308,19 @@
           
           <div class="post-header">
             <div class="post-meta">
-              <span class="post-category" :class="selectedPost.category.toLowerCase()">
+              <span
+                class="post-category"
+                :class="selectedPost.category.toLowerCase()"
+              >
                 {{ selectedPost.category }}
               </span>
               <span class="post-date">{{ formatDate(selectedPost.date) }}</span>
               <span class="post-read-time">{{ selectedPost.readTime }} min de leitura</span>
             </div>
             
-            <h1 class="post-title">{{ selectedPost.title }}</h1>
+            <h1 class="post-title">
+              {{ selectedPost.title }}
+            </h1>
             
             <div class="post-author-section">
               <img 
@@ -284,7 +336,10 @@
           </div>
           
           <div class="post-body">
-            <div class="post-content-text" v-html="selectedPost.content" />
+            <div
+              class="post-content-text"
+              v-html="selectedPost.content"
+            />
           </div>
           
           <div class="post-actions">
@@ -292,28 +347,36 @@
               <span class="share-label">Compartilhar:</span>
               <div class="share-buttons">
                 <button 
-                  @click="sharePost('twitter')" 
-                  class="share-button twitter"
+                  class="share-button twitter" 
+                  @click="sharePost('twitter')"
                 >
-                  <svg class="share-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                  <svg
+                    class="share-icon"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
                   </svg>
                   Twitter
                 </button>
                 
                 <button 
-                  @click="sharePost('linkedin')" 
-                  class="share-button linkedin"
+                  class="share-button linkedin" 
+                  @click="sharePost('linkedin')"
                 >
-                  <svg class="share-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  <svg
+                    class="share-icon"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                   </svg>
                   LinkedIn
                 </button>
                 
                 <button 
-                  @click="sharePost('copy')" 
-                  class="share-button copy"
+                  class="share-button copy" 
+                  @click="sharePost('copy')"
                 >
                   <LinkIcon class="share-icon" />
                   Copiar Link

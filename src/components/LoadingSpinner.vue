@@ -1,22 +1,40 @@
 <template>
-  <div class="loading-container" :class="containerClasses">
+  <div
+    class="loading-container"
+    :class="containerClasses"
+  >
     <!-- Overlay para loading de tela cheia -->
-    <div v-if="overlay" class="loading-overlay" @click="handleOverlayClick">
+    <div
+      v-if="overlay"
+      class="loading-overlay"
+      @click="handleOverlayClick"
+    >
       <div class="loading-content">
         <div class="spinner-wrapper">
-          <div class="spinner" :class="spinnerClasses">
-            <div class="spinner-inner"></div>
+          <div
+            class="spinner"
+            :class="spinnerClasses"
+          >
+            <div class="spinner-inner" />
           </div>
         </div>
         
-        <div v-if="message" class="loading-message">
-          <p class="message-text">{{ message }}</p>
-          <div v-if="progress !== null" class="progress-container">
+        <div
+          v-if="message"
+          class="loading-message"
+        >
+          <p class="message-text">
+            {{ message }}
+          </p>
+          <div
+            v-if="progress !== null"
+            class="progress-container"
+          >
             <div class="progress-bar">
               <div 
                 class="progress-fill" 
                 :style="{ width: `${progress}%` }"
-              ></div>
+              />
             </div>
             <span class="progress-text">{{ progress }}%</span>
           </div>
@@ -24,8 +42,8 @@
         
         <button 
           v-if="cancellable" 
-          @click="handleCancel"
           class="cancel-button"
+          @click="handleCancel"
         >
           Cancelar
         </button>
@@ -33,11 +51,20 @@
     </div>
     
     <!-- Loading inline -->
-    <div v-else class="inline-loading">
-      <div class="spinner" :class="spinnerClasses">
-        <div class="spinner-inner"></div>
+    <div
+      v-else
+      class="inline-loading"
+    >
+      <div
+        class="spinner"
+        :class="spinnerClasses"
+      >
+        <div class="spinner-inner" />
       </div>
-      <span v-if="message" class="inline-message">{{ message }}</span>
+      <span
+        v-if="message"
+        class="inline-message"
+      >{{ message }}</span>
     </div>
   </div>
 </template>

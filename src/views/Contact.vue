@@ -3,7 +3,9 @@
     <!-- Header -->
     <div class="contact-header">
       <div class="header-content">
-        <h1 class="page-title">Entre em contato</h1>
+        <h1 class="page-title">
+          Entre em contato
+        </h1>
         <p class="page-subtitle">
           Estamos aqui para ajudar. Entre em contato conosco através dos canais abaixo
           ou envie uma mensagem diretamente.
@@ -18,15 +20,23 @@
           <div class="option-icon">
             <ChatIcon />
           </div>
-          <h3 class="option-title">Suporte Técnico</h3>
+          <h3 class="option-title">
+            Suporte Técnico
+          </h3>
           <p class="option-description">
             Precisa de ajuda com a plataforma? Nossa equipe de suporte está pronta para ajudar.
           </p>
           <div class="option-actions">
-            <button @click="openChat" class="btn-primary">
+            <button
+              class="btn-primary"
+              @click="openChat"
+            >
               Iniciar chat
             </button>
-            <a href="mailto:suporte@sintetiza-doc.com" class="btn-secondary">
+            <a
+              href="mailto:suporte@sintetiza-doc.com"
+              class="btn-secondary"
+            >
               Enviar email
             </a>
           </div>
@@ -42,15 +52,23 @@
           <div class="option-icon">
             <BriefcaseIcon />
           </div>
-          <h3 class="option-title">Vendas</h3>
+          <h3 class="option-title">
+            Vendas
+          </h3>
           <p class="option-description">
             Interessado em planos empresariais ou tem dúvidas sobre preços?
           </p>
           <div class="option-actions">
-            <button @click="scheduleMeeting" class="btn-primary">
+            <button
+              class="btn-primary"
+              @click="scheduleMeeting"
+            >
               Agendar reunião
             </button>
-            <a href="mailto:vendas@sintetiza-doc.com" class="btn-secondary">
+            <a
+              href="mailto:vendas@sintetiza-doc.com"
+              class="btn-secondary"
+            >
               Falar com vendas
             </a>
           </div>
@@ -63,19 +81,29 @@
         </div>
         
         <div class="option-card disabled">
-          <div class="coming-soon-badge">Em breve</div>
+          <div class="coming-soon-badge">
+            Em breve
+          </div>
           <div class="option-icon">
             <CodeIcon />
           </div>
-          <h3 class="option-title">Parcerias & API</h3>
+          <h3 class="option-title">
+            Parcerias & API
+          </h3>
           <p class="option-description">
             Quer integrar nossa API ou discutir parcerias estratégicas?
           </p>
           <div class="option-actions">
-            <button disabled class="btn-disabled">
+            <button
+              disabled
+              class="btn-disabled"
+            >
               Ver documentação
             </button>
-            <button disabled class="btn-disabled">
+            <button
+              disabled
+              class="btn-disabled"
+            >
               Contato comercial
             </button>
           </div>
@@ -93,16 +121,24 @@
     <div class="contact-form-section">
       <div class="form-container">
         <div class="form-header">
-          <h2 class="form-title">Envie uma mensagem</h2>
+          <h2 class="form-title">
+            Envie uma mensagem
+          </h2>
           <p class="form-subtitle">
             Preencha o formulário abaixo e entraremos em contato em até 24 horas.
           </p>
         </div>
         
-        <form @submit.prevent="submitForm" class="contact-form">
+        <form
+          class="contact-form"
+          @submit.prevent="submitForm"
+        >
           <div class="form-grid">
             <div class="form-group">
-              <label for="name" class="form-label">Nome completo *</label>
+              <label
+                for="name"
+                class="form-label"
+              >Nome completo *</label>
               <input
                 id="name"
                 v-model="form.name"
@@ -112,11 +148,17 @@
                 :class="{ 'form-error': errors.name }"
                 placeholder="Seu nome completo"
               >
-              <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
+              <span
+                v-if="errors.name"
+                class="error-message"
+              >{{ errors.name }}</span>
             </div>
             
             <div class="form-group">
-              <label for="email" class="form-label">Email *</label>
+              <label
+                for="email"
+                class="form-label"
+              >Email *</label>
               <input
                 id="email"
                 v-model="form.email"
@@ -126,13 +168,19 @@
                 :class="{ 'form-error': errors.email }"
                 placeholder="seu@email.com"
               >
-              <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
+              <span
+                v-if="errors.email"
+                class="error-message"
+              >{{ errors.email }}</span>
             </div>
           </div>
           
           <div class="form-grid">
             <div class="form-group">
-              <label for="company" class="form-label">Empresa</label>
+              <label
+                for="company"
+                class="form-label"
+              >Empresa</label>
               <input
                 id="company"
                 v-model="form.company"
@@ -143,7 +191,10 @@
             </div>
             
             <div class="form-group">
-              <label for="subject" class="form-label">Assunto *</label>
+              <label
+                for="subject"
+                class="form-label"
+              >Assunto *</label>
               <select
                 id="subject"
                 v-model="form.subject"
@@ -151,21 +202,43 @@
                 class="form-select"
                 :class="{ 'form-error': errors.subject }"
               >
-                <option value="">Selecione um assunto</option>
-                <option value="support">Suporte técnico</option>
-                <option value="sales">Vendas e preços</option>
-                <option value="partnership">Parcerias</option>
-                <option value="api">API e integrações</option>
-                <option value="billing">Faturamento</option>
-                <option value="feedback">Feedback e sugestões</option>
-                <option value="other">Outros</option>
+                <option value="">
+                  Selecione um assunto
+                </option>
+                <option value="support">
+                  Suporte técnico
+                </option>
+                <option value="sales">
+                  Vendas e preços
+                </option>
+                <option value="partnership">
+                  Parcerias
+                </option>
+                <option value="api">
+                  API e integrações
+                </option>
+                <option value="billing">
+                  Faturamento
+                </option>
+                <option value="feedback">
+                  Feedback e sugestões
+                </option>
+                <option value="other">
+                  Outros
+                </option>
               </select>
-              <span v-if="errors.subject" class="error-message">{{ errors.subject }}</span>
+              <span
+                v-if="errors.subject"
+                class="error-message"
+              >{{ errors.subject }}</span>
             </div>
           </div>
           
           <div class="form-group">
-            <label for="message" class="form-label">Mensagem *</label>
+            <label
+              for="message"
+              class="form-label"
+            >Mensagem *</label>
             <textarea
               id="message"
               v-model="form.message"
@@ -174,8 +247,11 @@
               class="form-textarea"
               :class="{ 'form-error': errors.message }"
               placeholder="Descreva sua dúvida, problema ou solicitação em detalhes..."
-            ></textarea>
-            <span v-if="errors.message" class="error-message">{{ errors.message }}</span>
+            />
+            <span
+              v-if="errors.message"
+              class="error-message"
+            >{{ errors.message }}</span>
             <div class="character-count">
               {{ form.message.length }}/1000 caracteres
             </div>
@@ -188,7 +264,7 @@
                 type="checkbox"
                 class="checkbox-input"
               >
-              <span class="checkbox-custom"></span>
+              <span class="checkbox-custom" />
               <span class="checkbox-text">
                 Quero receber novidades e dicas sobre resumo de documentos por email
               </span>
@@ -201,7 +277,11 @@
               :disabled="isSubmitting"
               class="btn-submit"
             >
-              <LoadingSpinner v-if="isSubmitting" :show="true" size="sm" />
+              <LoadingSpinner
+                v-if="isSubmitting"
+                :show="true"
+                size="sm"
+              />
               <span v-else>Enviar mensagem</span>
             </button>
           </div>
@@ -209,15 +289,23 @@
       </div>
       
       <!-- Success Message -->
-      <div v-if="showSuccess" class="success-message">
+      <div
+        v-if="showSuccess"
+        class="success-message"
+      >
         <div class="success-content">
           <CheckCircleIcon class="success-icon" />
-          <h3 class="success-title">Mensagem enviada com sucesso!</h3>
+          <h3 class="success-title">
+            Mensagem enviada com sucesso!
+          </h3>
           <p class="success-text">
             Recebemos sua mensagem e entraremos em contato em até 24 horas.
             Obrigado por entrar em contato conosco!
           </p>
-          <button @click="resetForm" class="btn-secondary">
+          <button
+            class="btn-secondary"
+            @click="resetForm"
+          >
             Enviar nova mensagem
           </button>
         </div>
@@ -227,7 +315,9 @@
     <!-- FAQ Section -->
     <div class="faq-section">
       <div class="faq-header">
-        <h2 class="faq-title">Perguntas frequentes</h2>
+        <h2 class="faq-title">
+          Perguntas frequentes
+        </h2>
         <p class="faq-subtitle">
           Encontre respostas rápidas para as dúvidas mais comuns
         </p>
@@ -240,9 +330,9 @@
           class="faq-item"
         >
           <button 
-            @click="toggleFaq(index)"
             :class="{ active: activeFaq === index }"
             class="faq-question"
+            @click="toggleFaq(index)"
           >
             <span>{{ faq.question }}</span>
             <ChevronDownIcon class="faq-icon" />
@@ -261,7 +351,9 @@
     <div class="office-info">
       <div class="office-content">
         <div class="office-details">
-          <h3 class="office-title">Nosso escritório</h3>
+          <h3 class="office-title">
+            Nosso escritório
+          </h3>
           <div class="office-address">
             <MapPinIcon class="address-icon" />
             <div class="address-text">
@@ -284,7 +376,9 @@
           <!-- Placeholder for map integration -->
           <div class="map-placeholder">
             <MapPinIcon class="map-icon" />
-            <p class="map-text">Mapa interativo em breve</p>
+            <p class="map-text">
+              Mapa interativo em breve
+            </p>
           </div>
         </div>
       </div>
@@ -449,7 +543,12 @@ const submitForm = async () => {
     await new Promise(resolve => setTimeout(resolve, 2000))
     
     // Here you would typically send the form data to your backend
-    console.log('Form submitted:', form)
+    console.log('Form submitted:', {
+      name: form.name,
+      email: form.email,
+      subject: form.subject,
+      message: form.message
+    })
     
     showSuccess.value = true
     toast.success('Mensagem enviada com sucesso!')

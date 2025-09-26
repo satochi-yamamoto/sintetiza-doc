@@ -4,11 +4,29 @@
       <!-- Logo e Navegação Principal -->
       <div class="header-left">
         <!-- Logo -->
-        <router-link to="/" class="logo-link">
+        <router-link
+          to="/"
+          class="logo-link"
+        >
           <div class="logo">
-            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2"/>
+            <svg
+              class="logo-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 12L11 14L15 10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
             </svg>
             <span class="logo-text">SintetizaDoc</span>
           </div>
@@ -33,24 +51,36 @@
         <!-- Seletor de Idioma -->
         <div class="language-selector">
           <button 
-            @click="toggleLanguageMenu"
             class="language-btn"
             :class="{ 'active': showLanguageMenu }"
+            @click="toggleLanguageMenu"
           >
             <span class="flag-icon">{{ currentLanguageFlag }}</span>
             <span class="language-code">{{ appStore.currentLanguage.toUpperCase() }}</span>
-            <svg class="chevron-icon" :class="{ 'rotate': showLanguageMenu }" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <svg
+              class="chevron-icon"
+              :class="{ 'rotate': showLanguageMenu }"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
             </svg>
           </button>
           
-          <div v-if="showLanguageMenu" class="language-menu">
+          <div
+            v-if="showLanguageMenu"
+            class="language-menu"
+          >
             <button 
               v-for="lang in availableLanguages"
               :key="lang.code"
-              @click="changeLanguage(lang.code)"
               class="language-option"
               :class="{ 'active': appStore.currentLanguage === lang.code }"
+              @click="changeLanguage(lang.code)"
             >
               <span class="flag-icon">{{ lang.flag }}</span>
               <span class="language-name">{{ lang.name }}</span>
@@ -60,14 +90,28 @@
 
         <!-- Tema Toggle -->
         <button 
-          @click="appStore.toggleTheme()"
           class="theme-toggle"
           :title="appStore.isDarkMode ? 'Modo Claro' : 'Modo Escuro'"
+          @click="appStore.toggleTheme()"
         >
-          <svg v-if="appStore.isDarkMode" class="theme-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+          <svg
+            v-if="appStore.isDarkMode"
+            class="theme-icon"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+              clip-rule="evenodd"
+            />
           </svg>
-          <svg v-else class="theme-icon" viewBox="0 0 20 20" fill="currentColor">
+          <svg
+            v-else
+            class="theme-icon"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
           </svg>
         </button>
@@ -81,7 +125,11 @@
             class="dashboard-link"
             title="Ir para Dashboard"
           >
-            <svg class="dashboard-icon" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              class="dashboard-icon"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
               <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
             </svg>
             <span class="dashboard-text">Dashboard</span>
@@ -90,21 +138,36 @@
           <!-- Notificações -->
           <div class="notifications">
             <button
-              @click="toggleNotifications"
               class="notifications-btn"
               :class="{ 'has-unread': hasUnreadNotifications }"
+              @click="toggleNotifications"
             >
-              <svg class="notification-icon" viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                class="notification-icon"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path d="M10 2C7.79086 2 6 3.79086 6 6V8C6 9.10457 5.10457 10 4 10H3C2.44772 10 2 10.4477 2 11C2 11.5523 2.44772 12 3 12H17C17.5523 12 18 11.5523 18 11C18 10.4477 17.5523 10 17 10H16C14.8954 10 14 9.10457 14 8V6C14 3.79086 12.2091 2 10 2Z" />
                 <path d="M8.5 14C8.5 15.3807 9.11929 16 10.5 16C11.8807 16 12.5 15.3807 12.5 14H8.5Z" />
               </svg>
-              <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+              <span
+                v-if="unreadCount > 0"
+                class="notification-badge"
+              >{{ unreadCount }}</span>
             </button>
 
-            <div v-if="showNotifications" class="notifications-dropdown">
+            <div
+              v-if="showNotifications"
+              class="notifications-dropdown"
+            >
               <div class="notifications-header">
                 <h3>Notificações</h3>
-                <button @click="markAllAsRead" class="mark-all-read">Marcar todas como lidas</button>
+                <button
+                  class="mark-all-read"
+                  @click="markAllAsRead"
+                >
+                  Marcar todas como lidas
+                </button>
               </div>
 
               <div class="notifications-list">
@@ -122,7 +185,10 @@
                   </div>
                 </div>
 
-                <div v-if="notifications.length === 0" class="no-notifications">
+                <div
+                  v-if="notifications.length === 0"
+                  class="no-notifications"
+                >
                   <p>Nenhuma notificação</p>
                 </div>
               </div>
@@ -131,29 +197,64 @@
 
           <!-- Menu de Usuário -->
           <div class="user-menu">
-            <button @click="showUserMenu = !showUserMenu" class="user-menu-btn">
-              <div v-if="userAvatarUrl" class="w-8 h-8 rounded-full overflow-hidden">
-                <img :src="userAvatarUrl" alt="Avatar" class="user-avatar" />
+            <button
+              class="user-menu-btn"
+              @click="showUserMenu = !showUserMenu"
+            >
+              <div
+                v-if="userAvatarUrl"
+                class="w-8 h-8 rounded-full overflow-hidden"
+              >
+                <img
+                  :src="userAvatarUrl"
+                  alt="Avatar"
+                  class="user-avatar"
+                >
               </div>
-              <div v-else class="user-avatar-placeholder">
+              <div
+                v-else
+                class="user-avatar-placeholder"
+              >
                 {{ userInitials }}
               </div>
             </button>
 
-            <div v-if="showUserMenu" class="user-dropdown">
+            <div
+              v-if="showUserMenu"
+              class="user-dropdown"
+            >
               <div class="user-info">
-                <div class="user-name">{{ currentUserEmail }}</div>
-                <div class="user-plan">{{ appStore.currentPlanLabel || 'Plano padrão' }}</div>
+                <div class="user-name">
+                  {{ currentUserEmail }}
+                </div>
+                <div class="user-plan">
+                  {{ appStore.currentPlanLabel || 'Plano padrão' }}
+                </div>
               </div>
-              <div class="menu-divider"></div>
-              <router-link to="/perfil" class="menu-item" @click="showUserMenu = false">
-                <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
+              <div class="menu-divider" />
+              <router-link
+                to="/perfil"
+                class="menu-item"
+                @click="showUserMenu = false"
+              >
+                <svg
+                  class="menu-icon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
                   <path d="M10 2C6.686 2 4 4.686 4 8s2.686 6 6 6 6-2.686 6-6-2.686-6-6-6zM2 18a8 8 0 0116 0H2z" />
                 </svg>
                 <span>Perfil</span>
               </router-link>
-              <button class="menu-item logout" @click="logout">
-                <svg class="menu-icon" viewBox="0 0 20 20" fill="currentColor">
+              <button
+                class="menu-item logout"
+                @click="logout"
+              >
+                <svg
+                  class="menu-icon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
                   <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v3a1 1 0 11-2 0V4H5v12h6v-3a1 1 0 112 0v3a2 2 0 01-2 2H5a2 2 0 01-2-2V4z" />
                   <path d="M12 10a1 1 0 011-1h4a1 1 0 110 2h-4a1 1 0 01-1-1z" />
                 </svg>
@@ -166,10 +267,16 @@
         <!-- Bloco quando NÃO autenticado -->
         <template v-else>
           <div class="auth-buttons">
-            <router-link to="/sign-in" class="btn-secondary">
+            <router-link
+              to="/sign-in"
+              class="btn-secondary"
+            >
               Entrar
             </router-link>
-            <router-link to="/sign-up" class="btn-primary">
+            <router-link
+              to="/sign-up"
+              class="btn-primary"
+            >
               Cadastrar
             </router-link>
           </div>
@@ -177,19 +284,39 @@
 
         <!-- Menu Mobile -->
         <button 
-          @click="toggleMobileMenu"
           class="mobile-menu-btn"
+          @click="toggleMobileMenu"
         >
-          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path v-if="!showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            class="menu-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              v-if="!showMobileMenu"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+            <path
+              v-else
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
     </div>
 
     <!-- Menu Mobile Dropdown -->
-    <div v-if="showMobileMenu" class="mobile-menu">
+    <div
+      v-if="showMobileMenu"
+      class="mobile-menu"
+    >
       <nav class="mobile-nav">
         <router-link 
           v-for="item in navigationItems" 
@@ -205,10 +332,18 @@
       <!-- Autenticação Mobile: mostrar botões quando não logado -->
       <template v-if="!isSignedIn">
         <div class="mobile-auth">
-          <router-link to="/sign-in" class="mobile-auth-link" @click="closeMobileMenu">
+          <router-link
+            to="/sign-in"
+            class="mobile-auth-link"
+            @click="closeMobileMenu"
+          >
             Entrar
           </router-link>
-          <router-link to="/sign-up" class="mobile-auth-link primary" @click="closeMobileMenu">
+          <router-link
+            to="/sign-up"
+            class="mobile-auth-link primary"
+            @click="closeMobileMenu"
+          >
             Cadastrar
           </router-link>
         </div>
@@ -237,7 +372,8 @@ const currentUser = ref(null)
 // Debug logs para autenticação
 console.log('🔍 AppHeader - Estado inicial de autenticação (Supabase):', {
   isSignedIn: isSignedIn.value,
-  user: currentUser.value
+  userId: currentUser.value?.id,
+  email: currentUser.value?.email
 })
 
 // Atualiza estado a partir da sessão
@@ -271,7 +407,8 @@ const { data: authListener } = supabase.auth.onAuthStateChange((_event, session)
   currentUser.value = session?.user || null
   console.log('🔄 AppHeader - Mudança no estado de autenticação (Supabase):', {
     isSignedIn: isSignedIn.value,
-    user: currentUser.value
+    userId: currentUser.value?.id,
+    email: currentUser.value?.email
   })
 })
 

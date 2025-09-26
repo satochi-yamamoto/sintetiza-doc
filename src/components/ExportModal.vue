@@ -1,14 +1,34 @@
 <template>
-  <div v-if="isOpen" class="export-modal-overlay" @click="closeModal">
-    <div class="export-modal" @click.stop>
+  <div
+    v-if="isOpen"
+    class="export-modal-overlay"
+    @click="closeModal"
+  >
+    <div
+      class="export-modal"
+      @click.stop
+    >
       <!-- Header -->
       <div class="modal-header">
         <h2 class="text-xl font-semibold text-gray-900">
           Exportar Resumo
         </h2>
-        <button @click="closeModal" class="close-btn">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <button
+          class="close-btn"
+          @click="closeModal"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
@@ -33,22 +53,43 @@
               @click="selectFormat(format)"
             >
               <div class="format-icon">
-                <component :is="format.icon" class="w-8 h-8" />
+                <component
+                  :is="format.icon"
+                  class="w-8 h-8"
+                />
               </div>
               
               <div class="format-info">
-                <h4 class="font-medium text-gray-900">{{ format.name }}</h4>
-                <p class="text-sm text-gray-500">{{ format.description }}</p>
+                <h4 class="font-medium text-gray-900">
+                  {{ format.name }}
+                </h4>
+                <p class="text-sm text-gray-500">
+                  {{ format.description }}
+                </p>
                 
-                <div v-if="!format.available" class="format-badge">
+                <div
+                  v-if="!format.available"
+                  class="format-badge"
+                >
                   <span class="badge-pro">PRO</span>
                 </div>
               </div>
               
               <div class="format-check">
-                <div v-if="selectedFormat === format.id" class="check-icon">
-                  <svg class="w-5 h-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                <div
+                  v-if="selectedFormat === format.id"
+                  class="check-icon"
+                >
+                  <svg
+                    class="w-5 h-5 text-primary-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                 </div>
               </div>
@@ -57,7 +98,10 @@
         </div>
 
         <!-- Configurações Específicas -->
-        <div v-if="selectedFormat" class="export-config mt-6">
+        <div
+          v-if="selectedFormat"
+          class="export-config mt-6"
+        >
           <h3 class="text-lg font-medium text-gray-900 mb-4">
             Configurações de Exportação
           </h3>
@@ -67,7 +111,10 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Nome do Arquivo -->
               <div>
-                <label for="filename" class="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  for="filename"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Nome do Arquivo
                 </label>
                 <input
@@ -76,7 +123,7 @@
                   type="text"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   placeholder="resumo-documento"
-                />
+                >
               </div>
               
               <!-- Incluir Metadados -->
@@ -86,8 +133,11 @@
                   v-model="exportConfig.includeMetadata"
                   type="checkbox"
                   class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
-                />
-                <label for="include-metadata" class="ml-2 text-sm text-gray-700">
+                >
+                <label
+                  for="include-metadata"
+                  class="ml-2 text-sm text-gray-700"
+                >
                   Incluir metadados (data, autor, configurações)
                 </label>
               </div>
@@ -95,19 +145,36 @@
           </div>
 
           <!-- Configurações Específicas por Formato -->
-          <div v-if="formatSpecificConfig" class="format-specific-config mt-4">
+          <div
+            v-if="formatSpecificConfig"
+            class="format-specific-config mt-4"
+          >
             <!-- Word/PDF -->
-            <div v-if="['word', 'pdf'].includes(selectedFormat)" class="space-y-4">
+            <div
+              v-if="['word', 'pdf'].includes(selectedFormat)"
+              class="space-y-4"
+            >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Template
                   </label>
-                  <select v-model="exportConfig.template" class="form-select">
-                    <option value="standard">Padrão</option>
-                    <option value="executive">Executivo</option>
-                    <option value="technical">Técnico</option>
-                    <option value="minimal">Minimalista</option>
+                  <select
+                    v-model="exportConfig.template"
+                    class="form-select"
+                  >
+                    <option value="standard">
+                      Padrão
+                    </option>
+                    <option value="executive">
+                      Executivo
+                    </option>
+                    <option value="technical">
+                      Técnico
+                    </option>
+                    <option value="minimal">
+                      Minimalista
+                    </option>
                   </select>
                 </div>
                 
@@ -115,9 +182,16 @@
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Orientação
                   </label>
-                  <select v-model="exportConfig.orientation" class="form-select">
-                    <option value="portrait">Retrato</option>
-                    <option value="landscape">Paisagem</option>
+                  <select
+                    v-model="exportConfig.orientation"
+                    class="form-select"
+                  >
+                    <option value="portrait">
+                      Retrato
+                    </option>
+                    <option value="landscape">
+                      Paisagem
+                    </option>
                   </select>
                 </div>
               </div>
@@ -128,7 +202,7 @@
                     v-model="exportConfig.includeTableOfContents"
                     type="checkbox"
                     class="form-checkbox"
-                  />
+                  >
                   <span class="ml-2 text-sm text-gray-700">Incluir índice</span>
                 </label>
                 
@@ -137,22 +211,34 @@
                     v-model="exportConfig.includePageNumbers"
                     type="checkbox"
                     class="form-checkbox"
-                  />
+                  >
                   <span class="ml-2 text-sm text-gray-700">Numeração de páginas</span>
                 </label>
               </div>
             </div>
 
             <!-- Excel -->
-            <div v-if="selectedFormat === 'excel'" class="space-y-4">
+            <div
+              v-if="selectedFormat === 'excel'"
+              class="space-y-4"
+            >
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Estrutura da Planilha
                 </label>
-                <select v-model="exportConfig.excelStructure" class="form-select">
-                  <option value="single-sheet">Planilha única</option>
-                  <option value="multi-sheet">Múltiplas planilhas por seção</option>
-                  <option value="summary-details">Resumo + Detalhes</option>
+                <select
+                  v-model="exportConfig.excelStructure"
+                  class="form-select"
+                >
+                  <option value="single-sheet">
+                    Planilha única
+                  </option>
+                  <option value="multi-sheet">
+                    Múltiplas planilhas por seção
+                  </option>
+                  <option value="summary-details">
+                    Resumo + Detalhes
+                  </option>
                 </select>
               </div>
               
@@ -162,7 +248,7 @@
                     v-model="exportConfig.includeCharts"
                     type="checkbox"
                     class="form-checkbox"
-                  />
+                  >
                   <span class="ml-2 text-sm text-gray-700">Incluir gráficos</span>
                 </label>
                 
@@ -171,17 +257,23 @@
                     v-model="exportConfig.autoFilter"
                     type="checkbox"
                     class="form-checkbox"
-                  />
+                  >
                   <span class="ml-2 text-sm text-gray-700">Auto-filtro</span>
                 </label>
               </div>
             </div>
 
             <!-- Email -->
-            <div v-if="selectedFormat === 'email'" class="space-y-4">
+            <div
+              v-if="selectedFormat === 'email'"
+              class="space-y-4"
+            >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label for="email-to" class="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    for="email-to"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Para (emails)
                   </label>
                   <input
@@ -190,11 +282,14 @@
                     type="text"
                     placeholder="email1@exemplo.com, email2@exemplo.com"
                     class="form-input"
-                  />
+                  >
                 </div>
                 
                 <div>
-                  <label for="email-subject" class="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    for="email-subject"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Assunto
                   </label>
                   <input
@@ -203,12 +298,15 @@
                     type="text"
                     placeholder="Resumo do documento"
                     class="form-input"
-                  />
+                  >
                 </div>
               </div>
               
               <div>
-                <label for="email-message" class="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  for="email-message"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Mensagem adicional (opcional)
                 </label>
                 <textarea
@@ -217,19 +315,34 @@
                   rows="3"
                   placeholder="Mensagem que acompanhará o resumo..."
                   class="form-textarea"
-                ></textarea>
+                />
               </div>
             </div>
 
             <!-- Notion -->
-            <div v-if="selectedFormat === 'notion'" class="space-y-4">
+            <div
+              v-if="selectedFormat === 'notion'"
+              class="space-y-4"
+            >
               <div>
-                <label for="notion-page" class="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  for="notion-page"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Página de Destino
                 </label>
-                <select v-model="exportConfig.notionPageId" class="form-select">
-                  <option value="">Selecione uma página...</option>
-                  <option v-for="page in notionPages" :key="page.id" :value="page.id">
+                <select
+                  v-model="exportConfig.notionPageId"
+                  class="form-select"
+                >
+                  <option value="">
+                    Selecione uma página...
+                  </option>
+                  <option
+                    v-for="page in notionPages"
+                    :key="page.id"
+                    :value="page.id"
+                  >
                     {{ page.title }}
                   </option>
                 </select>
@@ -241,7 +354,7 @@
                     v-model="exportConfig.createNewPage"
                     type="checkbox"
                     class="form-checkbox"
-                  />
+                  >
                   <span class="ml-2 text-sm text-gray-700">Criar nova página</span>
                 </label>
                 
@@ -250,22 +363,34 @@
                     v-model="exportConfig.notionTemplate"
                     type="checkbox"
                     class="form-checkbox"
-                  />
+                  >
                   <span class="ml-2 text-sm text-gray-700">Usar template padrão</span>
                 </label>
               </div>
             </div>
 
             <!-- Trello -->
-            <div v-if="selectedFormat === 'trello'" class="space-y-4">
+            <div
+              v-if="selectedFormat === 'trello'"
+              class="space-y-4"
+            >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Board
                   </label>
-                  <select v-model="exportConfig.trelloBoardId" class="form-select">
-                    <option value="">Selecione um board...</option>
-                    <option v-for="board in trelloBoards" :key="board.id" :value="board.id">
+                  <select
+                    v-model="exportConfig.trelloBoardId"
+                    class="form-select"
+                  >
+                    <option value="">
+                      Selecione um board...
+                    </option>
+                    <option
+                      v-for="board in trelloBoards"
+                      :key="board.id"
+                      :value="board.id"
+                    >
                       {{ board.name }}
                     </option>
                   </select>
@@ -275,9 +400,18 @@
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Lista
                   </label>
-                  <select v-model="exportConfig.trelloListId" class="form-select">
-                    <option value="">Selecione uma lista...</option>
-                    <option v-for="list in trelloLists" :key="list.id" :value="list.id">
+                  <select
+                    v-model="exportConfig.trelloListId"
+                    class="form-select"
+                  >
+                    <option value="">
+                      Selecione uma lista...
+                    </option>
+                    <option
+                      v-for="list in trelloLists"
+                      :key="list.id"
+                      :value="list.id"
+                    >
                       {{ list.name }}
                     </option>
                   </select>
@@ -288,10 +422,19 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                   Estrutura dos Cards
                 </label>
-                <select v-model="exportConfig.trelloStructure" class="form-select">
-                  <option value="single-card">Card único com resumo completo</option>
-                  <option value="section-cards">Cards por seção</option>
-                  <option value="task-cards">Cards por tarefa identificada</option>
+                <select
+                  v-model="exportConfig.trelloStructure"
+                  class="form-select"
+                >
+                  <option value="single-card">
+                    Card único com resumo completo
+                  </option>
+                  <option value="section-cards">
+                    Cards por seção
+                  </option>
+                  <option value="task-cards">
+                    Cards por tarefa identificada
+                  </option>
                 </select>
               </div>
             </div>
@@ -299,7 +442,10 @@
         </div>
 
         <!-- Preview -->
-        <div v-if="showPreview" class="export-preview mt-6">
+        <div
+          v-if="showPreview"
+          class="export-preview mt-6"
+        >
           <h3 class="text-lg font-medium text-gray-900 mb-4">
             Preview da Exportação
           </h3>
@@ -334,25 +480,47 @@
               v-model="showPreview"
               type="checkbox"
               class="form-checkbox"
-            />
-            <label for="show-preview" class="text-sm text-gray-700">
+            >
+            <label
+              for="show-preview"
+              class="text-sm text-gray-700"
+            >
               Mostrar preview
             </label>
           </div>
           
           <div class="flex space-x-3">
-            <button @click="closeModal" class="btn-secondary">
+            <button
+              class="btn-secondary"
+              @click="closeModal"
+            >
               Cancelar
             </button>
             
             <button 
-              @click="exportSummary"
               :disabled="!canExport || isExporting"
               class="btn-primary"
+              @click="exportSummary"
             >
-              <svg v-if="isExporting" class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                v-if="isExporting"
+                class="animate-spin -ml-1 mr-2 h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
               </svg>
               {{ isExporting ? 'Exportando...' : 'Exportar' }}
             </button>
@@ -491,7 +659,12 @@ const ensureSupabaseSession = async () => {
     uid.value = session.value?.user?.id || null
     return !!uid.value
   } catch (e) {
-    console.error('Erro ao obter sessão do Supabase:', e)
+    console.error('Erro ao obter sessão do Supabase:', {
+      message: e.message,
+      stack: e.stack,
+      name: e.name,
+      code: e.code
+    })
     return false
   }
 }
@@ -595,7 +768,13 @@ const exportSummary = async () => {
     closeModal()
     
   } catch (error) {
-    console.error('Erro na exportação:', error)
+    console.error('Erro na exportação:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code,
+      exportType: exportType.value
+    })
     toast.error(`Erro ao exportar: ${error.message}`)
   } finally {
     isExporting.value = false

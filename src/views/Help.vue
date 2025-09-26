@@ -4,7 +4,9 @@
     <div class="help-header">
       <div class="header-content">
         <div class="header-text">
-          <h1 class="page-title">Central de Ajuda</h1>
+          <h1 class="page-title">
+            Central de Ajuda
+          </h1>
           <p class="page-description">
             Encontre respostas para suas dúvidas e aprenda a usar o SintetizaDoc
           </p>
@@ -27,7 +29,9 @@
     <!-- Quick Actions -->
     <div class="quick-actions-section">
       <div class="section-container">
-        <h2 class="section-title">Ações Rápidas</h2>
+        <h2 class="section-title">
+          Ações Rápidas
+        </h2>
         <div class="actions-grid">
           <router-link 
             to="/contact" 
@@ -35,8 +39,12 @@
           >
             <ChatBubbleLeftRightIcon class="action-icon" />
             <div class="action-content">
-              <h3 class="action-title">Falar com Suporte</h3>
-              <p class="action-description">Entre em contato conosco</p>
+              <h3 class="action-title">
+                Falar com Suporte
+              </h3>
+              <p class="action-description">
+                Entre em contato conosco
+              </p>
             </div>
             <ChevronRightIcon class="action-arrow" />
           </router-link>
@@ -47,8 +55,12 @@
           >
             <CodeBracketIcon class="action-icon" />
             <div class="action-content">
-              <h3 class="action-title">Documentação da API</h3>
-              <p class="action-description">Integre com nossa API</p>
+              <h3 class="action-title">
+                Documentação da API
+              </h3>
+              <p class="action-description">
+                Integre com nossa API
+              </p>
             </div>
             <ChevronRightIcon class="action-arrow" />
           </router-link>
@@ -59,8 +71,12 @@
           >
             <SignalIcon class="action-icon" />
             <div class="action-content">
-              <h3 class="action-title">Status do Sistema</h3>
-              <p class="action-description">Verifique a disponibilidade</p>
+              <h3 class="action-title">
+                Status do Sistema
+              </h3>
+              <p class="action-description">
+                Verifique a disponibilidade
+              </p>
             </div>
             <ChevronRightIcon class="action-arrow" />
           </router-link>
@@ -84,7 +100,9 @@
     <!-- Categories -->
     <div class="categories-section">
       <div class="section-container">
-        <h2 class="section-title">Categorias de Ajuda</h2>
+        <h2 class="section-title">
+          Categorias de Ajuda
+        </h2>
         <div class="categories-grid">
           <div 
             v-for="category in filteredCategories" 
@@ -94,10 +112,17 @@
           >
             <div class="category-header">
               <div class="category-info">
-                <component :is="category.icon" class="category-icon" />
+                <component
+                  :is="category.icon"
+                  class="category-icon"
+                />
                 <div class="category-details">
-                  <h3 class="category-title">{{ category.title }}</h3>
-                  <p class="category-description">{{ category.description }}</p>
+                  <h3 class="category-title">
+                    {{ category.title }}
+                  </h3>
+                  <p class="category-description">
+                    {{ category.description }}
+                  </p>
                 </div>
               </div>
               <div class="category-toggle">
@@ -120,8 +145,12 @@
                   @click.stop="openArticle(article)"
                 >
                   <div class="article-info">
-                    <h4 class="article-title">{{ article.title }}</h4>
-                    <p class="article-summary">{{ article.summary }}</p>
+                    <h4 class="article-title">
+                      {{ article.title }}
+                    </h4>
+                    <p class="article-summary">
+                      {{ article.summary }}
+                    </p>
                   </div>
                   <div class="article-meta">
                     <span class="article-views">{{ article.views }} visualizações</span>
@@ -136,9 +165,14 @@
     </div>
     
     <!-- Video Tutorials -->
-    <div id="video-tutorials" class="tutorials-section">
+    <div
+      id="video-tutorials"
+      class="tutorials-section"
+    >
       <div class="section-container">
-        <h2 class="section-title">Tutoriais em Vídeo</h2>
+        <h2 class="section-title">
+          Tutoriais em Vídeo
+        </h2>
         <div class="tutorials-grid">
           <div 
             v-for="tutorial in tutorials" 
@@ -155,13 +189,22 @@
               <div class="play-overlay">
                 <PlayIcon class="play-icon" />
               </div>
-              <div class="tutorial-duration">{{ tutorial.duration }}</div>
+              <div class="tutorial-duration">
+                {{ tutorial.duration }}
+              </div>
             </div>
             <div class="tutorial-content">
-              <h3 class="tutorial-title">{{ tutorial.title }}</h3>
-              <p class="tutorial-description">{{ tutorial.description }}</p>
+              <h3 class="tutorial-title">
+                {{ tutorial.title }}
+              </h3>
+              <p class="tutorial-description">
+                {{ tutorial.description }}
+              </p>
               <div class="tutorial-meta">
-                <span class="tutorial-level" :class="tutorial.level">
+                <span
+                  class="tutorial-level"
+                  :class="tutorial.level"
+                >
                   {{ getLevelText(tutorial.level) }}
                 </span>
                 <span class="tutorial-views">{{ tutorial.views }} visualizações</span>
@@ -175,7 +218,9 @@
     <!-- Popular Articles -->
     <div class="popular-section">
       <div class="section-container">
-        <h2 class="section-title">Artigos Mais Populares</h2>
+        <h2 class="section-title">
+          Artigos Mais Populares
+        </h2>
         <div class="popular-grid">
           <div 
             v-for="article in popularArticles" 
@@ -183,10 +228,16 @@
             class="popular-article"
             @click="openArticle(article)"
           >
-            <div class="popular-rank">{{ article.rank }}</div>
+            <div class="popular-rank">
+              {{ article.rank }}
+            </div>
             <div class="popular-content">
-              <h3 class="popular-title">{{ article.title }}</h3>
-              <p class="popular-summary">{{ article.summary }}</p>
+              <h3 class="popular-title">
+                {{ article.title }}
+              </h3>
+              <p class="popular-summary">
+                {{ article.summary }}
+              </p>
               <div class="popular-meta">
                 <span class="popular-category">{{ article.category }}</span>
                 <span class="popular-views">{{ article.views }} visualizações</span>
@@ -205,7 +256,9 @@
           <div class="support-content">
             <QuestionMarkCircleIcon class="support-icon" />
             <div class="support-info">
-              <h3 class="support-title">Não encontrou o que procurava?</h3>
+              <h3 class="support-title">
+                Não encontrou o que procurava?
+              </h3>
               <p class="support-description">
                 Nossa equipe de suporte está pronta para ajudar você.
               </p>
@@ -243,22 +296,27 @@
       >
         <div class="modal-header">
           <div class="modal-title-section">
-            <h2 class="modal-title">{{ selectedArticle.title }}</h2>
+            <h2 class="modal-title">
+              {{ selectedArticle.title }}
+            </h2>
             <div class="modal-meta">
               <span class="modal-category">{{ selectedArticle.category }}</span>
               <span class="modal-views">{{ selectedArticle.views }} visualizações</span>
             </div>
           </div>
           <button 
-            @click="closeArticle" 
-            class="close-button"
+            class="close-button" 
+            @click="closeArticle"
           >
             <XMarkIcon class="close-icon" />
           </button>
         </div>
         
         <div class="modal-content">
-          <div class="article-content" v-html="selectedArticle.content" />
+          <div
+            class="article-content"
+            v-html="selectedArticle.content"
+          />
         </div>
         
         <div class="modal-footer">
@@ -266,15 +324,15 @@
             <span class="feedback-label">Este artigo foi útil?</span>
             <div class="feedback-buttons">
               <button 
-                @click="submitFeedback(true)" 
-                :class="['feedback-button', { active: feedback === true }]"
+                :class="['feedback-button', { active: feedback === true }]" 
+                @click="submitFeedback(true)"
               >
                 <HandThumbUpIcon class="feedback-icon" />
                 Sim
               </button>
               <button 
-                @click="submitFeedback(false)" 
-                :class="['feedback-button', { active: feedback === false }]"
+                :class="['feedback-button', { active: feedback === false }]" 
+                @click="submitFeedback(false)"
               >
                 <HandThumbDownIcon class="feedback-icon" />
                 Não
@@ -296,10 +354,12 @@
         @click.stop
       >
         <div class="video-header">
-          <h2 class="video-title">{{ selectedTutorial.title }}</h2>
+          <h2 class="video-title">
+            {{ selectedTutorial.title }}
+          </h2>
           <button 
-            @click="closeTutorial" 
-            class="close-button"
+            class="close-button" 
+            @click="closeTutorial"
           >
             <XMarkIcon class="close-icon" />
           </button>

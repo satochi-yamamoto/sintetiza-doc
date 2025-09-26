@@ -1,20 +1,40 @@
 import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
+import { safeConsoleError, createStandardError } from '@/utils/errorHandler'
 
-// SEGURANÇA: As chaves de API devem ser movidas para o backend
 // Este arquivo deve ser refatorado para fazer chamadas para uma API backend
 // que gerencia as chaves de forma segura
 
+// Configuração controlada para uso de IA no navegador
+const isBrowser = typeof window !== 'undefined'
+const browserAIEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_BROWSER_AI === 'true'
+
+if (isBrowser && !browserAIEnabled && (import.meta.env.VITE_OPENAI_API_KEY || import.meta.env.VITE_ANTHROPIC_API_KEY)) {
+  console.warn('[ai] Chaves de IA detectadas, mas o uso direto no navegador está desabilitado. Configure um backend seguro ou defina VITE_ENABLE_BROWSER_AI=true apenas em ambientes de teste.')
+}
+
 // TEMPORÁRIO: Configuração das APIs (MOVER PARA BACKEND)
-const openai = import.meta.env.VITE_OPENAI_API_KEY ? new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true // INSEGURO: Apenas para desenvolvimento
+const openaiApiKey = import.meta.env.VITE_OPENAI_API_KEY
+const anthropicApiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
+
+const openai = openaiApiKey && browserAIEnabled ? new OpenAI({
+  apiKey: openaiApiKey,
+  dangerouslyAllowBrowser: true
 }) : null
 
-const anthropic = import.meta.env.VITE_ANTHROPIC_API_KEY ? new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true // INSEGURO: Apenas para desenvolvimento
+const anthropic = anthropicApiKey && browserAIEnabled ? new Anthropic({
+  apiKey: anthropicApiKey,
+  dangerouslyAllowBrowser: true
 }) : null
+
+if (!browserAIEnabled) {
+  if (openaiApiKey && !openai) {
+    console.warn('[ai] Uso do OpenAI direto no navegador bloqueado. Utilize o backend para proteger a chave.')
+  }
+  if (anthropicApiKey && !anthropic) {
+    console.warn('[ai] Uso do Anthropic direto no navegador bloqueado. Utilize o backend para proteger a chave.')
+  }
+}
 
 // Prompts para diferentes tipos de resumo
 const SUMMARY_PROMPTS = {
@@ -89,8 +109,15 @@ export const aiService = {
         provider: 'openai'
       }
     } catch (error) {
-      console.error('Erro na API OpenAI:', error)
-      throw new Error(`Erro ao gerar resumo com OpenAI: ${error.message}`)
+      safeConsoleError('Erro na API OpenAI:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        code: error.code,
+        type: type,
+        textLength: text?.length
+      })
+      throw createStandardError(`Erro ao gerar resumo com OpenAI: ${error.message}`, 'OPENAI_API_ERROR', error)
     }
   },
   
@@ -121,8 +148,15 @@ export const aiService = {
         provider: 'anthropic'
       }
     } catch (error) {
-      console.error('Erro na API Claude:', error)
-      throw new Error(`Erro ao gerar resumo com Claude: ${error.message}`)
+      safeConsoleError('Erro na API Claude:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        code: error.code,
+        type: type,
+        textLength: text?.length
+      })
+      throw createStandardError(`Erro ao gerar resumo com Claude: ${error.message}`, 'CLAUDE_API_ERROR', error)
     }
   },
   
@@ -148,8 +182,8 @@ export const aiService = {
           return await this.generateSummaryOpenAI(text, type, options)
         }
       } catch (fallbackError) {
-        console.error('Falha em ambos os provedores de IA:', fallbackError)
-        throw new Error('Serviços de IA indisponíveis. Tente novamente mais tarde.')
+        safeConsoleError('Falha em ambos os provedores de IA:', fallbackError)
+        throw createStandardError('Serviços de IA indisponíveis. Tente novamente mais tarde.', 'AI_SERVICES_UNAVAILABLE', fallbackError)
       }
     }
   },
@@ -167,7 +201,7 @@ export const aiService = {
         customPrompt: prompt
       })
     } catch (error) {
-      console.error('Erro na análise de reunião:', error)
+      safeConsoleError('Erro na análise de reunião:', error)
       throw error
     }
   },
@@ -200,7 +234,7 @@ export const aiService = {
       }
     } catch (error) {
       console.error('Erro na tradução:', error)
-      throw new Error(`Erro ao traduzir texto: ${error.message}`)
+      throw createStandardError(`Erro ao traduzir texto: ${error.message}`, 'OPENAI_TRANSLATE_ERROR', error)
     }
   },
   

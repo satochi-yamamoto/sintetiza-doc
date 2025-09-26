@@ -3,19 +3,31 @@
     <!-- Header -->
     <div class="pricing-header">
       <div class="header-content">
-        <h1 class="page-title">Escolha seu plano</h1>
+        <h1 class="page-title">
+          Escolha seu plano
+        </h1>
         <p class="page-subtitle">
           Encontre o plano perfeito para suas necessidades de resumo de documentos
         </p>
         
         <!-- Billing Toggle -->
         <div class="billing-toggle">
-          <span :class="{ active: !isAnnual }" class="toggle-label">Mensal</span>
+          <span
+            :class="{ active: !isAnnual }"
+            class="toggle-label"
+          >Mensal</span>
           <label class="toggle-switch">
-            <input v-model="isAnnual" type="checkbox" class="toggle-input">
-            <span class="toggle-slider"></span>
+            <input
+              v-model="isAnnual"
+              type="checkbox"
+              class="toggle-input"
+            >
+            <span class="toggle-slider" />
           </label>
-          <span :class="{ active: isAnnual }" class="toggle-label">
+          <span
+            :class="{ active: isAnnual }"
+            class="toggle-label"
+          >
             Anual
             <span class="discount-badge">-20%</span>
           </span>
@@ -36,12 +48,18 @@
         class="plan-card"
       >
         <!-- Popular Badge -->
-        <div v-if="plan.popular" class="popular-badge">
+        <div
+          v-if="plan.popular"
+          class="popular-badge"
+        >
           Mais popular
         </div>
 
         <!-- Coming Soon Badge -->
-        <div v-if="plan.disabled" class="coming-soon-badge">
+        <div
+          v-if="plan.disabled"
+          class="coming-soon-badge"
+        >
           Em breve
         </div>
         
@@ -50,8 +68,12 @@
           <div class="plan-icon">
             <component :is="plan.icon" />
           </div>
-          <h3 class="plan-name">{{ plan.name }}</h3>
-          <p class="plan-description">{{ plan.description }}</p>
+          <h3 class="plan-name">
+            {{ plan.name }}
+          </h3>
+          <p class="plan-description">
+            {{ plan.description }}
+          </p>
         </div>
         
         <!-- Plan Price -->
@@ -61,16 +83,25 @@
             <span class="amount">{{ getPlanPrice(plan) }}</span>
             <span class="period">{{ isAnnual ? '/ano' : '/mês' }}</span>
           </div>
-          <div v-if="isAnnual && plan.id !== 'free'" class="price-savings">
+          <div
+            v-if="isAnnual && plan.id !== 'free'"
+            class="price-savings"
+          >
             Economize R$ {{ getAnnualSavings(plan) }} por ano
           </div>
         </div>
         
         <!-- Plan Features -->
         <div class="plan-features">
-          <h4 class="features-title">O que está incluído:</h4>
+          <h4 class="features-title">
+            O que está incluído:
+          </h4>
           <ul class="features-list">
-            <li v-for="feature in plan.features" :key="feature" class="feature-item">
+            <li
+              v-for="feature in plan.features"
+              :key="feature"
+              class="feature-item"
+            >
               <CheckIcon class="feature-icon" />
               <span>{{ feature }}</span>
             </li>
@@ -104,8 +135,8 @@
           </button>
           <button 
             v-else-if="plan.id === 'free'"
-            @click="selectFreePlan"
             class="btn-secondary"
+            @click="selectFreePlan"
           >
             Começar grátis
           </button>
@@ -118,11 +149,15 @@
           </button>
           <button
             v-else
-            @click="selectPlan(plan.id)"
             :disabled="isProcessing"
             class="btn-primary"
+            @click="selectPlan(plan.id)"
           >
-            <LoadingSpinner v-if="isProcessing" :show="true" size="sm" />
+            <LoadingSpinner
+              v-if="isProcessing"
+              :show="true"
+              size="sm"
+            />
             <span v-else>{{ getActionLabel(plan.id) }}</span>
           </button>
         </div>
@@ -132,7 +167,9 @@
     <!-- FAQ Section -->
     <div class="faq-section">
       <div class="faq-header">
-        <h2 class="faq-title">Perguntas frequentes</h2>
+        <h2 class="faq-title">
+          Perguntas frequentes
+        </h2>
         <p class="faq-subtitle">
           Tire suas dúvidas sobre nossos planos e funcionalidades
         </p>
@@ -145,9 +182,9 @@
           class="faq-item"
         >
           <button 
-            @click="toggleFaq(index)"
             :class="{ active: activeFaq === index }"
             class="faq-question"
+            @click="toggleFaq(index)"
           >
             <span>{{ faq.question }}</span>
             <ChevronDownIcon class="faq-icon" />
@@ -166,14 +203,19 @@
     <div class="enterprise-cta">
       <div class="cta-content">
         <div class="cta-info">
-          <h3 class="cta-title">Precisa de mais?</h3>
+          <h3 class="cta-title">
+            Precisa de mais?
+          </h3>
           <p class="cta-description">
             Para empresas com necessidades específicas, oferecemos soluções personalizadas
             com recursos avançados, suporte dedicado e integrações customizadas.
           </p>
         </div>
         <div class="cta-action">
-          <button @click="contactSales" class="btn-enterprise">
+          <button
+            class="btn-enterprise"
+            @click="contactSales"
+          >
             Falar com vendas
           </button>
         </div>

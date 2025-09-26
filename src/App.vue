@@ -1,8 +1,14 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-50">
+  <div
+    id="app"
+    class="min-h-screen bg-gray-50"
+  >
     <!-- Loading Global -->
-    <div v-if="isLoading" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
-      <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
+    <div
+      v-if="isLoading"
+      class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50"
+    >
+      <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600" />
     </div>
 
     <!-- Header -->

@@ -1,29 +1,224 @@
 import { createClient } from '@supabase/supabase-js'
+import { createStandardError } from '@/utils/errorHandler'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Variáveis de ambiente do Supabase não configuradas')
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
+
+const createMissingConfigError = () => {
+  return createStandardError('Supabase não configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para habilitar autenticação e persistência.', 'SUPABASE_CONFIG_MISSING')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10
+const createAsyncMissingResponse = async () => ({ data: null, error: createMissingConfigError() })
+
+function createQueryBuilderStub() {
+  const builder = {
+    select: () => builder,
+    insert: () => builder,
+    update: () => builder,
+    upsert: () => builder,
+    delete: () => builder,
+    eq: () => builder,
+    neq: () => builder,
+    gt: () => builder,
+    gte: () => builder,
+    lt: () => builder,
+    lte: () => builder,
+    like: () => builder,
+    ilike: () => builder,
+    in: () => builder,
+    contains: () => builder,
+    order: () => builder,
+    range: () => builder,
+    limit: () => builder,
+    maybeSingle: createAsyncMissingResponse,
+    single: createAsyncMissingResponse,
+    then: (resolve, reject) => createAsyncMissingResponse().then(resolve, reject)
+  }
+  return builder
+}
+
+function createStorageStub() {
+  const asyncError = async () => ({ data: null, error: createMissingConfigError() })
+  return {
+    upload: asyncError,
+    download: asyncError,
+    remove: asyncError,
+    list: asyncError,
+    createSignedUrl: async () => ({ data: { signedUrl: '' }, error: createMissingConfigError() }),
+    getPublicUrl: () => ({ data: { publicUrl: '' }, error: createMissingConfigError() })
+  }
+}
+
+function createSupabaseFallbackClient() {
+  return {
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: createMissingConfigError() }),
+      getUser: async () => ({ data: null, error: createMissingConfigError() }),
+      updateUser: async () => ({ data: null, error: createMissingConfigError() }),
+      signOut: async () => ({ error: createMissingConfigError() }),
+      signInWithIdToken: async () => ({ data: null, error: createMissingConfigError() })
+    },
+    from: () => createQueryBuilderStub(),
+    storage: {
+      from: () => createStorageStub()
+    },
+    channel() {
+      const channelStub = {
+        on() { return channelStub },
+        subscribe() { return channelStub },
+        unsubscribe() {}
+      }
+      return channelStub
+    },
+    removeChannel() {},
+    rpc: createAsyncMissingResponse
+  }
+}
+
+if (!isSupabaseConfigured) {
+  console.warn('[supabase] Variáveis de ambiente não configuradas. Funcionalidades dependentes do Supabase serão desativadas.')
+}
+
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10
+        }
+      }
+    })
+  : createSupabaseFallbackClient()
+
+let cachedSession = null
+
+export async function getSupabaseSession({ forceRefresh = false } = {}) {
+  if (!isSupabaseConfigured) {
+    return null
+  }
+
+  if (!forceRefresh && cachedSession) {
+    return cachedSession
+  }
+
+  try {
+    const { data, error } = await supabase.auth.getSession()
+    if (error) {
+      throw error
+    }
+
+    cachedSession = data?.session ?? null
+    return cachedSession
+  } catch (error) {
+    console.warn('[supabase] Falha ao obter sessao atual:', error)
+    cachedSession = null
+    return null
+  }
+}
+
+export async function ensureAppUserProfile({ session: providedSession } = {}) {
+  if (!isSupabaseConfigured) {
+    return {
+      id: null,
+      session: null,
+      created: false,
+      reason: 'config-missing'
     }
   }
-})
+
+  try {
+    const session = providedSession ?? (await getSupabaseSession())
+    if (!session?.user?.id) {
+      return {
+        id: null,
+        session,
+        created: false,
+        reason: 'missing-session'
+      }
+    }
+
+    const authUser = session.user
+    const supabaseUid = authUser.id
+    const email = authUser.email || authUser.user_metadata?.email || null
+    const clerkId = authUser.user_metadata?.provider_id || authUser.user_metadata?.clerk_id || null
+
+    try {
+      const { data: existing, error: selectError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', supabaseUid)
+        .maybeSingle()
+
+      if (!selectError && existing?.id) {
+        return {
+          id: existing.id,
+          session,
+          created: false
+        }
+      }
+    } catch (selectUnexpected) {
+      console.warn('[supabase] Falha ao consultar tabela users:', selectUnexpected)
+    }
+
+    if (!email) {
+      return {
+        id: null,
+        session,
+        created: false,
+        reason: 'missing-email'
+      }
+    }
+
+    const payload = {
+      id: supabaseUid,
+      email,
+      ...(clerkId ? { clerk_id: clerkId } : {})
+    }
+
+    const { data: upserted, error: upsertError } = await supabase
+      .from('users')
+      .upsert(payload, { onConflict: 'id' })
+      .select('id')
+      .single()
+
+    if (upsertError) {
+      console.warn('[supabase] Erro ao criar/atualizar registro em users:', upsertError)
+      return {
+        id: null,
+        session,
+        created: false,
+        reason: 'upsert-failed',
+        error: upsertError
+      }
+    }
+
+    return {
+      id: upserted?.id || supabaseUid,
+      session,
+      created: true
+    }
+  } catch (error) {
+    console.warn('[supabase] ensureAppUserProfile falhou:', error)
+    return {
+      id: null,
+      session: providedSession ?? null,
+      created: false,
+      reason: 'unexpected-error',
+      error
+    }
+  }
+}
 
 // Nota: Em @supabase/supabase-js v2 não existe mais supabase.auth.setAuth.
 // Para autenticar com provedores externos via OIDC, use signInWithIdToken.
 // Este helper foi mantido apenas por compatibilidade e agora não faz nada.
-export function setSupabaseAccessToken(_accessToken) {
+export function setSupabaseAccessToken() {
   console.warn('[supabase] setSupabaseAccessToken não é suportado no supabase-js v2. Use ensureSupabaseAuth().')
 }
 
@@ -136,7 +331,14 @@ export const supabaseData = {
       if (error) throw error
       return result
     } catch (error) {
-      console.error(`Erro ao inserir em ${table}:`, error)
+      console.error(`Erro ao inserir em ${table}:`, {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        code: error.code,
+        table: table,
+        dataKeys: data ? Object.keys(data) : null
+      })
       throw error
     }
   },
@@ -156,7 +358,15 @@ export const supabaseData = {
       if (error) throw error
       return result
     } catch (error) {
-      console.error(`Erro ao atualizar ${table}:`, error)
+      console.error(`Erro ao atualizar ${table}:`, {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        code: error.code,
+        table: table,
+        dataKeys: data ? Object.keys(data) : null,
+        filterKeys: filters ? Object.keys(filters) : null
+      })
       throw error
     }
   },
@@ -176,7 +386,14 @@ export const supabaseData = {
       if (error) throw error
       return data
     } catch (error) {
-      console.error(`Erro ao deletar de ${table}:`, error)
+      console.error(`Erro ao deletar de ${table}:`, {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        code: error.code,
+        table: table,
+        filterKeys: filters ? Object.keys(filters) : null
+      })
       throw error
     }
   },

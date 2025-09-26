@@ -3,8 +3,9 @@ import PdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?worker'
 import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import mammoth from 'mammoth'
 import { supabaseUtils } from './supabase.js'
+import { safeConsoleError, safeConsoleWarn } from '@/utils/errorHandler'
 
-// Configurar PDF.js worker (usar asset local empacotado pelo Vite, evitando CDN)
+// Processamento de arquivos PDF e TXT
 try {
   if (typeof window !== 'undefined' && typeof Worker !== 'undefined') {
     const workerInstance = new PdfWorker()
@@ -101,7 +102,7 @@ export const fileProcessorService = {
           metadata.creator = pdfMetadata.info.Creator || ''
         }
       } catch (metaError) {
-        console.warn('Erro ao extrair metadados do PDF:', metaError)
+        safeConsoleWarn('Erro ao extrair metadados do PDF:', metaError)
       }
       
       // Extrair texto de todas as páginas
@@ -120,7 +121,7 @@ export const fileProcessorService = {
             fullText += `\n\n--- Página ${pageNum} ---\n${pageText}`
           }
         } catch (pageError) {
-          console.warn(`Erro ao processar página ${pageNum}:`, pageError)
+          safeConsoleWarn(`Erro ao processar página ${pageNum}:`, pageError)
         }
       }
       
@@ -131,7 +132,7 @@ export const fileProcessorService = {
         charCount: fullText.length
       }
     } catch (error) {
-      console.error('Erro ao extrair texto do PDF:', error)
+      safeConsoleError('Erro ao extrair texto do PDF:', error)
       throw new Error(`Erro ao processar PDF: ${error.message}`)
     }
   },
@@ -155,7 +156,7 @@ export const fileProcessorService = {
         charCount: text.length
       }
     } catch (error) {
-      console.error('Erro ao extrair texto do DOCX:', error)
+      safeConsoleError('Erro ao extrair texto do DOCX:', error)
       throw new Error(`Erro ao processar DOCX: ${error.message}`)
     }
   },
@@ -174,7 +175,7 @@ export const fileProcessorService = {
         charCount: text.length
       }
     } catch (error) {
-      console.error('Erro ao extrair texto do TXT:', error)
+      safeConsoleError('Erro ao extrair texto do TXT:', error)
       throw new Error(`Erro ao processar TXT: ${error.message}`)
     }
   },
@@ -212,30 +213,47 @@ export const fileProcessorService = {
         extraction: extractionResult
       }
     } catch (error) {
-      console.error('Erro ao processar documento:', error)
+      console.error('Erro ao processar documento:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        fileName: file?.name,
+        fileSize: file?.size,
+        fileType: file?.type
+      })
       throw error
     }
   },
   
   // Upload de arquivo para Supabase Storage
   async uploadFileToSupabase(file, bucket = 'documents', path = '') {
+    let generatedFileName = ''
+    let resolvedFilePath = ''
+
     try {
-      const fileName = `${Date.now()}_${file.name}`
-      const filePath = path ? `${path}/${fileName}` : fileName
-      
+      generatedFileName = `${Date.now()}_${file.name}`
+      resolvedFilePath = path ? `${path}/${generatedFileName}` : generatedFileName
+
       // Upload para Supabase Storage
-      const data = await supabaseUtils.uploadFile(bucket, filePath, file)
-      
+      const data = await supabaseUtils.uploadFile(bucket, resolvedFilePath, file)
+
       // Obter URL pública (se o bucket for público)
-      const url = supabaseUtils.getPublicUrl(bucket, filePath)
-      
+      const url = supabaseUtils.getPublicUrl(bucket, resolvedFilePath)
+
       return {
-        path: filePath,
+        path: resolvedFilePath,
         url,
         data
       }
     } catch (error) {
-      console.error('Erro no upload para Supabase:', error)
+      console.error('Erro no upload para Supabase:', {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name,
+        fileName: generatedFileName || file?.name,
+        bucket,
+        filePath: resolvedFilePath
+      })
       throw new Error(`Falha no upload: ${error.message}`)
     }
   },
@@ -256,7 +274,16 @@ export const fileProcessorService = {
         upload: uploadResult
       }
     } catch (error) {
-      console.error('Erro ao processar e fazer upload do documento:', error)
+      safeConsoleError('Erro ao processar e fazer upload do documento:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        fileName: file?.name,
+        fileSize: file?.size,
+        fileType: file?.type,
+        bucket,
+        path
+      })
       throw error
     }
   },
@@ -280,7 +307,7 @@ export const fileProcessorService = {
         }
       }
     } catch (error) {
-      console.error('Erro na transcrição de áudio:', error)
+      safeConsoleError('Erro na transcrição de áudio:', error)
       throw new Error(`Erro ao transcrever áudio: ${error.message}`)
     }
   }

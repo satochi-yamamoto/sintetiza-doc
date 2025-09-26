@@ -1,11 +1,11 @@
-<template>
+﻿<template>
   <div class="dashboard">
     <!-- Header -->
     <div class="dashboard-header">
       <div class="header-content">
         <div class="header-left">
           <h1 class="dashboard-title">
-            Olá, {{ getUserName || 'Usuário' }}! 👋
+            OlÃ¡, {{ getUserName || 'UsuÃ¡rio' }}! ðŸ‘‹
           </h1>
           <p class="dashboard-subtitle">
             Bem-vindo ao seu painel de controle
@@ -13,9 +13,20 @@
         </div>
         
         <div class="header-right">
-          <div class="plan-badge" :class="planBadgeClass">
-            <svg class="plan-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" />
+          <div
+            class="plan-badge"
+            :class="planBadgeClass"
+          >
+            <svg
+              class="plan-icon"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>{{ currentPlan }}</span>
           </div>
@@ -27,112 +38,290 @@
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon documents">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M14 2V8H20"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </div>
         <div class="stat-content">
-          <div class="stat-number">{{ stats.totalDocuments }}</div>
-          <div class="stat-label">Documentos</div>
+          <div class="stat-number">
+            {{ stats.totalDocuments }}
+          </div>
+          <div class="stat-label">
+            Documentos
+          </div>
         </div>
       </div>
       
       <div class="stat-card">
         <div class="stat-icon summaries">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9 12L11 14L15 10"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+              stroke="currentColor"
+              stroke-width="2"
+            />
           </svg>
         </div>
         <div class="stat-content">
-          <div class="stat-number">{{ stats.totalSummaries }}</div>
-          <div class="stat-label">Resumos</div>
+          <div class="stat-number">
+            {{ stats.totalSummaries }}
+          </div>
+          <div class="stat-label">
+            Resumos
+          </div>
         </div>
       </div>
       
       <div class="stat-card">
         <div class="stat-icon usage">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13 2L3 14H12L11 22L21 10H12L13 2Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </div>
         <div class="stat-content">
-          <div class="stat-number">{{ stats.monthlyUsage }}</div>
-          <div class="stat-label">Uso Mensal</div>
+          <div class="stat-number">
+            {{ stats.monthlyUsage }}
+          </div>
+          <div class="stat-label">
+            Uso Mensal
+          </div>
         </div>
       </div>
       
       <div class="stat-card">
         <div class="stat-icon storage">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="4" width="18" height="6" rx="2" stroke="currentColor" stroke-width="2" />
-            <rect x="3" y="14" width="18" height="6" rx="2" stroke="currentColor" stroke-width="2" />
-            <circle cx="7" cy="7" r="1" fill="currentColor" />
-            <circle cx="7" cy="17" r="1" fill="currentColor" />
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              x="3"
+              y="4"
+              width="18"
+              height="6"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <rect
+              x="3"
+              y="14"
+              width="18"
+              height="6"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle
+              cx="7"
+              cy="7"
+              r="1"
+              fill="currentColor"
+            />
+            <circle
+              cx="7"
+              cy="17"
+              r="1"
+              fill="currentColor"
+            />
           </svg>
         </div>
         <div class="stat-content">
-          <div class="stat-number">{{ formatStorage(stats.storageUsed) }}</div>
-          <div class="stat-label">Armazenamento</div>
+          <div class="stat-number">
+            {{ formatStorage(stats.storageUsed) }}
+          </div>
+          <div class="stat-label">
+            Armazenamento
+          </div>
         </div>
       </div>
     </div>
     
     <!-- Quick Actions -->
     <div class="quick-actions">
-      <h2 class="section-title">Ações Rápidas</h2>
+      <h2 class="section-title">
+        AÃ§Ãµes RÃ¡pidas
+      </h2>
       
       <div class="actions-grid">
-        <button @click="showUploadModal = true" class="action-card upload">
+        <button
+          class="action-card upload"
+          @click="showUploadModal = true"
+        >
           <div class="action-icon">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 10l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 5v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M7 10l5-5 5 5"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12 5v10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <div class="action-content">
-            <h3 class="action-title">Upload de Documento</h3>
-            <p class="action-description">Envie PDF, DOCX ou TXT</p>
+            <h3 class="action-title">
+              Upload de Documento
+            </h3>
+            <p class="action-description">
+              Envie PDF, DOCX ou TXT
+            </p>
           </div>
         </button>
         
-        <router-link to="/dashboard/documentos" class="action-card documents">
+        <router-link
+          to="/dashboard/documentos"
+          class="action-card documents"
+        >
           <div class="action-icon">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M14 2V8H20"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <div class="action-content">
-            <h3 class="action-title">Meus Documentos</h3>
-            <p class="action-description">Gerencie seus arquivos</p>
+            <h3 class="action-title">
+              Meus Documentos
+            </h3>
+            <p class="action-description">
+              Gerencie seus arquivos
+            </p>
           </div>
         </router-link>
         
-        <router-link to="/dashboard/resumos" class="action-card summaries">
+        <router-link
+          to="/dashboard/resumos"
+          class="action-card summaries"
+        >
           <div class="action-icon">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2"/>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 12L11 14L15 10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
             </svg>
           </div>
           <div class="action-content">
-            <h3 class="action-title">Meus Resumos</h3>
-            <p class="action-description">Visualize e exporte</p>
+            <h3 class="action-title">
+              Meus Resumos
+            </h3>
+            <p class="action-description">
+              Visualize e exporte
+            </p>
           </div>
         </router-link>
         
-        <router-link to="/dashboard/cobranca" class="action-card billing">
+        <router-link
+          to="/dashboard/cobranca"
+          class="action-card billing"
+        >
           <div class="action-icon">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <div class="action-content">
-            <h3 class="action-title">Upgrade de Plano</h3>
-            <p class="action-description">Mais recursos disponíveis</p>
+            <h3 class="action-title">
+              Upgrade de Plano
+            </h3>
+            <p class="action-description">
+              Mais recursos disponÃ­veis
+            </p>
           </div>
         </router-link>
       </div>
@@ -141,33 +330,72 @@
     <!-- Recent Activity -->
     <div class="recent-activity">
       <div class="section-header">
-        <h2 class="section-title">Atividade Recente</h2>
-        <router-link to="/dashboard/documentos" class="view-all-link">
+        <h2 class="section-title">
+          Atividade Recente
+        </h2>
+        <router-link
+          to="/dashboard/documentos"
+          class="view-all-link"
+        >
           Ver todos
         </router-link>
       </div>
       
-      <div class="activity-list" v-if="recentActivity.length > 0">
+      <div
+        v-if="recentActivity.length > 0"
+        class="activity-list"
+      >
         <div 
           v-for="activity in recentActivity" 
           :key="activity.id"
           class="activity-item"
         >
-          <div class="activity-icon" :class="activity.type">
-            <svg v-if="activity.type === 'upload'" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          <div
+            class="activity-icon"
+            :class="activity.type"
+          >
+            <svg
+              v-if="activity.type === 'upload'"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
-            <svg v-else-if="activity.type === 'summary'" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            <svg
+              v-else-if="activity.type === 'summary'"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
             </svg>
-            <svg v-else viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+            <svg
+              v-else
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clip-rule="evenodd"
+              />
             </svg>
           </div>
           
           <div class="activity-content">
-            <div class="activity-title">{{ activity.title }}</div>
-            <div class="activity-description">{{ activity.description }}</div>
+            <div class="activity-title">
+              {{ activity.title }}
+            </div>
+            <div class="activity-description">
+              {{ activity.description }}
+            </div>
           </div>
           
           <div class="activity-time">
@@ -176,37 +404,81 @@
         </div>
       </div>
       
-      <div v-else class="empty-activity">
+      <div
+        v-else
+        class="empty-activity"
+      >
         <div class="empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9 12L11 14L15 10"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+              stroke="currentColor"
+              stroke-width="2"
+            />
           </svg>
         </div>
-        <h3 class="empty-title">Nenhuma atividade ainda</h3>
+        <h3 class="empty-title">
+          Nenhuma atividade ainda
+        </h3>
         <p class="empty-description">
           Comece fazendo upload de um documento para ver sua atividade aqui.
         </p>
-        <button @click="showUploadModal = true" class="empty-action">
+        <button
+          class="empty-action"
+          @click="showUploadModal = true"
+        >
           Fazer primeiro upload
         </button>
       </div>
     </div>
     
     <!-- Upload Modal -->
-    <div v-if="showUploadModal" class="modal-overlay" @click="closeUploadModal">
-      <div class="modal-content" @click.stop>
+    <div
+      v-if="showUploadModal"
+      class="modal-overlay"
+      @click="closeUploadModal"
+    >
+      <div
+        class="modal-content"
+        @click.stop
+      >
         <div class="modal-header">
-          <h3 class="modal-title">Upload de Documento</h3>
-          <button @click="closeUploadModal" class="modal-close">
-            <svg viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+          <h3 class="modal-title">
+            Upload de Documento
+          </h3>
+          <button
+            class="modal-close"
+            @click="closeUploadModal"
+          >
+            <svg
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
             </svg>
           </button>
         </div>
         
         <div class="modal-body">
-          <FileUpload @upload-complete="handleUploadComplete" />
+          <FileUpload
+            @files-processed="handleFilesProcessed"
+            @processing-complete="handleUploadComplete"
+          />
         </div>
       </div>
     </div>
@@ -215,13 +487,13 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-
 import { useAppStore } from '@/stores/app'
-import { supabase } from '@/services/supabase'
+import { supabase, ensureAppUserProfile, getSupabaseSession } from '@/services/supabase'
 import { useToast } from 'vue-toastification'
 import FileUpload from '@/components/FileUpload.vue'
+import aiService from '@/services/ai.js'
 
-// Estado de sessão Supabase
+// Estado de sessÃ£o Supabase
 const session = ref(null)
 const uid = ref(null)
 
@@ -242,71 +514,228 @@ const stats = reactive({
 
 const recentActivity = ref([])
 
-// Garantir sessão do Supabase (sem Clerk)
-const ensureSupabaseSession = async () => {
+// Garantir sessÃ£o do Supabase (sem Clerk)
+const ensureSupabaseSession = async (forceRefresh = false) => {
   try {
-    const { data } = await supabase.auth.getSession()
-    session.value = data?.session || null
-    uid.value = session.value?.user?.id || null
+    const activeSession = await getSupabaseSession({ forceRefresh })
+    session.value = activeSession
+    uid.value = activeSession?.user?.id || null
+
+    if (uid.value) {
+      await ensureAppUserProfile({ session: session.value })
+    }
+
     return !!uid.value
-  } catch (_) {
+  } catch (error) {
+    console.debug('Erro ao garantir sessao do Supabase:', error)
+    session.value = null
+    uid.value = null
     return false
   }
 }
 
-// Computed
-const currentPlan = computed(() => {
-  // Tenta obter do user_metadata ou fallback do store
-  return (
-    session.value?.user?.user_metadata?.plan || appStore?.plan || 'Gratuito'
-  )
-})
+// Resolve o ID do usuario da aplicacao (tabela public.users)
+const resolveAppUserId = async () => {
+  const profile = await ensureAppUserProfile({ session: session.value })
 
-const planBadgeClass = computed(() => {
-  const plan = (currentPlan.value || 'Gratuito').toLowerCase()
-  return {
-    'plan-free': plan === 'gratuito' || plan === 'free',
-    'plan-basic': plan === 'básico' || plan === 'basic',
-    'plan-pro': plan === 'profissional' || plan === 'professional',
-    'plan-enterprise': plan === 'empresarial' || plan === 'enterprise'
+  if (profile?.session) {
+    session.value = profile.session
+    uid.value = profile.session?.user?.id || uid.value
   }
-})
 
-const getUserName = computed(() => {
-  const u = session.value?.user
-  if (!u) return null
-  const meta = u.user_metadata || {}
-  const firstName = meta.firstName || meta.first_name
-  const lastName = meta.lastName || meta.last_name
-  const fullName = meta.fullName || meta.full_name
-  const emailName = (u.email || '').split('@')[0]
+  if (!profile?.id) {
+    const reason = profile?.reason || 'unknown'
+    console.debug('[resolveAppUserId] falha ao garantir usuario da aplicacao:', {
+      reason,
+      error: profile?.error
+    })
 
-  if (firstName) return lastName ? `${firstName} ${lastName}` : firstName
-  if (fullName) return fullName
-  if (emailName) return emailName
-  return null
-})
+    if (reason == 'config-missing') {
+      toast.error('Persistencia de dados indisponivel. Verifique a configuracao do Supabase.')
+    } else if (reason == 'missing-email') {
+      toast.error('Conta sem e-mail cadastrada. Atualize seu perfil antes de continuar.')
+    } else if (reason == 'missing-session') {
+      toast.error('Sessao nao encontrada. Faca login novamente para continuar.')
+    } else {
+      toast.error('Nao foi possivel validar sua conta. Tente novamente em instantes.')
+    }
+  }
 
-// Métodos
+  return profile?.id || null
+}
+
+const getFileTypeFromMime = (mimeType) => {
+  const typeMap = {
+    'application/pdf': 'pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+    'text/plain': 'txt',
+    'audio/mpeg': 'mp3',
+    'audio/wav': 'wav',
+    'audio/mp4': 'm4a',
+    'audio/webm': 'webm'
+  }
+  return typeMap[mimeType] || 'unknown'
+}
+
+const handleFilesProcessed = async (results) => {
+  try {
+    // Garante sessÃ£o
+    if (!uid.value) {
+      await ensureSupabaseSession()
+      if (!uid.value) {
+        toast.error('SessÃ£o nÃ£o encontrada. FaÃ§a login novamente para salvar documentos.')
+        return
+      }
+    }
+
+    const appUserId = await resolveAppUserId()
+    if (!appUserId) {
+      return
+    }
+
+    console.log('[handleFilesProcessed] resultados recebidos:', results?.length)
+    console.log('[handleFilesProcessed] appUserId resolvido:', appUserId)
+
+    const createdDocs = []
+
+    // Salva documentos
+    for (const item of results) {
+      const fileItem = item.file
+      const originalFile = fileItem?.file
+      const processingResult = item.result
+      const extraction = processingResult?.processed?.extraction
+      const upload = processingResult?.upload
+
+      if (!extraction?.text) {
+        console.warn('[handleFilesProcessed] Texto extraÃ­do ausente, pulando item:', {
+          fileName: fileItem?.name,
+          hasExtraction: !!extraction,
+          extractionKeys: extraction ? Object.keys(extraction) : null,
+          processingResult: processingResult ? Object.keys(processingResult) : null
+        })
+        continue
+      }
+
+      const { data: inserted, error: insertErr } = await supabase
+        .from('documents')
+        .insert({
+          user_id: appUserId,
+          name: fileItem?.name || originalFile?.name,
+          original_name: originalFile?.name || fileItem?.name,
+          file_type: getFileTypeFromMime(originalFile?.type || ''),
+          mime_type: originalFile?.type || 'application/octet-stream',
+          file_size: originalFile?.size || 0,
+          file_path: upload?.path || null,
+          extracted_text: extraction.text,
+          metadata: extraction.metadata || {},
+          page_count: extraction.metadata?.numPages || null,
+          word_count: extraction.wordCount || 0,
+          status: 'completed'
+        })
+        .select('id')
+
+      if (insertErr) {
+        console.error('Erro ao inserir documento:', {
+          message: insertErr.message,
+          code: insertErr.code,
+          details: insertErr.details,
+          hint: insertErr.hint,
+          fileName: fileItem?.name || originalFile?.name
+        })
+        toast.error(`Erro ao salvar documento ${fileItem?.name || originalFile?.name}: ${insertErr.message || 'Erro desconhecido'}`)
+        continue
+      }
+
+      const docId = inserted && inserted.length > 0 ? inserted[0].id : null
+      if (!docId) {
+        console.warn('Documento inserido sem ID retornado:', {
+          fileName: fileItem?.name || originalFile?.name,
+          insertedData: inserted,
+          insertedLength: inserted?.length
+        })
+        continue
+      }
+
+      createdDocs.push({ docId, text: extraction.text })
+    }
+
+    // Gerar resumos automaticamente para cada documento criado
+    let summariesCreated = 0
+    for (const doc of createdDocs) {
+      try {
+        const t0 = performance.now()
+        const summary = await aiService.generateSummary(doc.text, 'standard', { provider: 'openai' })
+        const elapsed = Math.round(performance.now() - t0)
+
+        const usage = summary?.usage || {}
+        const tokensUsed =
+          typeof usage?.total_tokens === 'number'
+            ? usage.total_tokens
+            : (usage?.input_tokens || 0) + (usage?.output_tokens || 0)
+
+        const content = summary?.content || ''
+        console.log('[AI] Resumo gerado (modelo, tokens):', summary?.model, tokensUsed)
+
+        await supabase
+          .from('summaries')
+          .insert({
+            document_id: doc.docId,
+            user_id: appUserId,
+            type: 'standard',
+            language: 'pt-BR',
+            content,
+            word_count: content ? content.split(/\s+/).length : 0,
+            tokens_used: tokensUsed || null,
+            ai_model: summary?.model || null,
+            processing_time_ms: elapsed,
+            metadata: { provider: summary?.provider || null }
+          })
+
+        summariesCreated++
+      } catch (e) {
+        console.error('Erro ao gerar/inserir resumo:', e)
+      }
+    }
+
+    toast.success(`${createdDocs.length} documento(s) salvos. ${summariesCreated} resumo(s) gerados!`)
+    // Atualiza dashboard
+    await loadDashboardData()
+  } catch (error) {
+    console.error('Erro ao salvar documentos e gerar resumos (dashboard):', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code,
+      details: error.details,
+      cause: error.cause
+    })
+    toast.error('Erro ao salvar documentos ou gerar resumos. Verifique as chaves de IA e tente novamente.')
+  }
+}
 const loadDashboardData = async () => {
   try {
     isLoading.value = true
     appStore.setLoading(true)
 
-    // Garante sessão e UID
+    // Garante sessÃ£o e UID
     const ready = await ensureSupabaseSession()
     if (!ready) {
-      console.log('Sessão do Supabase não pronta, abortando carregamento do dashboard')
+      console.log('SessÃ£o do Supabase nÃ£o pronta, abortando carregamento do dashboard')
       return
     }
 
-    // Carregar estatísticas e atividade
+    // Carregar estatÃ­sticas e atividade
     await Promise.all([
       loadStats(),
       loadRecentActivity()
     ])
   } catch (error) {
-    console.error('Erro ao carregar dados do dashboard:', error)
+    console.error('Erro ao carregar dados do dashboard:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code
+    })
     toast.error('Erro ao carregar dados do dashboard')
   } finally {
     isLoading.value = false
@@ -316,18 +745,18 @@ const loadDashboardData = async () => {
 
 const loadStats = async () => {
   try {
-    const userId = uid.value
-    if (!userId) return
+    const appUserId = await resolveAppUserId()
+    if (!appUserId) return
 
     const { count: documentsCount } = await supabase
       .from('documents')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
+      .eq('user_id', appUserId)
 
     const { count: summariesCount } = await supabase
       .from('summaries')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
+      .eq('user_id', appUserId)
 
     const startOfMonth = new Date()
     startOfMonth.setDate(1)
@@ -336,13 +765,13 @@ const loadStats = async () => {
     const { count: monthlyCount } = await supabase
       .from('summaries')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
+      .eq('user_id', appUserId)
       .gte('created_at', startOfMonth.toISOString())
 
     const { data: documents } = await supabase
       .from('documents')
       .select('file_size')
-      .eq('user_id', userId)
+      .eq('user_id', appUserId)
 
     const totalStorage = documents?.reduce((sum, doc) => sum + (doc.file_size || 0), 0) || 0
 
@@ -351,26 +780,31 @@ const loadStats = async () => {
     stats.monthlyUsage = monthlyCount || 0
     stats.storageUsed = totalStorage
   } catch (error) {
-    console.error('Erro ao carregar estatísticas:', error)
+    console.error('Erro ao carregar estatÃ­sticas:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code
+    })
   }
 }
 
 const loadRecentActivity = async () => {
   try {
-    const userId = uid.value
-    if (!userId) return
+    const appUserId = await resolveAppUserId()
+    if (!appUserId) return
 
     const { data: documents } = await supabase
       .from('documents')
       .select('id, name, created_at')
-      .eq('user_id', userId)
+      .eq('user_id', appUserId)
       .order('created_at', { ascending: false })
       .limit(3)
 
     const { data: summaries } = await supabase
       .from('summaries')
       .select('id, type, created_at, document:documents(name)')
-      .eq('user_id', userId)
+      .eq('user_id', appUserId)
       .order('created_at', { ascending: false })
       .limit(3)
 
@@ -398,11 +832,16 @@ const loadRecentActivity = async () => {
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, 5)
   } catch (error) {
-    console.error('Erro ao carregar atividade recente:', error)
+    console.error('Erro ao carregar atividade recente:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code
+    })
   }
 }
 
-// Formatação
+// FormataÃ§Ã£o
 const formatStorage = (bytes) => {
   if (bytes === 0) return '0 B'
   const k = 1024
@@ -415,8 +854,8 @@ const formatTime = (timestamp) => {
   const date = new Date(timestamp)
   const now = new Date()
   const diffInHours = (now - date) / (1000 * 60 * 60)
-  if (diffInHours < 1) return 'Agora há pouco'
-  if (diffInHours < 24) return `${Math.floor(diffInHours)}h atrás`
+  if (diffInHours < 1) return 'Agora hÃ¡ pouco'
+  if (diffInHours < 24) return `${Math.floor(diffInHours)}h atrÃ¡s`
   if (diffInHours < 48) return 'Ontem'
   return date.toLocaleDateString('pt-BR')
 }
@@ -428,7 +867,7 @@ const closeUploadModal = () => {
 const handleUploadComplete = () => {
   closeUploadModal()
   loadDashboardData()
-  toast.success('Upload concluído com sucesso!')
+  toast.success('Upload concluÃ­do com sucesso!')
 }
 
 // Watchers (usando UID do Supabase)
@@ -444,6 +883,37 @@ onMounted(async () => {
   if (uid.value) {
     await loadDashboardData()
   }
+})
+// Computed
+const currentPlan = computed(() => {
+  return (
+    session.value?.user?.user_metadata?.plan || appStore?.plan || 'Gratuito'
+  )
+})
+
+const planBadgeClass = computed(() => {
+  const plan = (currentPlan.value || 'Gratuito').toLowerCase()
+  return {
+    'plan-free': plan === 'gratuito' || plan === 'free',
+    'plan-basic': plan === 'bÃ¡sico' || plan === 'basic',
+    'plan-pro': plan === 'profissional' || plan === 'professional',
+    'plan-enterprise': plan === 'empresarial' || plan === 'enterprise'
+  }
+})
+
+const getUserName = computed(() => {
+  const u = session.value?.user
+  if (!u) return null
+  const meta = u.user_metadata || {}
+  const firstName = meta.firstName || meta.first_name
+  const lastName = meta.lastName || meta.last_name
+  const fullName = meta.fullName || meta.full_name
+  const emailName = (u.email || '').split('@')[0]
+
+  if (firstName) return lastName ? `${firstName} ${lastName}` : firstName
+  if (fullName) return fullName
+  if (emailName) return emailName
+  return null
 })
 </script>
 

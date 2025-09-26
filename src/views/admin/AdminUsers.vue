@@ -5,12 +5,16 @@
       <div class="mb-8">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">Gerenciar Usuários</h1>
-            <p class="text-gray-600 mt-2">Visualize e gerencie todos os usuários da plataforma</p>
+            <h1 class="text-3xl font-bold text-gray-900">
+              Gerenciar Usuários
+            </h1>
+            <p class="text-gray-600 mt-2">
+              Visualize e gerencie todos os usuários da plataforma
+            </p>
           </div>
           <button
-            @click="showCreateModal = true"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium"
+            @click="showCreateModal = true"
           >
             Adicionar Usuário
           </button>
@@ -35,10 +39,18 @@
               v-model="filters.status"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">Todos</option>
-              <option value="active">Ativo</option>
-              <option value="inactive">Inativo</option>
-              <option value="suspended">Suspenso</option>
+              <option value="">
+                Todos
+              </option>
+              <option value="active">
+                Ativo
+              </option>
+              <option value="inactive">
+                Inativo
+              </option>
+              <option value="suspended">
+                Suspenso
+              </option>
             </select>
           </div>
           <div>
@@ -47,17 +59,27 @@
               v-model="filters.plan"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">Todos</option>
-              <option value="free">Gratuito</option>
-              <option value="basic">Básico</option>
-              <option value="professional">Profissional</option>
-              <option value="enterprise">Empresarial</option>
+              <option value="">
+                Todos
+              </option>
+              <option value="free">
+                Gratuito
+              </option>
+              <option value="basic">
+                Básico
+              </option>
+              <option value="professional">
+                Profissional
+              </option>
+              <option value="enterprise">
+                Empresarial
+              </option>
             </select>
           </div>
           <div class="flex items-end">
             <button
-              @click="clearFilters"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
+              @click="clearFilters"
             >
               Limpar Filtros
             </button>
@@ -92,7 +114,11 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-gray-50">
+              <tr
+                v-for="user in filteredUsers"
+                :key="user.id"
+                class="hover:bg-gray-50"
+              >
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
                     <img
@@ -101,8 +127,12 @@
                       class="w-10 h-10 rounded-full"
                     >
                     <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
-                      <div class="text-sm text-gray-500">{{ user.email }}</div>
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ user.name }}
+                      </div>
+                      <div class="text-sm text-gray-500">
+                        {{ user.email }}
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -131,20 +161,20 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div class="flex space-x-2">
                     <button
-                      @click="editUser(user)"
                       class="text-blue-600 hover:text-blue-900"
+                      @click="editUser(user)"
                     >
                       Editar
                     </button>
                     <button
-                      @click="toggleUserStatus(user)"
                       :class="user.status === 'active' ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'"
+                      @click="toggleUserStatus(user)"
                     >
                       {{ user.status === 'active' ? 'Suspender' : 'Ativar' }}
                     </button>
                     <button
-                      @click="deleteUser(user)"
                       class="text-red-600 hover:text-red-900"
+                      @click="deleteUser(user)"
                     >
                       Excluir
                     </button>
@@ -161,15 +191,15 @@
             <div class="flex-1 flex justify-between sm:hidden">
               <button
                 :disabled="currentPage === 1"
-                @click="currentPage--"
                 class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                @click="currentPage--"
               >
                 Anterior
               </button>
               <button
                 :disabled="currentPage === totalPages"
-                @click="currentPage++"
                 class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                @click="currentPage++"
               >
                 Próximo
               </button>
@@ -190,24 +220,24 @@
                 <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                   <button
                     :disabled="currentPage === 1"
-                    @click="currentPage--"
                     class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                    @click="currentPage--"
                   >
                     Anterior
                   </button>
                   <button
                     v-for="page in visiblePages"
                     :key="page"
-                    @click="currentPage = page"
                     :class="page === currentPage ? 'bg-blue-50 border-blue-500 text-blue-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
                     class="relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                    @click="currentPage = page"
                   >
                     {{ page }}
                   </button>
                   <button
                     :disabled="currentPage === totalPages"
-                    @click="currentPage++"
                     class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                    @click="currentPage++"
                   >
                     Próximo
                   </button>
@@ -220,7 +250,10 @@
     </div>
 
     <!-- Create/Edit User Modal -->
-    <div v-if="showCreateModal || showEditModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div
+      v-if="showCreateModal || showEditModal"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+    >
       <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3">
           <h3 class="text-lg font-medium text-gray-900 mb-4">
@@ -252,10 +285,18 @@
                   v-model="userForm.plan"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="free">Gratuito</option>
-                  <option value="basic">Básico</option>
-                  <option value="professional">Profissional</option>
-                  <option value="enterprise">Empresarial</option>
+                  <option value="free">
+                    Gratuito
+                  </option>
+                  <option value="basic">
+                    Básico
+                  </option>
+                  <option value="professional">
+                    Profissional
+                  </option>
+                  <option value="enterprise">
+                    Empresarial
+                  </option>
                 </select>
               </div>
               <div>
@@ -264,17 +305,23 @@
                   v-model="userForm.status"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="active">Ativo</option>
-                  <option value="inactive">Inativo</option>
-                  <option value="suspended">Suspenso</option>
+                  <option value="active">
+                    Ativo
+                  </option>
+                  <option value="inactive">
+                    Inativo
+                  </option>
+                  <option value="suspended">
+                    Suspenso
+                  </option>
                 </select>
               </div>
             </div>
             <div class="flex justify-end space-x-3 mt-6">
               <button
                 type="button"
-                @click="closeModal"
                 class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
+                @click="closeModal"
               >
                 Cancelar
               </button>

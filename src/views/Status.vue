@@ -6,8 +6,12 @@
         <div class="status-indicator">
           <div :class="['status-dot', overallStatus]" />
           <div class="status-info">
-            <h1 class="page-title">Status do Sistema</h1>
-            <p class="status-message">{{ overallStatusMessage }}</p>
+            <h1 class="page-title">
+              Status do Sistema
+            </h1>
+            <p class="status-message">
+              {{ overallStatusMessage }}
+            </p>
           </div>
         </div>
         <div class="last-updated">
@@ -20,7 +24,9 @@
     <!-- Current Status -->
     <div class="current-status-section">
       <div class="section-container">
-        <h2 class="section-title">Status Atual dos Serviços</h2>
+        <h2 class="section-title">
+          Status Atual dos Serviços
+        </h2>
         
         <div class="services-grid">
           <div 
@@ -30,10 +36,17 @@
           >
             <div class="service-header">
               <div class="service-info">
-                <component :is="service.icon" class="service-icon" />
+                <component
+                  :is="service.icon"
+                  class="service-icon"
+                />
                 <div class="service-details">
-                  <h3 class="service-name">{{ service.name }}</h3>
-                  <p class="service-description">{{ service.description }}</p>
+                  <h3 class="service-name">
+                    {{ service.name }}
+                  </h3>
+                  <p class="service-description">
+                    {{ service.description }}
+                  </p>
                 </div>
               </div>
               <div :class="['service-status', service.status]">
@@ -42,7 +55,10 @@
               </div>
             </div>
             
-            <div v-if="service.metrics" class="service-metrics">
+            <div
+              v-if="service.metrics"
+              class="service-metrics"
+            >
               <div class="metric-item">
                 <span class="metric-label">Uptime:</span>
                 <span class="metric-value">{{ service.metrics.uptime }}%</span>
@@ -53,7 +69,10 @@
               </div>
             </div>
             
-            <div v-if="service.lastIncident" class="last-incident">
+            <div
+              v-if="service.lastIncident"
+              class="last-incident"
+            >
               <ExclamationTriangleIcon class="incident-icon" />
               <div class="incident-info">
                 <span class="incident-text">Último incidente: {{ service.lastIncident }}</span>
@@ -67,13 +86,17 @@
     <!-- Performance Metrics -->
     <div class="metrics-section">
       <div class="section-container">
-        <h2 class="section-title">Métricas de Performance</h2>
+        <h2 class="section-title">
+          Métricas de Performance
+        </h2>
         
         <div class="metrics-grid">
           <div class="metric-card">
             <div class="metric-header">
               <ChartBarIcon class="metric-icon" />
-              <h3 class="metric-title">Tempo de Resposta da API</h3>
+              <h3 class="metric-title">
+                Tempo de Resposta da API
+              </h3>
             </div>
             <div class="metric-chart">
               <div class="chart-placeholder">
@@ -86,7 +109,11 @@
                   />
                 </div>
                 <div class="chart-labels">
-                  <span v-for="(label, index) in timeLabels" :key="index" class="chart-label">
+                  <span
+                    v-for="(label, index) in timeLabels"
+                    :key="index"
+                    class="chart-label"
+                  >
                     {{ label }}
                   </span>
                 </div>
@@ -107,7 +134,9 @@
           <div class="metric-card">
             <div class="metric-header">
               <ServerIcon class="metric-icon" />
-              <h3 class="metric-title">Uptime dos Serviços</h3>
+              <h3 class="metric-title">
+                Uptime dos Serviços
+              </h3>
             </div>
             <div class="uptime-grid">
               <div 
@@ -138,7 +167,9 @@
           <div class="metric-card">
             <div class="metric-header">
               <UsersIcon class="metric-icon" />
-              <h3 class="metric-title">Usuários Ativos</h3>
+              <h3 class="metric-title">
+                Usuários Ativos
+              </h3>
             </div>
             <div class="active-users">
               <div class="users-count">
@@ -146,8 +177,14 @@
                 <span class="count-label">usuários online</span>
               </div>
               <div class="users-trend">
-                <ArrowTrendingUpIcon v-if="usersTrend > 0" class="trend-icon positive" />
-                <ArrowTrendingDownIcon v-else class="trend-icon negative" />
+                <ArrowTrendingUpIcon
+                  v-if="usersTrend > 0"
+                  class="trend-icon positive"
+                />
+                <ArrowTrendingDownIcon
+                  v-else
+                  class="trend-icon negative"
+                />
                 <span :class="['trend-text', usersTrend > 0 ? 'positive' : 'negative']">
                   {{ Math.abs(usersTrend) }}% vs ontem
                 </span>
@@ -158,7 +195,9 @@
           <div class="metric-card">
             <div class="metric-header">
               <DocumentIcon class="metric-icon" />
-              <h3 class="metric-title">Processamento</h3>
+              <h3 class="metric-title">
+                Processamento
+              </h3>
             </div>
             <div class="processing-stats">
               <div class="stat-item">
@@ -183,35 +222,61 @@
     <div class="incidents-section">
       <div class="section-container">
         <div class="incidents-header">
-          <h2 class="section-title">Histórico de Incidentes</h2>
+          <h2 class="section-title">
+            Histórico de Incidentes
+          </h2>
           <div class="incidents-filter">
-            <select v-model="incidentFilter" class="filter-select">
-              <option value="all">Todos os incidentes</option>
-              <option value="resolved">Resolvidos</option>
-              <option value="investigating">Em investigação</option>
-              <option value="monitoring">Monitorando</option>
+            <select
+              v-model="incidentFilter"
+              class="filter-select"
+            >
+              <option value="all">
+                Todos os incidentes
+              </option>
+              <option value="resolved">
+                Resolvidos
+              </option>
+              <option value="investigating">
+                Em investigação
+              </option>
+              <option value="monitoring">
+                Monitorando
+              </option>
             </select>
           </div>
         </div>
         
-        <div v-if="filteredIncidents.length === 0" class="no-incidents">
+        <div
+          v-if="filteredIncidents.length === 0"
+          class="no-incidents"
+        >
           <CheckCircleIcon class="no-incidents-icon" />
-          <h3 class="no-incidents-title">Nenhum incidente encontrado</h3>
+          <h3 class="no-incidents-title">
+            Nenhum incidente encontrado
+          </h3>
           <p class="no-incidents-text">
             {{ incidentFilter === 'all' ? 'Não há incidentes registrados.' : `Não há incidentes com status "${getStatusText(incidentFilter)}".` }}
           </p>
         </div>
         
-        <div v-else class="incidents-timeline">
+        <div
+          v-else
+          class="incidents-timeline"
+        >
           <div 
             v-for="incident in filteredIncidents" 
             :key="incident.id"
             class="incident-item"
           >
-            <div class="incident-timeline-dot" :class="incident.status" />
+            <div
+              class="incident-timeline-dot"
+              :class="incident.status"
+            />
             <div class="incident-content">
               <div class="incident-header">
-                <h3 class="incident-title">{{ incident.title }}</h3>
+                <h3 class="incident-title">
+                  {{ incident.title }}
+                </h3>
                 <div class="incident-meta">
                   <span :class="['incident-status', incident.status]">
                     {{ getStatusText(incident.status) }}
@@ -219,8 +284,13 @@
                   <span class="incident-date">{{ formatDate(incident.date) }}</span>
                 </div>
               </div>
-              <p class="incident-description">{{ incident.description }}</p>
-              <div v-if="incident.affectedServices.length > 0" class="affected-services">
+              <p class="incident-description">
+                {{ incident.description }}
+              </p>
+              <div
+                v-if="incident.affectedServices.length > 0"
+                class="affected-services"
+              >
                 <span class="affected-label">Serviços afetados:</span>
                 <div class="affected-list">
                   <span 
@@ -232,16 +302,25 @@
                   </span>
                 </div>
               </div>
-              <div v-if="incident.updates && incident.updates.length > 0" class="incident-updates">
-                <h4 class="updates-title">Atualizações:</h4>
+              <div
+                v-if="incident.updates && incident.updates.length > 0"
+                class="incident-updates"
+              >
+                <h4 class="updates-title">
+                  Atualizações:
+                </h4>
                 <div class="updates-list">
                   <div 
                     v-for="update in incident.updates" 
                     :key="update.id"
                     class="update-item"
                   >
-                    <div class="update-time">{{ formatTime(update.time) }}</div>
-                    <div class="update-text">{{ update.message }}</div>
+                    <div class="update-time">
+                      {{ formatTime(update.time) }}
+                    </div>
+                    <div class="update-text">
+                      {{ update.message }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -254,17 +333,27 @@
     <!-- Maintenance Schedule -->
     <div class="maintenance-section">
       <div class="section-container">
-        <h2 class="section-title">Manutenções Programadas</h2>
+        <h2 class="section-title">
+          Manutenções Programadas
+        </h2>
         
-        <div v-if="scheduledMaintenance.length === 0" class="no-maintenance">
+        <div
+          v-if="scheduledMaintenance.length === 0"
+          class="no-maintenance"
+        >
           <WrenchScrewdriverIcon class="no-maintenance-icon" />
-          <h3 class="no-maintenance-title">Nenhuma manutenção programada</h3>
+          <h3 class="no-maintenance-title">
+            Nenhuma manutenção programada
+          </h3>
           <p class="no-maintenance-text">
             Não há manutenções programadas no momento.
           </p>
         </div>
         
-        <div v-else class="maintenance-list">
+        <div
+          v-else
+          class="maintenance-list"
+        >
           <div 
             v-for="maintenance in scheduledMaintenance" 
             :key="maintenance.id"
@@ -272,21 +361,32 @@
           >
             <div class="maintenance-header">
               <div class="maintenance-info">
-                <h3 class="maintenance-title">{{ maintenance.title }}</h3>
-                <p class="maintenance-description">{{ maintenance.description }}</p>
+                <h3 class="maintenance-title">
+                  {{ maintenance.title }}
+                </h3>
+                <p class="maintenance-description">
+                  {{ maintenance.description }}
+                </p>
               </div>
               <div class="maintenance-schedule">
                 <CalendarIcon class="schedule-icon" />
                 <div class="schedule-details">
-                  <div class="schedule-date">{{ formatDate(maintenance.startDate) }}</div>
+                  <div class="schedule-date">
+                    {{ formatDate(maintenance.startDate) }}
+                  </div>
                   <div class="schedule-time">
                     {{ formatTime(maintenance.startTime) }} - {{ formatTime(maintenance.endTime) }}
                   </div>
-                  <div class="schedule-duration">Duração: {{ maintenance.duration }}</div>
+                  <div class="schedule-duration">
+                    Duração: {{ maintenance.duration }}
+                  </div>
                 </div>
               </div>
             </div>
-            <div v-if="maintenance.affectedServices.length > 0" class="maintenance-services">
+            <div
+              v-if="maintenance.affectedServices.length > 0"
+              class="maintenance-services"
+            >
               <span class="services-label">Serviços afetados:</span>
               <div class="services-list">
                 <span 
@@ -310,7 +410,9 @@
           <div class="subscribe-content">
             <BellIcon class="subscribe-icon" />
             <div class="subscribe-info">
-              <h3 class="subscribe-title">Receba Notificações de Status</h3>
+              <h3 class="subscribe-title">
+                Receba Notificações de Status
+              </h3>
               <p class="subscribe-description">
                 Seja notificado sobre incidentes, manutenções e atualizações de status.
               </p>
@@ -326,11 +428,14 @@
                 :disabled="subscribing"
               >
               <button 
-                @click="subscribeToUpdates" 
-                :disabled="!subscribeEmail || subscribing"
+                :disabled="!subscribeEmail || subscribing" 
                 class="subscribe-button"
+                @click="subscribeToUpdates"
               >
-                <LoadingSpinner v-if="subscribing" class="button-spinner" />
+                <LoadingSpinner
+                  v-if="subscribing"
+                  class="button-spinner"
+                />
                 {{ subscribing ? 'Inscrevendo...' : 'Inscrever-se' }}
               </button>
             </div>

@@ -38,10 +38,13 @@
                     :value="style.id"
                     type="radio"
                     class="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300"
-                  />
+                  >
                 </div>
                 <div class="ml-3">
-                  <label :for="style.id" class="font-medium text-gray-900 cursor-pointer">
+                  <label
+                    :for="style.id"
+                    class="font-medium text-gray-900 cursor-pointer"
+                  >
                     {{ style.name }}
                   </label>
                   <p class="text-sm text-gray-500">
@@ -74,10 +77,13 @@
                     :value="analysis.id"
                     type="radio"
                     class="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300"
-                  />
+                  >
                 </div>
                 <div class="ml-3">
-                  <label :for="analysis.id" class="font-medium text-gray-900 cursor-pointer">
+                  <label
+                    :for="analysis.id"
+                    class="font-medium text-gray-900 cursor-pointer"
+                  >
                     {{ analysis.name }}
                   </label>
                   <p class="text-sm text-gray-500">
@@ -91,7 +97,10 @@
 
         <!-- Idioma -->
         <div class="config-group">
-          <label for="language" class="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            for="language"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
             Idioma do Resumo
           </label>
           <select
@@ -99,15 +108,24 @@
             v-model="selectedLanguage"
             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
           >
-            <option value="pt-BR">Português (Brasil)</option>
-            <option value="en-US">English (US)</option>
-            <option value="auto">Detectar automaticamente</option>
+            <option value="pt-BR">
+              Português (Brasil)
+            </option>
+            <option value="en-US">
+              English (US)
+            </option>
+            <option value="auto">
+              Detectar automaticamente
+            </option>
           </select>
         </div>
 
         <!-- Tamanho do Resumo -->
         <div class="config-group">
-          <label for="length" class="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            for="length"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
             Tamanho do Resumo
           </label>
           <select
@@ -115,9 +133,15 @@
             v-model="selectedLength"
             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
           >
-            <option value="short">Curto (bullet points)</option>
-            <option value="medium">Médio (1-2 parágrafos)</option>
-            <option value="long">Longo (executivo detalhado)</option>
+            <option value="short">
+              Curto (bullet points)
+            </option>
+            <option value="medium">
+              Médio (1-2 parágrafos)
+            </option>
+            <option value="long">
+              Longo (executivo detalhado)
+            </option>
           </select>
         </div>
       </div>
@@ -125,8 +149,8 @@
       <!-- Opções Avançadas -->
       <div class="mt-6">
         <button
-          @click="showAdvanced = !showAdvanced"
           class="flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
+          @click="showAdvanced = !showAdvanced"
         >
           <svg 
             class="w-4 h-4 mr-1 transform transition-transform duration-200"
@@ -135,16 +159,27 @@
             stroke="currentColor" 
             viewBox="0 0 24 24"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
           </svg>
           Opções Avançadas
         </button>
         
-        <div v-if="showAdvanced" class="mt-4 p-4 bg-gray-50 rounded-lg">
+        <div
+          v-if="showAdvanced"
+          class="mt-4 p-4 bg-gray-50 rounded-lg"
+        >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Foco Específico -->
             <div>
-              <label for="focus" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="focus"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Foco Específico (opcional)
               </label>
               <input
@@ -153,12 +188,15 @@
                 type="text"
                 placeholder="Ex: decisões, custos, cronograma..."
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-              />
+              >
             </div>
             
             <!-- Palavras-chave -->
             <div>
-              <label for="keywords" class="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                for="keywords"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Palavras-chave (opcional)
               </label>
               <input
@@ -167,7 +205,7 @@
                 type="text"
                 placeholder="Separadas por vírgula"
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-              />
+              >
             </div>
           </div>
           
@@ -177,13 +215,17 @@
               Incluir Seções
             </label>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-              <label v-for="section in availableSections" :key="section.id" class="flex items-center">
+              <label
+                v-for="section in availableSections"
+                :key="section.id"
+                class="flex items-center"
+              >
                 <input
                   v-model="includedSections"
                   :value="section.id"
                   type="checkbox"
                   class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
-                />
+                >
                 <span class="ml-2 text-sm text-gray-700">{{ section.name }}</span>
               </label>
             </div>
@@ -193,7 +235,10 @@
     </div>
 
     <!-- Documentos Selecionados -->
-    <div v-if="selectedDocuments.length > 0" class="selected-documents bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <div
+      v-if="selectedDocuments.length > 0"
+      class="selected-documents bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6"
+    >
       <h3 class="text-lg font-semibold text-gray-900 mb-4">
         Documentos Selecionados ({{ selectedDocuments.length }})
       </h3>
@@ -206,10 +251,15 @@
         >
           <div class="flex items-center">
             <div class="file-icon mr-3">
-              <component :is="getDocumentIcon(doc.type)" class="w-6 h-6 text-gray-400" />
+              <component
+                :is="getDocumentIcon(doc.type)"
+                class="w-6 h-6 text-gray-400"
+              />
             </div>
             <div>
-              <p class="font-medium text-gray-900">{{ doc.name }}</p>
+              <p class="font-medium text-gray-900">
+                {{ doc.name }}
+              </p>
               <p class="text-sm text-gray-500">
                 {{ formatFileSize(doc.size) }} • {{ formatDate(doc.created_at) }}
               </p>
@@ -217,11 +267,21 @@
           </div>
           
           <button
-            @click="removeDocument(doc.id)"
             class="text-gray-400 hover:text-red-500 transition-colors duration-200"
+            @click="removeDocument(doc.id)"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -231,29 +291,49 @@
     <!-- Botões de Ação -->
     <div class="generator-actions">
       <button
-        @click="generateSummary"
         :disabled="!canGenerate || isGenerating"
         class="btn-primary"
+        @click="generateSummary"
       >
-        <svg v-if="isGenerating" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        <svg
+          v-if="isGenerating"
+          class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          />
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
         </svg>
         {{ isGenerating ? 'Gerando Resumo...' : 'Gerar Resumo' }}
       </button>
       
       <button
         v-if="selectedDocuments.length > 0"
-        @click="clearDocuments"
         :disabled="isGenerating"
         class="btn-secondary ml-3"
+        @click="clearDocuments"
       >
         Limpar Seleção
       </button>
     </div>
 
     <!-- Preview do Resumo -->
-    <div v-if="generatedSummary" class="summary-preview bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-6">
+    <div
+      v-if="generatedSummary"
+      class="summary-preview bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-6"
+    >
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-semibold text-gray-900">
           Resumo Gerado
@@ -261,29 +341,49 @@
         
         <div class="flex space-x-2">
           <button
-            @click="copySummary"
             class="btn-icon"
             title="Copiar resumo"
+            @click="copySummary"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
             </svg>
           </button>
           
           <button
-            @click="exportSummary"
             class="btn-icon"
             title="Exportar resumo"
+            @click="exportSummary"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
           </button>
         </div>
       </div>
       
       <div class="summary-content prose max-w-none">
-        <div v-html="formattedSummary"></div>
+        <div v-html="formattedSummary" />
       </div>
       
       <!-- Metadados do Resumo -->

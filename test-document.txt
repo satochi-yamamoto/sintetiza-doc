@@ -1,0 +1,12 @@
+Este é um documento de teste para verificar o upload e processamento de arquivos no sistema Sintetiza Doc.
+
+O sistema deve ser capaz de:
+1. Fazer upload do arquivo
+2. Extrair o texto do documento
+3. Salvar no banco de dados
+4. Gerar resumos automaticamente
+
+Este arquivo contém texto simples para facilitar o teste e verificação do funcionamento correto do sistema.
+
+Data do teste: 26 de setembro de 2025
+Objetivo: Validar correções no tratamento de erros de inserção de documentos.

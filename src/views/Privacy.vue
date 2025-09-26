@@ -3,7 +3,9 @@
     <!-- Header -->
     <div class="privacy-header">
       <div class="header-content">
-        <h1 class="page-title">Política de Privacidade</h1>
+        <h1 class="page-title">
+          Política de Privacidade
+        </h1>
         <p class="page-subtitle">
           Última atualização: {{ lastUpdated }}
         </p>
@@ -19,14 +21,16 @@
     <!-- Table of Contents -->
     <div class="toc-section">
       <div class="toc-container">
-        <h2 class="toc-title">Índice</h2>
+        <h2 class="toc-title">
+          Índice
+        </h2>
         <nav class="toc-nav">
           <a 
             v-for="section in sections" 
             :key="section.id"
             :href="`#${section.id}`"
-            @click="scrollToSection(section.id)"
             class="toc-link"
+            @click="scrollToSection(section.id)"
           >
             {{ section.title }}
           </a>
@@ -37,11 +41,18 @@
     <!-- Content -->
     <div class="privacy-content">
       <!-- Section 1: Informações que Coletamos -->
-      <section id="informacoes-coletamos" class="content-section">
-        <h2 class="section-title">1. Informações que Coletamos</h2>
+      <section
+        id="informacoes-coletamos"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          1. Informações que Coletamos
+        </h2>
         
         <div class="subsection">
-          <h3 class="subsection-title">1.1 Informações Fornecidas por Você</h3>
+          <h3 class="subsection-title">
+            1.1 Informações Fornecidas por Você
+          </h3>
           <p class="section-text">
             Coletamos informações que você nos fornece diretamente, incluindo:
           </p>
@@ -55,7 +66,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">1.2 Informações Coletadas Automaticamente</h3>
+          <h3 class="subsection-title">
+            1.2 Informações Coletadas Automaticamente
+          </h3>
           <p class="section-text">
             Quando você usa nosso serviço, coletamos automaticamente:
           </p>
@@ -68,7 +81,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">1.3 Informações de Terceiros</h3>
+          <h3 class="subsection-title">
+            1.3 Informações de Terceiros
+          </h3>
           <p class="section-text">
             Podemos receber informações de terceiros quando você:
           </p>
@@ -81,11 +96,18 @@
       </section>
       
       <!-- Section 2: Como Usamos suas Informações -->
-      <section id="como-usamos" class="content-section">
-        <h2 class="section-title">2. Como Usamos suas Informações</h2>
+      <section
+        id="como-usamos"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          2. Como Usamos suas Informações
+        </h2>
         
         <div class="subsection">
-          <h3 class="subsection-title">2.1 Prestação de Serviços</h3>
+          <h3 class="subsection-title">
+            2.1 Prestação de Serviços
+          </h3>
           <ul class="section-list">
             <li>Processar e gerar resumos de seus documentos</li>
             <li>Fornecer funcionalidades de tradução e análise</li>
@@ -95,7 +117,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">2.2 Comunicação</h3>
+          <h3 class="subsection-title">
+            2.2 Comunicação
+          </h3>
           <ul class="section-list">
             <li>Enviar notificações sobre o status de processamento</li>
             <li>Responder a solicitações de suporte</li>
@@ -105,7 +129,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">2.3 Melhoria do Serviço</h3>
+          <h3 class="subsection-title">
+            2.3 Melhoria do Serviço
+          </h3>
           <ul class="section-list">
             <li>Analisar padrões de uso para otimizar funcionalidades</li>
             <li>Treinar e melhorar nossos modelos de IA (dados anonimizados)</li>
@@ -116,13 +142,20 @@
       </section>
       
       <!-- Section 3: Compartilhamento de Informações -->
-      <section id="compartilhamento" class="content-section">
-        <h2 class="section-title">3. Compartilhamento de Informações</h2>
+      <section
+        id="compartilhamento"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          3. Compartilhamento de Informações
+        </h2>
         
         <div class="important-notice">
           <ShieldIcon class="notice-icon" />
           <div class="notice-content">
-            <h4 class="notice-title">Compromisso de Privacidade</h4>
+            <h4 class="notice-title">
+              Compromisso de Privacidade
+            </h4>
             <p class="notice-text">
               Nunca vendemos, alugamos ou comercializamos suas informações pessoais.
             </p>
@@ -130,7 +163,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">3.1 Provedores de Serviço</h3>
+          <h3 class="subsection-title">
+            3.1 Provedores de Serviço
+          </h3>
           <p class="section-text">
             Compartilhamos informações com terceiros confiáveis que nos ajudam a operar nosso serviço:
           </p>
@@ -144,7 +179,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">3.2 Requisitos Legais</h3>
+          <h3 class="subsection-title">
+            3.2 Requisitos Legais
+          </h3>
           <p class="section-text">
             Podemos divulgar informações quando exigido por lei ou para:
           </p>
@@ -158,13 +195,20 @@
       </section>
       
       <!-- Section 4: Segurança dos Dados -->
-      <section id="seguranca" class="content-section">
-        <h2 class="section-title">4. Segurança dos Dados</h2>
+      <section
+        id="seguranca"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          4. Segurança dos Dados
+        </h2>
         
         <div class="security-grid">
           <div class="security-item">
             <LockIcon class="security-icon" />
-            <h4 class="security-title">Criptografia</h4>
+            <h4 class="security-title">
+              Criptografia
+            </h4>
             <p class="security-text">
               Todos os dados são criptografados em trânsito e em repouso usando padrões da indústria.
             </p>
@@ -172,7 +216,9 @@
           
           <div class="security-item">
             <ServerIcon class="security-icon" />
-            <h4 class="security-title">Infraestrutura Segura</h4>
+            <h4 class="security-title">
+              Infraestrutura Segura
+            </h4>
             <p class="security-text">
               Utilizamos provedores de nuvem certificados com medidas de segurança rigorosas.
             </p>
@@ -180,7 +226,9 @@
           
           <div class="security-item">
             <UserGroupIcon class="security-icon" />
-            <h4 class="security-title">Acesso Limitado</h4>
+            <h4 class="security-title">
+              Acesso Limitado
+            </h4>
             <p class="security-text">
               Apenas funcionários autorizados têm acesso aos dados, seguindo o princípio do menor privilégio.
             </p>
@@ -188,7 +236,9 @@
           
           <div class="security-item">
             <EyeIcon class="security-icon" />
-            <h4 class="security-title">Monitoramento</h4>
+            <h4 class="security-title">
+              Monitoramento
+            </h4>
             <p class="security-text">
               Monitoramos continuamente nossos sistemas para detectar e prevenir atividades suspeitas.
             </p>
@@ -196,7 +246,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">4.1 Processamento de Documentos</h3>
+          <h3 class="subsection-title">
+            4.1 Processamento de Documentos
+          </h3>
           <p class="section-text">
             Seus documentos são processados de forma segura:
           </p>
@@ -210,47 +262,64 @@
       </section>
       
       <!-- Section 5: Seus Direitos -->
-      <section id="seus-direitos" class="content-section">
-        <h2 class="section-title">5. Seus Direitos</h2>
+      <section
+        id="seus-direitos"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          5. Seus Direitos
+        </h2>
         
         <div class="rights-grid">
           <div class="right-item">
-            <h4 class="right-title">Acesso</h4>
+            <h4 class="right-title">
+              Acesso
+            </h4>
             <p class="right-text">
               Solicitar uma cópia de todas as informações que temos sobre você.
             </p>
           </div>
           
           <div class="right-item">
-            <h4 class="right-title">Correção</h4>
+            <h4 class="right-title">
+              Correção
+            </h4>
             <p class="right-text">
               Corrigir informações imprecisas ou incompletas em sua conta.
             </p>
           </div>
           
           <div class="right-item">
-            <h4 class="right-title">Exclusão</h4>
+            <h4 class="right-title">
+              Exclusão
+            </h4>
             <p class="right-text">
               Solicitar a exclusão de suas informações pessoais (direito ao esquecimento).
             </p>
           </div>
           
           <div class="right-item">
-            <h4 class="right-title">Portabilidade</h4>
+            <h4 class="right-title">
+              Portabilidade
+            </h4>
             <p class="right-text">
               Exportar seus dados em formato estruturado e legível por máquina.
             </p>
           </div>
           
           <div class="right-item">
-            <h4 class="right-title">Objeção</h4>
+            <h4 class="right-title">
+              Objeção
+            </h4>
             <p class="right-text">
               Opor-se ao processamento de seus dados para fins específicos.
             </p>
           </div>
           
           <div class="right-item">
-            <h4 class="right-title">Limitação</h4>
+            <h4 class="right-title">
+              Limitação
+            </h4>
             <p class="right-text">
               Solicitar a limitação do processamento em certas circunstâncias.
             </p>
@@ -258,7 +327,9 @@
         </div>
         
         <div class="exercise-rights">
-          <h3 class="subsection-title">Como Exercer seus Direitos</h3>
+          <h3 class="subsection-title">
+            Como Exercer seus Direitos
+          </h3>
           <p class="section-text">
             Para exercer qualquer um desses direitos, entre em contato conosco através de:
           </p>
@@ -276,35 +347,50 @@
       </section>
       
       <!-- Section 6: Cookies -->
-      <section id="cookies" class="content-section">
-        <h2 class="section-title">6. Cookies e Tecnologias Similares</h2>
+      <section
+        id="cookies"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          6. Cookies e Tecnologias Similares
+        </h2>
         
         <div class="subsection">
-          <h3 class="subsection-title">6.1 Tipos de Cookies</h3>
+          <h3 class="subsection-title">
+            6.1 Tipos de Cookies
+          </h3>
           <div class="cookies-grid">
             <div class="cookie-type">
-              <h4 class="cookie-title">Essenciais</h4>
+              <h4 class="cookie-title">
+                Essenciais
+              </h4>
               <p class="cookie-text">
                 Necessários para o funcionamento básico do site (autenticação, segurança).
               </p>
             </div>
             
             <div class="cookie-type">
-              <h4 class="cookie-title">Funcionais</h4>
+              <h4 class="cookie-title">
+                Funcionais
+              </h4>
               <p class="cookie-text">
                 Lembram suas preferências e configurações personalizadas.
               </p>
             </div>
             
             <div class="cookie-type">
-              <h4 class="cookie-title">Analytics</h4>
+              <h4 class="cookie-title">
+                Analytics
+              </h4>
               <p class="cookie-text">
                 Ajudam a entender como você usa o site para melhorar a experiência.
               </p>
             </div>
             
             <div class="cookie-type">
-              <h4 class="cookie-title">Marketing</h4>
+              <h4 class="cookie-title">
+                Marketing
+              </h4>
               <p class="cookie-text">
                 Usados para personalizar anúncios e medir eficácia de campanhas.
               </p>
@@ -313,7 +399,9 @@
         </div>
         
         <div class="subsection">
-          <h3 class="subsection-title">6.2 Gerenciar Cookies</h3>
+          <h3 class="subsection-title">
+            6.2 Gerenciar Cookies
+          </h3>
           <p class="section-text">
             Você pode controlar cookies através de:
           </p>
@@ -326,51 +414,97 @@
       </section>
       
       <!-- Section 7: Retenção de Dados -->
-      <section id="retencao" class="content-section">
-        <h2 class="section-title">7. Retenção de Dados</h2>
+      <section
+        id="retencao"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          7. Retenção de Dados
+        </h2>
         
         <div class="retention-table">
           <div class="table-header">
-            <div class="header-cell">Tipo de Dado</div>
-            <div class="header-cell">Período de Retenção</div>
-            <div class="header-cell">Justificativa</div>
+            <div class="header-cell">
+              Tipo de Dado
+            </div>
+            <div class="header-cell">
+              Período de Retenção
+            </div>
+            <div class="header-cell">
+              Justificativa
+            </div>
           </div>
           
           <div class="table-row">
-            <div class="table-cell">Dados da conta</div>
-            <div class="table-cell">Até exclusão da conta</div>
-            <div class="table-cell">Prestação do serviço</div>
+            <div class="table-cell">
+              Dados da conta
+            </div>
+            <div class="table-cell">
+              Até exclusão da conta
+            </div>
+            <div class="table-cell">
+              Prestação do serviço
+            </div>
           </div>
           
           <div class="table-row">
-            <div class="table-cell">Documentos processados</div>
-            <div class="table-cell">30 dias após processamento</div>
-            <div class="table-cell">Suporte técnico</div>
+            <div class="table-cell">
+              Documentos processados
+            </div>
+            <div class="table-cell">
+              30 dias após processamento
+            </div>
+            <div class="table-cell">
+              Suporte técnico
+            </div>
           </div>
           
           <div class="table-row">
-            <div class="table-cell">Resumos gerados</div>
-            <div class="table-cell">Conforme plano do usuário</div>
-            <div class="table-cell">Acesso do usuário</div>
+            <div class="table-cell">
+              Resumos gerados
+            </div>
+            <div class="table-cell">
+              Conforme plano do usuário
+            </div>
+            <div class="table-cell">
+              Acesso do usuário
+            </div>
           </div>
           
           <div class="table-row">
-            <div class="table-cell">Logs de sistema</div>
-            <div class="table-cell">90 dias</div>
-            <div class="table-cell">Segurança e debugging</div>
+            <div class="table-cell">
+              Logs de sistema
+            </div>
+            <div class="table-cell">
+              90 dias
+            </div>
+            <div class="table-cell">
+              Segurança e debugging
+            </div>
           </div>
           
           <div class="table-row">
-            <div class="table-cell">Dados de pagamento</div>
-            <div class="table-cell">7 anos</div>
-            <div class="table-cell">Obrigações fiscais</div>
+            <div class="table-cell">
+              Dados de pagamento
+            </div>
+            <div class="table-cell">
+              7 anos
+            </div>
+            <div class="table-cell">
+              Obrigações fiscais
+            </div>
           </div>
         </div>
       </section>
       
       <!-- Section 8: Transferências Internacionais -->
-      <section id="transferencias" class="content-section">
-        <h2 class="section-title">8. Transferências Internacionais</h2>
+      <section
+        id="transferencias"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          8. Transferências Internacionais
+        </h2>
         
         <p class="section-text">
           Alguns de nossos provedores de serviço estão localizados fora do Brasil. 
@@ -386,13 +520,20 @@
       </section>
       
       <!-- Section 9: Menores de Idade -->
-      <section id="menores" class="content-section">
-        <h2 class="section-title">9. Proteção de Menores</h2>
+      <section
+        id="menores"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          9. Proteção de Menores
+        </h2>
         
         <div class="minor-protection">
           <ExclamationIcon class="protection-icon" />
           <div class="protection-content">
-            <h3 class="protection-title">Restrição de Idade</h3>
+            <h3 class="protection-title">
+              Restrição de Idade
+            </h3>
             <p class="protection-text">
               Nosso serviço é destinado a usuários com 18 anos ou mais. 
               Não coletamos intencionalmente informações de menores de 18 anos.
@@ -408,8 +549,13 @@
       </section>
       
       <!-- Section 10: Alterações -->
-      <section id="alteracoes" class="content-section">
-        <h2 class="section-title">10. Alterações nesta Política</h2>
+      <section
+        id="alteracoes"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          10. Alterações nesta Política
+        </h2>
         
         <p class="section-text">
           Podemos atualizar esta política periodicamente. Quando fizermos alterações materiais:
@@ -429,12 +575,19 @@
       </section>
       
       <!-- Section 11: Contato -->
-      <section id="contato" class="content-section">
-        <h2 class="section-title">11. Entre em Contato</h2>
+      <section
+        id="contato"
+        class="content-section"
+      >
+        <h2 class="section-title">
+          11. Entre em Contato
+        </h2>
         
         <div class="contact-grid">
           <div class="contact-card">
-            <h3 class="contact-title">Encarregado de Dados (DPO)</h3>
+            <h3 class="contact-title">
+              Encarregado de Dados (DPO)
+            </h3>
             <div class="contact-details">
               <div class="contact-item">
                 <MailIcon class="contact-icon" />
@@ -448,7 +601,9 @@
           </div>
           
           <div class="contact-card">
-            <h3 class="contact-title">Endereço Físico</h3>
+            <h3 class="contact-title">
+              Endereço Físico
+            </h3>
             <div class="contact-details">
               <div class="contact-item">
                 <MapPinIcon class="contact-icon" />
@@ -464,7 +619,9 @@
         </div>
         
         <div class="authority-info">
-          <h3 class="subsection-title">Autoridade de Proteção de Dados</h3>
+          <h3 class="subsection-title">
+            Autoridade de Proteção de Dados
+          </h3>
           <p class="section-text">
             Se não estivermos conseguindo resolver sua preocupação, você tem o direito 
             de apresentar uma reclamação à Autoridade Nacional de Proteção de Dados (ANPD):

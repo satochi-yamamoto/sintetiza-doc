@@ -3,7 +3,9 @@
     <!-- Header -->
     <div class="settings-header">
       <div class="header-content">
-        <h1 class="page-title">Configurações</h1>
+        <h1 class="page-title">
+          Configurações
+        </h1>
         <p class="page-subtitle">
           Gerencie sua conta, preferências e configurações da aplicação
         </p>
@@ -16,11 +18,14 @@
         <button 
           v-for="tab in tabs" 
           :key="tab.id"
-          @click="activeTab = tab.id"
           :class="{ active: activeTab === tab.id }"
           class="nav-tab"
+          @click="activeTab = tab.id"
         >
-          <component :is="tab.icon" class="tab-icon" />
+          <component
+            :is="tab.icon"
+            class="tab-icon"
+          />
           <span>{{ tab.label }}</span>
         </button>
       </nav>
@@ -29,9 +34,14 @@
     <!-- Settings Content -->
     <div class="settings-content">
       <!-- Account Tab -->
-      <div v-if="activeTab === 'account'" class="tab-content">
+      <div
+        v-if="activeTab === 'account'"
+        class="tab-content"
+      >
         <div class="settings-section">
-          <h2 class="section-title">Informações da Conta</h2>
+          <h2 class="section-title">
+            Informações da Conta
+          </h2>
           <p class="section-description">
             Gerencie suas informações pessoais e configurações de conta
           </p>
@@ -55,7 +65,9 @@
                 class="form-input"
                 :disabled="true"
               >
-              <p class="form-help">O email não pode ser alterado</p>
+              <p class="form-help">
+                O email não pode ser alterado
+              </p>
             </div>
             
             <div class="form-group">
@@ -80,15 +92,25 @@
           </div>
           
           <div class="form-actions">
-            <button @click="updateAccount" :disabled="isUpdatingAccount" class="btn-primary">
-              <LoadingSpinner v-if="isUpdatingAccount" :show="true" size="sm" />
+            <button
+              :disabled="isUpdatingAccount"
+              class="btn-primary"
+              @click="updateAccount"
+            >
+              <LoadingSpinner
+                v-if="isUpdatingAccount"
+                :show="true"
+                size="sm"
+              />
               <span v-else>Salvar alterações</span>
             </button>
           </div>
         </div>
         
         <div class="settings-section">
-          <h2 class="section-title">Alterar Senha</h2>
+          <h2 class="section-title">
+            Alterar Senha
+          </h2>
           <p class="section-description">
             Mantenha sua conta segura com uma senha forte
           </p>
@@ -126,8 +148,16 @@
           </div>
           
           <div class="form-actions">
-            <button @click="updatePassword" :disabled="isUpdatingPassword" class="btn-primary">
-              <LoadingSpinner v-if="isUpdatingPassword" :show="true" size="sm" />
+            <button
+              :disabled="isUpdatingPassword"
+              class="btn-primary"
+              @click="updatePassword"
+            >
+              <LoadingSpinner
+                v-if="isUpdatingPassword"
+                :show="true"
+                size="sm"
+              />
               <span v-else>Alterar senha</span>
             </button>
           </div>
@@ -135,9 +165,14 @@
       </div>
       
       <!-- Preferences Tab -->
-      <div v-if="activeTab === 'preferences'" class="tab-content">
+      <div
+        v-if="activeTab === 'preferences'"
+        class="tab-content"
+      >
         <div class="settings-section">
-          <h2 class="section-title">Preferências Gerais</h2>
+          <h2 class="section-title">
+            Preferências Gerais
+          </h2>
           <p class="section-description">
             Configure suas preferências de uso da aplicação
           </p>
@@ -145,63 +180,125 @@
           <div class="preference-group">
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Idioma padrão</h3>
-                <p class="preference-description">Idioma usado para gerar resumos</p>
+                <h3 class="preference-title">
+                  Idioma padrão
+                </h3>
+                <p class="preference-description">
+                  Idioma usado para gerar resumos
+                </p>
               </div>
-              <select v-model="preferences.defaultLanguage" class="preference-select">
-                <option value="pt">Português</option>
-                <option value="en">Inglês</option>
+              <select
+                v-model="preferences.defaultLanguage"
+                class="preference-select"
+              >
+                <option value="pt">
+                  Português
+                </option>
+                <option value="en">
+                  Inglês
+                </option>
               </select>
             </div>
             
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Estilo de resumo padrão</h3>
-                <p class="preference-description">Estilo aplicado automaticamente aos novos resumos</p>
+                <h3 class="preference-title">
+                  Estilo de resumo padrão
+                </h3>
+                <p class="preference-description">
+                  Estilo aplicado automaticamente aos novos resumos
+                </p>
               </div>
-              <select v-model="preferences.defaultStyle" class="preference-select">
-                <option value="standard">Padrão</option>
-                <option value="executive">Executivo</option>
-                <option value="technical">Técnico</option>
-                <option value="educational">Educacional</option>
+              <select
+                v-model="preferences.defaultStyle"
+                class="preference-select"
+              >
+                <option value="standard">
+                  Padrão
+                </option>
+                <option value="executive">
+                  Executivo
+                </option>
+                <option value="technical">
+                  Técnico
+                </option>
+                <option value="educational">
+                  Educacional
+                </option>
               </select>
             </div>
             
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Tamanho de resumo padrão</h3>
-                <p class="preference-description">Extensão padrão dos resumos gerados</p>
+                <h3 class="preference-title">
+                  Tamanho de resumo padrão
+                </h3>
+                <p class="preference-description">
+                  Extensão padrão dos resumos gerados
+                </p>
               </div>
-              <select v-model="preferences.defaultSize" class="preference-select">
-                <option value="short">Curto</option>
-                <option value="medium">Médio</option>
-                <option value="long">Longo</option>
+              <select
+                v-model="preferences.defaultSize"
+                class="preference-select"
+              >
+                <option value="short">
+                  Curto
+                </option>
+                <option value="medium">
+                  Médio
+                </option>
+                <option value="long">
+                  Longo
+                </option>
               </select>
             </div>
             
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Tema da interface</h3>
-                <p class="preference-description">Aparência da aplicação</p>
+                <h3 class="preference-title">
+                  Tema da interface
+                </h3>
+                <p class="preference-description">
+                  Aparência da aplicação
+                </p>
               </div>
-              <select v-model="preferences.theme" class="preference-select">
-                <option value="light">Claro</option>
-                <option value="dark">Escuro</option>
-                <option value="system">Sistema</option>
+              <select
+                v-model="preferences.theme"
+                class="preference-select"
+              >
+                <option value="light">
+                  Claro
+                </option>
+                <option value="dark">
+                  Escuro
+                </option>
+                <option value="system">
+                  Sistema
+                </option>
               </select>
             </div>
           </div>
           
           <div class="form-actions">
-            <button @click="updatePreferences" :disabled="isUpdatingPreferences" class="btn-primary">
-              <LoadingSpinner v-if="isUpdatingPreferences" :show="true" size="sm" />
+            <button
+              :disabled="isUpdatingPreferences"
+              class="btn-primary"
+              @click="updatePreferences"
+            >
+              <LoadingSpinner
+                v-if="isUpdatingPreferences"
+                :show="true"
+                size="sm"
+              />
               <span v-else>Salvar preferências</span>
             </button>
           </div>
         </div>
         
         <div class="settings-section">
-          <h2 class="section-title">Configurações de Upload</h2>
+          <h2 class="section-title">
+            Configurações de Upload
+          </h2>
           <p class="section-description">
             Configure como os arquivos são processados
           </p>
@@ -209,8 +306,12 @@
           <div class="preference-group">
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Processamento automático</h3>
-                <p class="preference-description">Gerar resumo automaticamente após upload</p>
+                <h3 class="preference-title">
+                  Processamento automático
+                </h3>
+                <p class="preference-description">
+                  Gerar resumo automaticamente após upload
+                </p>
               </div>
               <label class="toggle-switch">
                 <input 
@@ -218,14 +319,18 @@
                   type="checkbox" 
                   class="toggle-input"
                 >
-                <span class="toggle-slider"></span>
+                <span class="toggle-slider" />
               </label>
             </div>
             
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Manter arquivos originais</h3>
-                <p class="preference-description">Armazenar cópia dos documentos enviados</p>
+                <h3 class="preference-title">
+                  Manter arquivos originais
+                </h3>
+                <p class="preference-description">
+                  Armazenar cópia dos documentos enviados
+                </p>
               </div>
               <label class="toggle-switch">
                 <input 
@@ -233,20 +338,35 @@
                   type="checkbox" 
                   class="toggle-input"
                 >
-                <span class="toggle-slider"></span>
+                <span class="toggle-slider" />
               </label>
             </div>
             
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Tamanho máximo de arquivo</h3>
-                <p class="preference-description">Limite para upload de documentos</p>
+                <h3 class="preference-title">
+                  Tamanho máximo de arquivo
+                </h3>
+                <p class="preference-description">
+                  Limite para upload de documentos
+                </p>
               </div>
-              <select v-model="preferences.maxFileSize" class="preference-select">
-                <option value="5">5 MB</option>
-                <option value="10">10 MB</option>
-                <option value="25">25 MB</option>
-                <option value="50">50 MB</option>
+              <select
+                v-model="preferences.maxFileSize"
+                class="preference-select"
+              >
+                <option value="5">
+                  5 MB
+                </option>
+                <option value="10">
+                  10 MB
+                </option>
+                <option value="25">
+                  25 MB
+                </option>
+                <option value="50">
+                  50 MB
+                </option>
               </select>
             </div>
           </div>
@@ -254,9 +374,14 @@
       </div>
       
       <!-- Notifications Tab -->
-      <div v-if="activeTab === 'notifications'" class="tab-content">
+      <div
+        v-if="activeTab === 'notifications'"
+        class="tab-content"
+      >
         <div class="settings-section">
-          <h2 class="section-title">Notificações por Email</h2>
+          <h2 class="section-title">
+            Notificações por Email
+          </h2>
           <p class="section-description">
             Configure quando e como receber notificações
           </p>
@@ -264,8 +389,12 @@
           <div class="preference-group">
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Resumos concluídos</h3>
-                <p class="preference-description">Receber email quando um resumo for gerado</p>
+                <h3 class="preference-title">
+                  Resumos concluídos
+                </h3>
+                <p class="preference-description">
+                  Receber email quando um resumo for gerado
+                </p>
               </div>
               <label class="toggle-switch">
                 <input 
@@ -273,14 +402,18 @@
                   type="checkbox" 
                   class="toggle-input"
                 >
-                <span class="toggle-slider"></span>
+                <span class="toggle-slider" />
               </label>
             </div>
             
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Limite de plano atingido</h3>
-                <p class="preference-description">Avisar quando atingir o limite do plano</p>
+                <h3 class="preference-title">
+                  Limite de plano atingido
+                </h3>
+                <p class="preference-description">
+                  Avisar quando atingir o limite do plano
+                </p>
               </div>
               <label class="toggle-switch">
                 <input 
@@ -288,14 +421,18 @@
                   type="checkbox" 
                   class="toggle-input"
                 >
-                <span class="toggle-slider"></span>
+                <span class="toggle-slider" />
               </label>
             </div>
             
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Novidades e atualizações</h3>
-                <p class="preference-description">Receber informações sobre novas funcionalidades</p>
+                <h3 class="preference-title">
+                  Novidades e atualizações
+                </h3>
+                <p class="preference-description">
+                  Receber informações sobre novas funcionalidades
+                </p>
               </div>
               <label class="toggle-switch">
                 <input 
@@ -303,14 +440,18 @@
                   type="checkbox" 
                   class="toggle-input"
                 >
-                <span class="toggle-slider"></span>
+                <span class="toggle-slider" />
               </label>
             </div>
             
             <div class="preference-item">
               <div class="preference-info">
-                <h3 class="preference-title">Newsletter semanal</h3>
-                <p class="preference-description">Dicas e melhores práticas de uso</p>
+                <h3 class="preference-title">
+                  Newsletter semanal
+                </h3>
+                <p class="preference-description">
+                  Dicas e melhores práticas de uso
+                </p>
               </div>
               <label class="toggle-switch">
                 <input 
@@ -318,14 +459,22 @@
                   type="checkbox" 
                   class="toggle-input"
                 >
-                <span class="toggle-slider"></span>
+                <span class="toggle-slider" />
               </label>
             </div>
           </div>
           
           <div class="form-actions">
-            <button @click="updateNotifications" :disabled="isUpdatingNotifications" class="btn-primary">
-              <LoadingSpinner v-if="isUpdatingNotifications" :show="true" size="sm" />
+            <button
+              :disabled="isUpdatingNotifications"
+              class="btn-primary"
+              @click="updateNotifications"
+            >
+              <LoadingSpinner
+                v-if="isUpdatingNotifications"
+                :show="true"
+                size="sm"
+              />
               <span v-else>Salvar configurações</span>
             </button>
           </div>
@@ -333,19 +482,29 @@
       </div>
       
       <!-- Subscription Tab -->
-      <div v-if="activeTab === 'subscription'" class="tab-content">
+      <div
+        v-if="activeTab === 'subscription'"
+        class="tab-content"
+      >
         <div class="settings-section">
-          <h2 class="section-title">Plano Atual</h2>
+          <h2 class="section-title">
+            Plano Atual
+          </h2>
           <p class="section-description">
             Gerencie sua assinatura e faturamento
           </p>
           
           <div class="current-plan">
             <div class="plan-info">
-              <div class="plan-badge" :class="getPlanBadgeClass(currentPlan?.name)">
+              <div
+                class="plan-badge"
+                :class="getPlanBadgeClass(currentPlan?.name)"
+              >
                 {{ getPlanLabel(currentPlan?.name) }}
               </div>
-              <h3 class="plan-name">{{ getPlanLabel(currentPlan?.name) }}</h3>
+              <h3 class="plan-name">
+                {{ getPlanLabel(currentPlan?.name) }}
+              </h3>
               <p class="plan-price">
                 {{ formatPrice(currentPlan?.price) }}
                 <span class="plan-period">{{ currentPlan?.interval === 'month' ? '/mês' : '/ano' }}</span>
@@ -356,7 +515,10 @@
               <div class="usage-item">
                 <span class="usage-label">Documentos processados</span>
                 <div class="usage-bar">
-                  <div class="usage-progress" :style="{ width: getUsagePercentage('documents') + '%' }"></div>
+                  <div
+                    class="usage-progress"
+                    :style="{ width: getUsagePercentage('documents') + '%' }"
+                  />
                 </div>
                 <span class="usage-text">{{ usage.documents }} / {{ currentPlan?.limits?.documents || '∞' }}</span>
               </div>
@@ -364,7 +526,10 @@
               <div class="usage-item">
                 <span class="usage-label">Resumos gerados</span>
                 <div class="usage-bar">
-                  <div class="usage-progress" :style="{ width: getUsagePercentage('summaries') + '%' }"></div>
+                  <div
+                    class="usage-progress"
+                    :style="{ width: getUsagePercentage('summaries') + '%' }"
+                  />
                 </div>
                 <span class="usage-text">{{ usage.summaries }} / {{ currentPlan?.limits?.summaries || '∞' }}</span>
               </div>
@@ -372,47 +537,85 @@
               <div class="usage-item">
                 <span class="usage-label">Armazenamento</span>
                 <div class="usage-bar">
-                  <div class="usage-progress" :style="{ width: getUsagePercentage('storage') + '%' }"></div>
+                  <div
+                    class="usage-progress"
+                    :style="{ width: getUsagePercentage('storage') + '%' }"
+                  />
                 </div>
                 <span class="usage-text">{{ formatStorage(usage.storage) }} / {{ formatStorage(currentPlan?.limits?.storage) }}</span>
               </div>
             </div>
             
             <div class="plan-actions">
-              <button v-if="currentPlan?.name !== 'enterprise'" @click="upgradePlan" class="btn-primary">
+              <button
+                v-if="currentPlan?.name !== 'enterprise'"
+                class="btn-primary"
+                @click="upgradePlan"
+              >
                 Fazer upgrade
               </button>
-              <button @click="manageBilling" class="btn-secondary">
+              <button
+                class="btn-secondary"
+                @click="manageBilling"
+              >
                 Gerenciar faturamento
               </button>
             </div>
           </div>
         </div>
         
-        <div v-if="currentPlan?.name !== 'free'" class="settings-section">
-          <h2 class="section-title">Histórico de Faturamento</h2>
+        <div
+          v-if="currentPlan?.name !== 'free'"
+          class="settings-section"
+        >
+          <h2 class="section-title">
+            Histórico de Faturamento
+          </h2>
           <p class="section-description">
             Visualize suas faturas e histórico de pagamentos
           </p>
           
           <div class="billing-history">
-            <div v-if="billingHistory.length > 0" class="history-list">
-              <div v-for="invoice in billingHistory" :key="invoice.id" class="history-item">
+            <div
+              v-if="billingHistory.length > 0"
+              class="history-list"
+            >
+              <div
+                v-for="invoice in billingHistory"
+                :key="invoice.id"
+                class="history-item"
+              >
                 <div class="invoice-info">
                   <span class="invoice-date">{{ formatDate(invoice.created) }}</span>
                   <span class="invoice-amount">{{ formatPrice(invoice.amount_paid / 100) }}</span>
-                  <span class="invoice-status" :class="getInvoiceStatusClass(invoice.status)">
+                  <span
+                    class="invoice-status"
+                    :class="getInvoiceStatusClass(invoice.status)"
+                  >
                     {{ getInvoiceStatusLabel(invoice.status) }}
                   </span>
                 </div>
-                <button @click="downloadInvoice(invoice)" class="download-btn">
-                  <svg viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                <button
+                  class="download-btn"
+                  @click="downloadInvoice(invoice)"
+                >
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                 </button>
               </div>
             </div>
-            <div v-else class="empty-history">
+            <div
+              v-else
+              class="empty-history"
+            >
               <p>Nenhuma fatura encontrada</p>
             </div>
           </div>
@@ -420,9 +623,14 @@
       </div>
       
       <!-- Security Tab -->
-      <div v-if="activeTab === 'security'" class="tab-content">
+      <div
+        v-if="activeTab === 'security'"
+        class="tab-content"
+      >
         <div class="settings-section">
-          <h2 class="section-title">Segurança da Conta</h2>
+          <h2 class="section-title">
+            Segurança da Conta
+          </h2>
           <p class="section-description">
             Configure opções de segurança e privacidade
           </p>
@@ -430,14 +638,26 @@
           <div class="security-options">
             <div class="security-item">
               <div class="security-info">
-                <h3 class="security-title">Autenticação de dois fatores</h3>
-                <p class="security-description">Adicione uma camada extra de segurança</p>
+                <h3 class="security-title">
+                  Autenticação de dois fatores
+                </h3>
+                <p class="security-description">
+                  Adicione uma camada extra de segurança
+                </p>
               </div>
               <div class="security-action">
-                <button v-if="!twoFactorEnabled" @click="enableTwoFactor" class="btn-primary">
+                <button
+                  v-if="!twoFactorEnabled"
+                  class="btn-primary"
+                  @click="enableTwoFactor"
+                >
                   Ativar 2FA
                 </button>
-                <button v-else @click="disableTwoFactor" class="btn-secondary">
+                <button
+                  v-else
+                  class="btn-secondary"
+                  @click="disableTwoFactor"
+                >
                   Desativar 2FA
                 </button>
               </div>
@@ -445,11 +665,18 @@
             
             <div class="security-item">
               <div class="security-info">
-                <h3 class="security-title">Sessões ativas</h3>
-                <p class="security-description">Gerencie dispositivos conectados à sua conta</p>
+                <h3 class="security-title">
+                  Sessões ativas
+                </h3>
+                <p class="security-description">
+                  Gerencie dispositivos conectados à sua conta
+                </p>
               </div>
               <div class="security-action">
-                <button @click="viewActiveSessions" class="btn-secondary">
+                <button
+                  class="btn-secondary"
+                  @click="viewActiveSessions"
+                >
                   Ver sessões
                 </button>
               </div>
@@ -457,11 +684,18 @@
             
             <div class="security-item">
               <div class="security-info">
-                <h3 class="security-title">Log de atividades</h3>
-                <p class="security-description">Histórico de ações realizadas na conta</p>
+                <h3 class="security-title">
+                  Log de atividades
+                </h3>
+                <p class="security-description">
+                  Histórico de ações realizadas na conta
+                </p>
               </div>
               <div class="security-action">
-                <button @click="viewActivityLog" class="btn-secondary">
+                <button
+                  class="btn-secondary"
+                  @click="viewActivityLog"
+                >
                   Ver atividades
                 </button>
               </div>
@@ -470,7 +704,9 @@
         </div>
         
         <div class="settings-section danger-zone">
-          <h2 class="section-title">Zona de Perigo</h2>
+          <h2 class="section-title">
+            Zona de Perigo
+          </h2>
           <p class="section-description">
             Ações irreversíveis que afetam permanentemente sua conta
           </p>
@@ -478,20 +714,34 @@
           <div class="danger-actions">
             <div class="danger-item">
               <div class="danger-info">
-                <h3 class="danger-title">Excluir todos os dados</h3>
-                <p class="danger-description">Remove permanentemente todos os documentos e resumos</p>
+                <h3 class="danger-title">
+                  Excluir todos os dados
+                </h3>
+                <p class="danger-description">
+                  Remove permanentemente todos os documentos e resumos
+                </p>
               </div>
-              <button @click="deleteAllData" class="btn-danger">
+              <button
+                class="btn-danger"
+                @click="deleteAllData"
+              >
                 Excluir dados
               </button>
             </div>
             
             <div class="danger-item">
               <div class="danger-info">
-                <h3 class="danger-title">Excluir conta</h3>
-                <p class="danger-description">Remove permanentemente sua conta e todos os dados</p>
+                <h3 class="danger-title">
+                  Excluir conta
+                </h3>
+                <p class="danger-description">
+                  Remove permanentemente sua conta e todos os dados
+                </p>
               </div>
-              <button @click="deleteAccount" class="btn-danger">
+              <button
+                class="btn-danger"
+                @click="deleteAccount"
+              >
                 Excluir conta
               </button>
             </div>
