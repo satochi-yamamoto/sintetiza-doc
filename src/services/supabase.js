@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+﻿import { createClient } from '@supabase/supabase-js'
 import { createStandardError } from '@/utils/errorHandler'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -7,7 +7,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
 const createMissingConfigError = () => {
-  return createStandardError('Supabase não configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para habilitar autenticação e persistência.', 'SUPABASE_CONFIG_MISSING')
+  return createStandardError('Supabase nÃ£o configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para habilitar autenticaÃ§Ã£o e persistÃªncia.', 'SUPABASE_CONFIG_MISSING')
 }
 
 const createAsyncMissingResponse = async () => ({ data: null, error: createMissingConfigError() })
@@ -78,7 +78,7 @@ function createSupabaseFallbackClient() {
 }
 
 if (!isSupabaseConfigured) {
-  console.warn('[supabase] Variáveis de ambiente não configuradas. Funcionalidades dependentes do Supabase serão desativadas.')
+  console.warn('[supabase] VariÃ¡veis de ambiente nÃ£o configuradas. Funcionalidades dependentes do Supabase serÃ£o desativadas.')
 }
 
 export const supabase = isSupabaseConfigured
@@ -188,7 +188,14 @@ export async function ensureAppUserProfile({ session: providedSession } = {}) {
       .single()
 
     if (upsertError) {
-      console.warn('[supabase] Erro ao criar/atualizar registro em users:', upsertError)
+      console.warn('[supabase] Erro ao criar/atualizar registro em users:', {
+        message: upsertError?.message,
+        code: upsertError?.code,
+        details: upsertError?.details,
+        hint: upsertError?.hint,
+        status: upsertError?.status ?? null,
+        original: upsertError
+      })
       return {
         id: null,
         session,
@@ -215,14 +222,14 @@ export async function ensureAppUserProfile({ session: providedSession } = {}) {
   }
 }
 
-// Nota: Em @supabase/supabase-js v2 não existe mais supabase.auth.setAuth.
+// Nota: Em @supabase/supabase-js v2 nÃ£o existe mais supabase.auth.setAuth.
 // Para autenticar com provedores externos via OIDC, use signInWithIdToken.
-// Este helper foi mantido apenas por compatibilidade e agora não faz nada.
+// Este helper foi mantido apenas por compatibilidade e agora nÃ£o faz nada.
 export function setSupabaseAccessToken() {
-  console.warn('[supabase] setSupabaseAccessToken não é suportado no supabase-js v2. Use ensureSupabaseAuth().')
+  console.warn('[supabase] setSupabaseAccessToken nÃ£o Ã© suportado no supabase-js v2. Use ensureSupabaseAuth().')
 }
 
-// Funções utilitárias para o Supabase
+// FunÃ§Ãµes utilitÃ¡rias para o Supabase
 export const supabaseUtils = {
   // Upload de arquivo
   async uploadFile(bucket, path, file, options = {}) {
@@ -258,7 +265,7 @@ export const supabaseUtils = {
     }
   },
   
-  // Obter URL pública do arquivo
+  // Obter URL pÃºblica do arquivo
   getPublicUrl(bucket, path) {
     const { data } = supabase.storage
       .from(bucket)
@@ -318,7 +325,7 @@ export const supabaseUtils = {
   }
 }
 
-// Funções para trabalhar com dados
+// FunÃ§Ãµes para trabalhar com dados
 export const supabaseData = {
   // Inserir dados
   async insert(table, data) {
@@ -411,7 +418,7 @@ export const supabaseData = {
         })
       }
   
-      // Normalização: permitir objeto de consulta no parâmetro "columns"
+      // NormalizaÃ§Ã£o: permitir objeto de consulta no parÃ¢metro "columns"
       let selectStr = columns
       let eqMap = filters || {}
       let gteMap = {}
@@ -443,12 +450,12 @@ export const supabaseData = {
         }
       })
   
-      // Aplicar filtros IN explícitos
+      // Aplicar filtros IN explÃ­citos
       Object.entries(inMap).forEach(([key, value]) => {
         query = query.in(key, value)
       })
       
-      // Aplicar operadores de comparação
+      // Aplicar operadores de comparaÃ§Ã£o
       Object.entries(gteMap).forEach(([key, value]) => {
         query = query.gte(key, value)
       })
@@ -456,7 +463,7 @@ export const supabaseData = {
         query = query.lte(key, value)
       })
       
-      // Aplicar opções
+      // Aplicar opÃ§Ãµes
       if (orderByOpt) {
         query = query.order(orderByOpt.column, { 
           ascending: orderByOpt.ascending !== false 
@@ -481,7 +488,7 @@ export const supabaseData = {
     }
   },
   
-  // Buscar um único registro
+  // Buscar um Ãºnico registro
   async selectOne(table, columns = '*', filters = {}) {
     try {
       if (import.meta?.env?.DEV) {
@@ -495,15 +502,15 @@ export const supabaseData = {
       const data = await this.select(table, columns, filters, { limit: 1 })
       return data?.[0] || null
     } catch (error) {
-      console.error(`Erro ao buscar registro único de ${table}:`, error)
+      console.error(`Erro ao buscar registro Ãºnico de ${table}:`, error)
       throw error
     }
   }
 }
 
-// Funções para Real-time
+// FunÃ§Ãµes para Real-time
 export const supabaseRealtime = {
-  // Subscrever a mudanças em uma tabela
+  // Subscrever a mudanÃ§as em uma tabela
   subscribe(table, callback, filters = {}) {
     let channel = supabase
       .channel(`public:${table}`)
@@ -518,7 +525,7 @@ export const supabaseRealtime = {
     return channel
   },
   
-  // Cancelar subscrição
+  // Cancelar subscriÃ§Ã£o
   unsubscribe(channel) {
     supabase.removeChannel(channel)
   }
@@ -526,17 +533,17 @@ export const supabaseRealtime = {
 
 export default supabase
 
-// Centraliza autenticação externa (OIDC) → Supabase sem depender de JWT template
+// Centraliza autenticaÃ§Ã£o externa (OIDC) â†’ Supabase sem depender de JWT template
 export async function ensureSupabaseAuth(getTokenLike) {
   try {
-    // 0) Se já há sessão válida do Supabase, evita trabalho
+    // 0) Se jÃ¡ hÃ¡ sessÃ£o vÃ¡lida do Supabase, evita trabalho
     try {
       const { data: sessData } = await supabase.auth.getSession()
       if (sessData?.session?.access_token) {
         return true
       }
     } catch (eSession) {
-      console.debug('[ensureSupabaseAuth] sessão inexistente ou inválida, tentando autenticar...', eSession)
+      console.debug('[ensureSupabaseAuth] sessÃ£o inexistente ou invÃ¡lida, tentando autenticar...', eSession)
     }
 
     const callGetToken = async (opts) => {
@@ -546,8 +553,8 @@ export async function ensureSupabaseAuth(getTokenLike) {
       return await fn(opts);
     };
 
-    // 1) Obter token do provedor externo (IdP). Em muitos setups, o template "supabase" é o recomendado
-    //    para signInWithIdToken. Tentamos na ordem: env template → 'supabase' → default
+    // 1) Obter token do provedor externo (IdP). Em muitos setups, o template "supabase" Ã© o recomendado
+    //    para signInWithIdToken. Tentamos na ordem: env template â†’ 'supabase' â†’ default
     let token = null;
     const envTemplate = (
       (import.meta?.env?.VITE_SUPABASE_OIDC_TEMPLATE ||
@@ -572,18 +579,18 @@ export async function ensureSupabaseAuth(getTokenLike) {
     }
     if (!token) {
       try {
-        token = await callGetToken(); // último recurso: token padrão da sessão
+        token = await callGetToken(); // Ãºltimo recurso: token padrÃ£o da sessÃ£o
       } catch (eDefault) {
-        console.debug('[ensureSupabaseAuth] falha ao obter token padrão:', eDefault);
+        console.debug('[ensureSupabaseAuth] falha ao obter token padrÃ£o:', eDefault);
       }
     }
 
     // Se token vier nulo, tentar usar template do Clerk informado por ENV
     if (!token) return false;
 
-    // 2) Fluxo compatível com supabase-js v2: usar signInWithIdToken
+    // 2) Fluxo compatÃ­vel com supabase-js v2: usar signInWithIdToken
     //    Requer habilitar OIDC no Supabase para o provedor configurado
-    // Tentativas de provider: ENV → 'oidc'
+    // Tentativas de provider: ENV â†’ 'oidc'
     const providersToTry = []
     const envProv = (import.meta?.env?.VITE_SUPABASE_OIDC_PROVIDER || '').trim()
     if (envProv) providersToTry.push(envProv)
@@ -603,10 +610,11 @@ export async function ensureSupabaseAuth(getTokenLike) {
         }
       }
     }
-    console.warn('[ensureSupabaseAuth] Não foi possível autenticar com nenhum provider (ENV, oidc). Verifique a configuração OIDC no Supabase e o JWT template do seu IdP.')
+    console.warn('[ensureSupabaseAuth] NÃ£o foi possÃ­vel autenticar com nenhum provider (ENV, oidc). Verifique a configuraÃ§Ã£o OIDC no Supabase e o JWT template do seu IdP.')
     return false
   } catch (err) {
     console.warn('[ensureSupabaseAuth] erro inesperado:', err);
     return false;
   }
 }
+

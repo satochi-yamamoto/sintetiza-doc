@@ -1,5 +1,6 @@
 import asyncio
 from playwright import async_api
+from config import BASE_URL, BROWSER_ARGS, DEFAULT_TIMEOUT, PAGE_LOAD_TIMEOUT, WAIT_UNTIL
 
 async def run_test():
     pw = None
@@ -13,23 +14,18 @@ async def run_test():
         # Launch a Chromium browser in headless mode with custom arguments
         browser = await pw.chromium.launch(
             headless=True,
-            args=[
-                "--window-size=1280,720",         # Set the browser window size
-                "--disable-dev-shm-usage",        # Avoid using /dev/shm which can cause issues in containers
-                "--ipc=host",                     # Use host-level IPC for better stability
-                "--single-process"                # Run the browser in a single process mode
-            ],
+            args=BROWSER_ARGS,
         )
         
         # Create a new browser context (like an incognito window)
         context = await browser.new_context()
-        context.set_default_timeout(5000)
+        context.set_default_timeout(DEFAULT_TIMEOUT)
         
         # Open a new page in the browser context
         page = await context.new_page()
         
         # Navigate to your target URL and wait until the network request is committed
-        await page.goto("http://localhost:3018", wait_until="commit", timeout=10000)
+        await page.goto(BASE_URL, wait_until=WAIT_UNTIL, timeout=PAGE_LOAD_TIMEOUT)
         
         # Wait for the main page to reach DOMContentLoaded state (optional for stability)
         try:
